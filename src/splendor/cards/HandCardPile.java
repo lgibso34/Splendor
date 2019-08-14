@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class HandCardPile {
 
-	Integer cardCount = 0;
+	int cardCount = 0;
 	ArrayList<Card> cards = new ArrayList<Card>();
 
 	

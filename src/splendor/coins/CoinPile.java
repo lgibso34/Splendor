@@ -6,37 +6,34 @@ public class CoinPile {
 
 	ArrayList<Coin> coins = new ArrayList<Coin>();
 
-	private Integer FOUR = 4;
-	private Integer FIVE = 5;
-	private Integer SEVEN = 7;
+	private static final int MAX_GEMS_4PLAYER = 4;
+	private static final int MAX_GEMS_5PLAYER = 5;
+	private static final int MAX_GEMS_DEFAULT = 7;
 	
 	
 	public CoinPile(Integer numberOfPlayers, String color) {		
 		// gold pile is always five no mater the amount of players
 		if (color.equals("gold")) {
 			Coin goldCoin = new Coin("gold");
-			for (var i = 0; i < FIVE; i++) {
+			for (var i = 0; i < 5; i++) {
 				coins.add(goldCoin);
-			}			
+			}
 		} else {
 			switch (numberOfPlayers) {
 			case 2:
-				initializePile(FOUR, color);
+				initializePile(MAX_GEMS_4PLAYER, color);
 				break;
 			case 3:
-				initializePile(FIVE, color);
+				initializePile(MAX_GEMS_5PLAYER, color);
 				break;
-			case 4:
-				initializePile(SEVEN, color);
-				break;
-			case 5:
-				initializePile(SEVEN, color);
+			default:
+				initializePile(MAX_GEMS_DEFAULT, color);
 				break;
 			}
 		}
 	}
 
-	private void initializePile(Integer numberOfPlayers, String color){
+	private void initializePile(int numberOfPlayers, String color){
 		for (var i = 0; i < numberOfPlayers; i++) {
 			coins.add(new Coin(color));
 		}

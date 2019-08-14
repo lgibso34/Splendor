@@ -10,7 +10,7 @@ public class Hand{
 	ArrayList<HandCoinPile> handCoinPiles = new ArrayList<HandCoinPile>(6); // six coin piles
 	// [ reserveCards, white, blue, green, red, black ]
 	ArrayList<HandCardPile> cardPiles = new ArrayList<HandCardPile>(6); 
-	Integer points = 0;
+	int points = 0;
 	
 	public Hand() {
 		HandCoinPile emptyHandCoinPile = new HandCoinPile();

@@ -8,53 +8,10 @@ import java.util.Random;
  */
 public class Deck {
 
-	Integer row = 0; // 1,2,3. 1 being bottom row, 3 being top
-	Integer cardsLeft = 0;
 	ArrayList<Card> cards = new ArrayList<Card>();
-	private static Integer deckCount = 0;
-	private Integer TWENTY = 20;
-	private Integer THIRTY = 30;
-	private Integer FORTY = 40;
 
-	// row 3 (top) has 20 (4 dealt immediately)
-	// row 2 has 30 "
-	// row 1 has 40 "
-
-	public Deck(Integer row) {
-		if (deckCount < 4) {
-			switch (row) {
-			case 1:
-				createDeck(row, TWENTY);
-				break;
-			case 2:
-				createDeck(row, THIRTY);
-				break;
-			case 3:
-				createDeck(row, FORTY);
-				break;
-			}
-		}
-	}
-
-	private void createDeck(Integer row, Integer amountOfCards) {
-		cardsLeft = amountOfCards;
-		switch (amountOfCards) {
-		case 20:
-			// grab 20 card deck from constants file
-			// then shuffle
-			shuffle(amountOfCards);
-			break;
-		case 30:
-			// grab 30 card deck from constants file
-			// then shuffle
-			shuffle(amountOfCards);
-			break;
-		case 40:
-			// grab 40 card deck from constants file
-			// then shuffle
-			shuffle(amountOfCards);
-			break;
-		}
+	public Deck(ArrayList<Card> cards) {
+		this.cards = cards;
 	}
 
 	private void shuffle(Integer amountOfCards) {
@@ -71,7 +28,6 @@ public class Deck {
 	}
 
 	public Card dealCard() {
-		cardsLeft--;
-		return cards.remove(cards.size() - 1); // may be able to use cardsleft
+		return cards.remove(cards.size() - 1);
 	}
 }

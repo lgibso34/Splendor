@@ -5,10 +5,10 @@ import java.util.ArrayList;
 public class CardRow {
 
 	ArrayList<Card> cards = new ArrayList<Card>(4); // 4 cards per row
-	Integer row = 0;
-	private static Integer rowCount = 0;
+	int row = 0;
+	private static int rowCount = 0;
 
-	public CardRow(Integer row, Deck deck) {
+	public CardRow(int row, Deck deck) {
 		if (rowCount < 4) {
 			this.row = row;
 			// deal cards and place in corresponding spot in CardRow

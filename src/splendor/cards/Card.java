@@ -5,10 +5,10 @@ package splendor.cards;
  */
 public class Card {
 
-	private Integer white, blue, green, red, black, value = 0;
+	private int white, blue, green, red, black, value = 0;
 	private Boolean faceUp = false;
 
-	public Card(Integer[] colors, Integer value) {
+	public Card(int[] colors, int value) {
 		white = colors[0];
 		blue = colors[1];
 		green = colors[2];
@@ -17,7 +17,7 @@ public class Card {
 		this.value = value;
 	}
 
-	public Integer getValue() {
+	public int getValue() {
 		return value;
 	}
 
@@ -29,7 +29,7 @@ public class Card {
 		faceUp = newBool;
 	}
 	
-	public Integer getColorValue(String color) {
+	public int getColorValue(String color) {
 		switch(color) {
 		case "white":
 			return white;

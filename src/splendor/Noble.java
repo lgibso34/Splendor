@@ -4,7 +4,7 @@ import splendor.cards.Card;
 
 public class Noble extends Card {
 
-	public Noble(Integer[] colors, Integer value) {
+	public Noble(int[] colors, int value) {
 		super(colors, value);
 	}
 }
