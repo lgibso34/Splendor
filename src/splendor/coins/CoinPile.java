@@ -11,7 +11,7 @@ public class CoinPile {
 	private Integer SEVEN = 7;
 	
 	
-	public CoinPile(int numberOfPlayers, String color) {		
+	public CoinPile(Integer numberOfPlayers, String color) {		
 
 		// gold pile is always five no mater the amount of players
 		if (color.equals("gold")) {
@@ -22,25 +22,33 @@ public class CoinPile {
 		} else {
 			switch (numberOfPlayers) {
 			case 2:
-				addToPile(FOUR, color);
+				initializePile(FOUR, color);
 				break;
 			case 3:
-				addToPile(FIVE, color);
+				initializePile(FIVE, color);
 				break;
 			case 4:
-				addToPile(SEVEN, color);
+				initializePile(SEVEN, color);
 				break;
 			case 5:
-				addToPile(SEVEN, color);
+				initializePile(SEVEN, color);
 				break;
 			}
 		}
 	}
 
-	private void addToPile(int numberOfPlayers, String color){
+	private void initializePile(Integer numberOfPlayers, String color){
 		for (var i = 0; i < numberOfPlayers; i++) {
 			this.coins.add(new Coin(color));
 		}
+	}
+	
+	public void add(Coin incoming) {
+		this.coins.add(incoming);
+	}
+	
+	public Coin remove(Coin outgoing) {
+		return this.coins.remove(this.coins.size() - 1); // last index coin
 	}
 
 	public String toString() {
@@ -50,6 +58,7 @@ public class CoinPile {
 		}
 		return test;
 	}
+	
 	public static void main(String[] args) {
 		int numOfPlayers = 2;
 
