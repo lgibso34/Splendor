@@ -58,6 +58,6 @@ public class DeckBuilder {
             System.err.println("Error reading card list.");
         }
 
-        return new Deck[]{new Deck(lv1), new Deck(lv2), new Deck(lv3), new Deck(patrons)};
+        return new Deck[]{new Deck(patrons), new Deck(lv1), new Deck(lv2), new Deck(lv3)};
     }
 }
