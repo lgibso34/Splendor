@@ -4,6 +4,6 @@ public class Coin{
     String value = "";
    
     public Coin(String color){
-       this.value = color;
+       value = color;
     }
 }

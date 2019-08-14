@@ -5,21 +5,44 @@ package splendor.cards;
  */
 public class Card {
 
-    Integer white = 0;
-    Integer blue = 0;
-    Integer green = 0;
-    Integer red= 0;
-    Integer black = 0;
-    Integer value = 0;
+	private Integer white, blue, green, red, black, value = 0;
+	private Boolean faceUp = false;
 
+	public Card(Integer[] colors, Integer value) {
+		white = colors[0];
+		blue = colors[1];
+		green = colors[2];
+		red = colors[3];
+		black = colors[4];
+		this.value = value;
+	}
 
-    public Card(Integer[] colors, Integer value){
-        this.white = colors[0];
-        this.blue = colors[1];
-        this.green = colors[2];
-        this.red = colors[3];
-        this.black = colors[4];
-        this.value = value;
-    }
+	public Integer getValue() {
+		return value;
+	}
 
+	public Boolean getFaceUp() {
+		return faceUp;
+	}
+
+	public void setFaceUp(Boolean newBool) {
+		faceUp = newBool;
+	}
+	
+	public Integer getColorValue(String color) {
+		switch(color) {
+		case "white":
+			return white;
+		case "blue":
+			return blue;
+		case "green":
+			return green;
+		case "red":
+			return red;
+		case "black":
+			return black;
+		default:
+			return -1;
+		}
+	}
 }

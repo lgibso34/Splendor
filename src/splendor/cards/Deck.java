@@ -11,6 +11,7 @@ public class Deck {
 	Integer row = 0; // 1,2,3. 1 being bottom row, 3 being top
 	Integer cardsLeft = 0;
 	ArrayList<Card> cards = new ArrayList<Card>();
+	private static Integer deckCount = 0;
 	private Integer TWENTY = 20;
 	private Integer THRITY = 30;
 	private Integer FORTY = 40;
@@ -20,21 +21,23 @@ public class Deck {
 	// row 1 has 40 "
 
 	public Deck(Integer row) {
-		switch (row) {
-		case 1:
-			createDeck(row, TWENTY);
-			break;
-		case 2:
-			createDeck(row, THRITY);
-			break;
-		case 3:
-			createDeck(row, FORTY);
-			break;
+		if (deckCount < 4) {
+			switch (row) {
+			case 1:
+				createDeck(row, TWENTY);
+				break;
+			case 2:
+				createDeck(row, THRITY);
+				break;
+			case 3:
+				createDeck(row, FORTY);
+				break;
+			}
 		}
 	}
 
 	private void createDeck(Integer row, Integer amountOfCards) {
-		this.cardsLeft = amountOfCards;
+		cardsLeft = amountOfCards;
 		switch (amountOfCards) {
 		case 20:
 			// grab 20 card deck from constants file
@@ -61,14 +64,14 @@ public class Deck {
 			int rand1 = numberGenerator.nextInt(amountOfCards); // create a random number between 0-amountOfCards (for
 																// index).
 			int rand2 = numberGenerator.nextInt(amountOfCards);
-			Card copy = this.cards.get(rand1); // store the card of the first random spot
-			this.cards.set(rand1, this.cards.get(rand2)); // set the second card to the first cards spot
-			this.cards.set(rand2, copy); // set the first card to the second cards spot
+			Card copy = cards.get(rand1); // store the card of the first random spot
+			cards.set(rand1, cards.get(rand2)); // set the second card to the first cards spot
+			cards.set(rand2, copy); // set the first card to the second cards spot
 		}
 	}
 
 	public Card dealCard() {
-		this.cardsLeft--;
-		return this.cards.remove(this.cards.size() - 1); // may be able to use this.cardsleft
+		cardsLeft--;
+		return cards.remove(cards.size() - 1); // may be able to use cardsleft
 	}
 }

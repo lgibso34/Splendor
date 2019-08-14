@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class CoinPile {
 
-	public ArrayList<Coin> coins = new ArrayList<Coin>();
+	ArrayList<Coin> coins = new ArrayList<Coin>();
 
 	private Integer FOUR = 4;
 	private Integer FIVE = 5;
@@ -12,12 +12,11 @@ public class CoinPile {
 	
 	
 	public CoinPile(Integer numberOfPlayers, String color) {		
-
 		// gold pile is always five no mater the amount of players
 		if (color.equals("gold")) {
 			Coin goldCoin = new Coin("gold");
 			for (var i = 0; i < FIVE; i++) {
-				this.coins.add(goldCoin);
+				coins.add(goldCoin);
 			}			
 		} else {
 			switch (numberOfPlayers) {
@@ -39,21 +38,21 @@ public class CoinPile {
 
 	private void initializePile(Integer numberOfPlayers, String color){
 		for (var i = 0; i < numberOfPlayers; i++) {
-			this.coins.add(new Coin(color));
+			coins.add(new Coin(color));
 		}
 	}
 	
 	public void add(Coin incoming) {
-		this.coins.add(incoming);
+		coins.add(incoming);
 	}
 	
 	public Coin remove(Coin outgoing) {
-		return this.coins.remove(this.coins.size() - 1); // last index coin
+		return coins.remove(coins.size() - 1); // last index coin
 	}
 
 	public String toString() {
 		String test = "";
-		for(Coin coin : this.coins) {
+		for(Coin coin : coins) {
 			test += coin.value + " ";
 		}
 		return test;
