@@ -1,7 +1,7 @@
-package splendor.util;
+package splendor.common.util;
 
-import splendor.cards.Card;
-import splendor.cards.Deck;
+import splendor.common.cards.Card;
+import splendor.common.cards.Deck;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class DeckBuilder {
                 for(int i = 0; i < colorCost.length; i++){
                     colorCost[i] = reader.nextInt();
                 }
-                int color = reader.nextInt();
+                Constants.Colors color = Constants.colors[reader.nextInt()];
                 int pointValue = reader.nextInt();
 
                 switch(deck){

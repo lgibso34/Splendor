@@ -20,7 +20,7 @@
  *
  * http://www.com.github.alexeyr.pcg.pcg-random.org
  */
-package splendor.cards;
+package splendor.common.cards;
 
 import java.util.concurrent.atomic.AtomicLong;
 

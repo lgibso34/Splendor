@@ -1,4 +1,6 @@
-package splendor.coins;
+package splendor.common.coins;
+
+import splendor.common.util.Constants.Colors;
 
 import java.util.ArrayList;
 
@@ -6,25 +8,25 @@ public class CoinPile {
 
 	ArrayList<Coin> coins = new ArrayList<Coin>();
 
-	private static final int MAX_GEMS_4PLAYER = 4;
-	private static final int MAX_GEMS_5PLAYER = 5;
+	private static final int MAX_GEMS_2PLAYER = 4;
+	private static final int MAX_GEMS_3PLAYER = 5;
 	private static final int MAX_GEMS_DEFAULT = 7;
 	
 	
-	public CoinPile(Integer numberOfPlayers, String color) {		
+	public CoinPile(Integer numberOfPlayers, Colors color) {
 		// gold pile is always five no mater the amount of players
-		if (color.equals("gold")) {
-			Coin goldCoin = new Coin("gold");
+		if (color.equals(Colors.Gold)) {
+			Coin goldCoin = new Coin(Colors.Gold);
 			for (var i = 0; i < 5; i++) {
 				coins.add(goldCoin);
 			}
 		} else {
 			switch (numberOfPlayers) {
 			case 2:
-				initializePile(MAX_GEMS_4PLAYER, color);
+				initializePile(MAX_GEMS_2PLAYER, color);
 				break;
 			case 3:
-				initializePile(MAX_GEMS_5PLAYER, color);
+				initializePile(MAX_GEMS_3PLAYER, color);
 				break;
 			default:
 				initializePile(MAX_GEMS_DEFAULT, color);
@@ -33,8 +35,8 @@ public class CoinPile {
 		}
 	}
 
-	private void initializePile(int numberOfPlayers, String color){
-		for (var i = 0; i < numberOfPlayers; i++) {
+	private void initializePile(int numCoins, Colors color){
+		for (var i = 0; i < numCoins; i++) {
 			coins.add(new Coin(color));
 		}
 	}
@@ -50,7 +52,7 @@ public class CoinPile {
 	public String toString() {
 		String test = "";
 		for(Coin coin : coins) {
-			test += coin.value + " ";
+			test += coin.color.toString() + " ";
 		}
 		return test;
 	}
@@ -58,12 +60,12 @@ public class CoinPile {
 	public static void main(String[] args) {
 		int numOfPlayers = 2;
 
-		CoinPile goldPile = new CoinPile(numOfPlayers, "gold");
-		CoinPile whitePile = new CoinPile(numOfPlayers, "white");
-		CoinPile bluePile = new CoinPile(numOfPlayers, "blue");
-		CoinPile greenPile = new CoinPile(numOfPlayers, "green");
-		CoinPile redPile = new CoinPile(numOfPlayers, "red");
-		CoinPile blackPile = new CoinPile(numOfPlayers, "black");
+		CoinPile goldPile = new CoinPile(numOfPlayers, Colors.Gold);
+		CoinPile whitePile = new CoinPile(numOfPlayers, Colors.White);
+		CoinPile bluePile = new CoinPile(numOfPlayers, Colors.Blue);
+		CoinPile greenPile = new CoinPile(numOfPlayers, Colors.Green);
+		CoinPile redPile = new CoinPile(numOfPlayers, Colors.Red);
+		CoinPile blackPile = new CoinPile(numOfPlayers, Colors.Black);
 
 		CoinPile[] allCoins = { goldPile, whitePile, bluePile, greenPile, redPile, blackPile };
 

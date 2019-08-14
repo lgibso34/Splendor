@@ -1,7 +1,7 @@
-package splendor;
+package splendor.common;
 
-import splendor.cards.Deck;
-import splendor.util.DeckBuilder;
+import splendor.common.cards.Deck;
+import splendor.common.util.DeckBuilder;
 
 public class Game{
     public static void main(String[] args) {

@@ -1,6 +1,4 @@
-package splendor.cards;
-
-import splendor.cards.Card;
+package splendor.common.cards;
 
 public class Noble extends Card {
 

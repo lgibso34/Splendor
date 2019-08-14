@@ -1,4 +1,4 @@
-package splendor.coins;
+package splendor.common.coins;
 
 import java.util.ArrayList;
 

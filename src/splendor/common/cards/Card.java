@@ -1,15 +1,18 @@
-package splendor.cards;
+package splendor.common.cards;
+
+import splendor.common.util.Constants.Colors;
 
 /**
  * Card
  */
 public class Card {
 
-	private int color, pointValue;
 	private int[] colorCost;
+	private Colors color;
+	private int pointValue;
 	private Boolean faceUp = false;
 
-	public Card(int[] colorCost, int pointValue, int color) {
+	public Card(int[] colorCost, int pointValue, Colors color) {
 		this.colorCost = colorCost;
 		this.pointValue = pointValue;
 		this.color = color;
@@ -19,8 +22,12 @@ public class Card {
 		return pointValue;
 	}
 
-	public int getColor() {
+	public Colors getColor() {
 		return color;
+	}
+
+	public int getColorIndex() {
+		return color.ordinal();
 	}
 
 	public Boolean getFaceUp() {
@@ -31,19 +38,17 @@ public class Card {
 		faceUp = b;
 	}
 
-	//public enum Colors
-	//{
-	//	White, Blue, Green, Red, Black, Gold;
-	//}
-
 	public int getColorValue(int color) {
 		return colorCost[color];
 	}
 
 	public String toString(){
-		String output = "Card: ";
-		for(int color : colorCost){
-			output += color + " ";
+		String output = "Card:: Cost: ";
+		int i = 0;
+		for(int cost : colorCost){
+			if(cost > 0)
+				output += color.toString() + ": " + cost + " ";
+			i++;
 		}
 		output += " | Value: " + pointValue + " | FaceUp: " + faceUp;
 		return output;

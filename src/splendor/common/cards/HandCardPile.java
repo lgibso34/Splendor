@@ -1,4 +1,4 @@
-package splendor.cards;
+package splendor.common.cards;
 
 import java.util.ArrayList;
 
