@@ -1,7 +1,6 @@
 package splendor.cards;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Deck
@@ -9,21 +8,24 @@ import java.util.Random;
 public class Deck {
 
 	ArrayList<Card> cards = new ArrayList<Card>();
+	private static Pcg32 rand = new Pcg32();
 
 	public Deck(ArrayList<Card> cards) {
 		this.cards = cards;
 	}
 
-	private void shuffle(Integer amountOfCards) {
-		Random numberGenerator = new Random();
+	//Fisher-Yates
+	private void shuffle(Integer numCards) {
+		Card temp;
 
-		for (int i = 0; i < 1001; i++) {
-			int rand1 = numberGenerator.nextInt(amountOfCards); // create a random number between 0-amountOfCards (for
-																// index).
-			int rand2 = numberGenerator.nextInt(amountOfCards);
-			Card copy = cards.get(rand1); // store the card of the first random spot
-			cards.set(rand1, cards.get(rand2)); // set the second card to the first cards spot
-			cards.set(rand2, copy); // set the first card to the second cards spot
+		for(int i = 0; i < numCards - 2; i++){
+			//j is a random integer such that i ≤ j < n
+			int j = rand.nextInt(numCards);
+			while(j < i)
+				j = rand.nextInt(numCards);
+			temp = cards.get(i);
+			cards.set(i, cards.get(j));
+			cards.set(j, temp);
 		}
 	}
 

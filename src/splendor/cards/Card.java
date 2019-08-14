@@ -5,44 +5,46 @@ package splendor.cards;
  */
 public class Card {
 
-	private int white, blue, green, red, black, value = 0;
+	private int color, pointValue = 0;
+	private int[] colorCost;
 	private Boolean faceUp = false;
 
-	public Card(int[] colors, int value) {
-		white = colors[0];
-		blue = colors[1];
-		green = colors[2];
-		red = colors[3];
-		black = colors[4];
-		this.value = value;
+	public Card(int[] colorCost, int pointValue, int color) {
+		this.colorCost = colorCost;
+		this.pointValue = pointValue;
+		this.color = color;
 	}
 
 	public int getValue() {
-		return value;
+		return pointValue;
+	}
+
+	public int getColor() {
+		return color;
 	}
 
 	public Boolean getFaceUp() {
 		return faceUp;
 	}
 
-	public void setFaceUp(Boolean newBool) {
-		faceUp = newBool;
+	public void setFaceUp(Boolean b) {
+		faceUp = b;
 	}
 	
 	public int getColorValue(String color) {
 		switch(color) {
-		case "white":
-			return white;
-		case "blue":
-			return blue;
-		case "green":
-			return green;
-		case "red":
-			return red;
-		case "black":
-			return black;
-		default:
-			return -1;
+			case "white":
+				return colorCost[0];
+			case "blue":
+				return colorCost[1];
+			case "green":
+				return colorCost[2];
+			case "red":
+				return colorCost[3];
+			case "black":
+				return colorCost[4];
+			default:
+				return -1;
 		}
 	}
 
