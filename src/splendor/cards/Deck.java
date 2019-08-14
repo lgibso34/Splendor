@@ -12,11 +12,13 @@ public class Deck {
 
 	public Deck(ArrayList<Card> cards) {
 		this.cards = cards;
+		shuffle();
 	}
 
 	//Fisher-Yates
-	private void shuffle(Integer numCards) {
+	private void shuffle() {
 		Card temp;
+		int numCards = cards.size();
 
 		for(int i = 0; i < numCards - 2; i++){
 			//j is a random integer such that i ≤ j < n
