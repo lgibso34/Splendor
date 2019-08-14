@@ -13,7 +13,7 @@ public class Deck {
 	ArrayList<Card> cards = new ArrayList<Card>();
 	private static Integer deckCount = 0;
 	private Integer TWENTY = 20;
-	private Integer THRITY = 30;
+	private Integer THIRTY = 30;
 	private Integer FORTY = 40;
 
 	// row 3 (top) has 20 (4 dealt immediately)
@@ -27,7 +27,7 @@ public class Deck {
 				createDeck(row, TWENTY);
 				break;
 			case 2:
-				createDeck(row, THRITY);
+				createDeck(row, THIRTY);
 				break;
 			case 3:
 				createDeck(row, FORTY);
