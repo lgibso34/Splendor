@@ -19,4 +19,12 @@ public class CardRow {
 			rowCount++;
 		}
 	}
+
+	public String toString(){
+		String output = "Row #: " + row + " \n";
+		for(Card card : cards){
+			output += card.toString() + "\n";
+		}
+		return output;
+	}
 }

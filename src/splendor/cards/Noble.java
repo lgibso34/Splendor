@@ -1,4 +1,4 @@
-package splendor;
+package splendor.cards;
 
 import splendor.cards.Card;
 

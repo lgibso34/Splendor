@@ -30,4 +30,14 @@ public class Deck {
 	public Card dealCard() {
 		return cards.remove(cards.size() - 1);
 	}
+
+	public String toString() {
+		String output = "";
+		int counter = 1;
+		for (Card card: cards){
+			output += "Card " + counter++ + " " + card.toString() + "\n";
+		}
+
+		return output;
+	}
 }
