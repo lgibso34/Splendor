@@ -45,4 +45,8 @@ public class Card {
 			return -1;
 		}
 	}
+
+	public String toString(){
+		return "Card: " + white + " " + blue + " " + green + " " + red + " " + black + " | Value: " + value + " | FaceUp: " + faceUp;
+	}
 }

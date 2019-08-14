@@ -74,4 +74,14 @@ public class Deck {
 		cardsLeft--;
 		return cards.remove(cards.size() - 1); // may be able to use cardsleft
 	}
+
+	public String toString() {
+		String output = "";
+		int counter = 1;
+		for (Card card: cards){
+			output += "Card " + counter++ + " " + card.toString() + "\n";
+		}
+
+		return output;
+	}
 }
