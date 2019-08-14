@@ -40,6 +40,11 @@ public class Card {
 	}
 
 	public String toString(){
-		return "Card: " + white + " " + blue + " " + green + " " + red + " " + black + " | Value: " + value + " | FaceUp: " + faceUp;
+		String output = "Card: ";
+		for(int color : colorCost){
+			output += color + " ";
+		}
+		output += " | Value: " + pointValue + " | FaceUp: " + faceUp;
+		return output;
 	}
 }
