@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 /**
  * This class is solely responsible for reading the CSV file with the card information and constructing decks from it
@@ -26,29 +27,29 @@ public class DeckBuilder {
         Scanner reader;
         try {
             reader = new Scanner(new File("lib/CardList.csv"));
-            reader.useDelimiter(",");
+            reader.useDelimiter(Pattern.compile("[\\s,]+"));
             reader.nextLine(); //skip the header
             while(reader.hasNextLine()){
-                if(!reader.hasNextInt())
-                    break; // I don't know if this is necessary without testing it.
                 int deck = reader.nextInt();
-                int[] costs = new int[5];
-                for(int i = 0; i < costs.length; i++){
-                    costs[i] = reader.nextInt();
+                int[] colorCost = new int[5];
+                for(int i = 0; i < colorCost.length; i++){
+                    colorCost[i] = reader.nextInt();
                 }
                 int color = reader.nextInt();
+                int pointValue = reader.nextInt();
+
                 switch(deck){
                     case 1:
-                        lv1.add(new Card(costs, reader.nextInt(), color));
+                        lv1.add(new Card(colorCost, pointValue, color));
                         break;
                     case 2:
-                        lv2.add(new Card(costs, reader.nextInt(), color));
+                        lv2.add(new Card(colorCost, pointValue, color));
                         break;
                     case 3:
-                        lv3.add(new Card(costs, reader.nextInt(), color));
+                        lv3.add(new Card(colorCost, pointValue, color));
                         break;
                     default:
-                        patrons.add(new Card(costs, reader.nextInt(), color));
+                        patrons.add(new Card(colorCost, pointValue, color));
                         break;
                 }
                 reader.nextLine();

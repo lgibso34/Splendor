@@ -33,8 +33,9 @@ public class Card {
 
 	//public enum Colors
 	//{
-	//	WHITE, BLUE, GREEN, RED, BLACK, GOLD;
+	//	White, Blue, Green, Red, Black, Gold;
 	//}
+
 	public int getColorValue(int color) {
 		return colorCost[color];
 	}
