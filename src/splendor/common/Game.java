@@ -18,11 +18,11 @@ public class Game{
         ArrayList<CoinPile> coinPiles = new ArrayList<CoinPile>();
         ArrayList<CardRow> cardRows = new ArrayList<CardRow>();
 
-        for(int i=0; i<6; i++){
+        for(int i = 0; i < 6; i++){
             coinPiles.add(i, new CoinPile(numberOfPlayers, Colors.values()[i]));
         }
 
-        for(int i=0; i<decks.length; i++){
+        for(int i = 0; i < decks.length; i++){
             cardRows.add(i, new CardRow(i, decks[i]));
         }
 
