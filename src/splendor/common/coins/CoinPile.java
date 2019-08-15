@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class CoinPile {
 
-	ArrayList<Coin> coins = new ArrayList<Coin>();
+	private ArrayList<Coin> coins = new ArrayList<>();
 
 	private static final int MAX_GEMS_2PLAYER = 4;
 	private static final int MAX_GEMS_3PLAYER = 5;
@@ -45,16 +45,12 @@ public class CoinPile {
 		coins.add(incoming);
 	}
 	
-	public Coin remove(Coin outgoing) {
+	public Coin remove() {
 		return coins.remove(coins.size() - 1); // last index coin
 	}
 
 	public String toString() {
-		String test = "";
-		for(Coin coin : coins) {
-			test += coin.color.toString() + " ";
-		}
-		return test;
+		return coins.size() + "x " + coins.get(0).color.toString();
 	}
 	
 	public static void main(String[] args) {

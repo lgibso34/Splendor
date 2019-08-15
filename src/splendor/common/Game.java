@@ -16,8 +16,8 @@ public class Game{
         boolean debug = true;
 
         Deck[] decks = DeckBuilder.buildDecks();
-        ArrayList<CoinPile> coinPiles = new ArrayList<CoinPile>();
-        ArrayList<CardRow> cardRows = new ArrayList<CardRow>();
+        ArrayList<CoinPile> coinPiles = new ArrayList<>();
+        ArrayList<CardRow> cardRows = new ArrayList<>();
 
         for(int i = 0; i < 6; i++){
             coinPiles.add(i, new CoinPile(numberOfPlayers, Colors.values()[i]));

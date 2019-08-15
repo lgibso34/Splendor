@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class HandCoinPile {
 	
-	ArrayList<Coin> coins = new ArrayList<Coin>();
+	private ArrayList<Coin> coins = new ArrayList<>();
 
 	
 	public HandCoinPile() {}

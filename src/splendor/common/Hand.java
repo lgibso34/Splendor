@@ -7,9 +7,9 @@ import splendor.common.cards.HandCardPile;
 
 public class Hand{
 	// [ white, blue, green, red, black, gold ]
-	ArrayList<HandCoinPile> handCoinPiles = new ArrayList<HandCoinPile>(6); // six coin piles
+	ArrayList<HandCoinPile> handCoinPiles = new ArrayList<>(6); // six coin piles
 	// [ reserveCards, white, blue, green, red, black ]
-	ArrayList<HandCardPile> cardPiles = new ArrayList<HandCardPile>(6); 
+	ArrayList<HandCardPile> cardPiles = new ArrayList<>(6);
 	int points = 0;
 	
 	public Hand() {
