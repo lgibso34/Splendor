@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class Deck {
 
-	ArrayList<Card> cards = new ArrayList<>();
+	ArrayList<Card> cards;
 	private static PCG rand = new PCG();
 
 	public Deck(ArrayList<Card> cards) {
@@ -38,12 +38,12 @@ public class Deck {
 	}
 
 	public String toString() {
-		String output = "";
+		StringBuilder output = new StringBuilder();
 		int counter = 1;
 		for (Card card: cards){
-			output += "(" + counter++ + ") " + card.toString() + "\n";
+			output.append("(").append(counter++).append(") ").append(card.toString()).append("\n");
 		}
 
-		return output;
+		return output.toString();
 	}
 }

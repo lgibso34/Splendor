@@ -38,20 +38,20 @@ public class PCG {
     public int nextInt() {
         long oldState = state;
         state = oldState * PERMUTATION + inc;
-        int xorShifted = (int) ((oldState >>> 18) ^ oldState) >>> 27;
+        int xorShifted = (int) (((oldState >>> 18) ^ oldState) >>> 27);
         int rot = (int) (oldState >>> 59);
         //return (xorShifted >>> rot) | (xorShifted << ((-rot) & 31));
-        //return Integer.toUnsignedLong(Integer.rotateRight(xorShifted, rot));
         return Integer.rotateRight(xorShifted, rot);
     }
 
-    public int nextInt(int n) {
-        int threshold = -n % n;
-        int r;
-        do {
-            r = nextInt();
-        } while (r < threshold);
-        return r % n;
+    public int nextInt(int upperBound) {
+        if (upperBound <= 0)
+            throw new IllegalArgumentException("upperBound must be positive");
+        int threshold = (0x10000000 - upperBound) % upperBound;
+        int output = nextInt();
+        while (output < threshold)
+            output = nextInt();
+        return output % upperBound;
     }
 
     public boolean nextBoolean() {
