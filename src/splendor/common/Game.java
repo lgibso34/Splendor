@@ -4,6 +4,7 @@ import splendor.common.cards.CardRow;
 import splendor.common.cards.Deck;
 import splendor.common.coins.CoinPile;
 import splendor.common.util.DeckBuilder;
+import splendor.common.util.Constants;
 import splendor.common.util.Constants.Colors;
 
 
@@ -20,7 +21,7 @@ public class Game{
         ArrayList<CardRow> cardRows = new ArrayList<>();
 
         for(int i = 0; i < 6; i++){
-            coinPiles.add(i, new CoinPile(numberOfPlayers, Colors.values()[i]));
+            coinPiles.add(i, new CoinPile(numberOfPlayers, Constants.colors[i]));
         }
 
         for(int i = 0; i < decks.length; i++){
