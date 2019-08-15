@@ -28,6 +28,6 @@ public class testPRNG {
         System.out.println("numTrials: " + numTrials);
         System.out.println("numNeg: " + numNegative + " " + (float) numNegative / numTrials * 100 + "%");
         System.out.println("fourPlus: " + fourPlus + " " + (float) fourPlus / numTrials * 100 + "%");
-        System.out.println("numHeads: " + numHeads + " " + (float) fourPlus / numTrials * 100 + "%");
+        System.out.println("numHeads: " + numHeads + " " + (float) numHeads / numTrials * 100 + "%");
     }
 }
