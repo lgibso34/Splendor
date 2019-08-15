@@ -50,13 +50,14 @@ public class Card {
 	}
 
 	public String toString(){
-		String output = "Card:: Cost: ";
+		String output = "Card: (";
 		for(int i = 0; i < colorCost.length; i++){
 			int cost = colorCost[i];
 			if(cost > 0)
-				output += Constants.colors[i].toString() + ": " + cost + ", ";
+				output += cost + Constants.shortColors[i]  + " ";
 		}
-		output += "[" + pointValue + "] " + (faceUp == true ? "FaceUp" : "FaceDown");
+		output = output.substring(0, output.length() - 1);
+		output += ") [" + pointValue + "] " + (faceUp == true ? "FaceUp" : "FaceDown");
 		return output;
 	}
 }

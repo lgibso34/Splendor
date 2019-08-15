@@ -7,6 +7,7 @@ public class Constants {
     }
 
     public static Colors[] colors = Colors.values();
+    public static String[] shortColors = { "w", "b", "g", "r", "k", "o"};
 
     public enum ProtocolActions
     {

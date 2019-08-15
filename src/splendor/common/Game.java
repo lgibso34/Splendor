@@ -36,7 +36,7 @@ public class Game{
             System.out.println();
             i = 0;
             for (Deck d : decks) {
-                System.out.println("==========Deck " + i++ + " ==========");
+                System.out.println("========== Deck " + i++ + " ==========");
                 System.out.println(d.toString());
             }
             System.out.println();
