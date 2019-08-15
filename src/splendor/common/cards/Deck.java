@@ -23,10 +23,10 @@ public class Deck {
 		int numCards = cards.size();
 
 		for(int i = 0; i < numCards - 2; i++){
-			//j is a random integer such that i ≤ j < n
-			int j = rand.nextInt(numCards);
+			//j is a random integer such that i ≤ j < n, for our purposes this is always a positive int
+			int j = (int) rand.nextInt(numCards);
 			while(j < i)
-				j = rand.nextInt(numCards);
+				j = (int) rand.nextInt(numCards);
 			temp = cards.get(i);
 			cards.set(i, cards.get(j));
 			cards.set(j, temp);

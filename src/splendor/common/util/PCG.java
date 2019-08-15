@@ -34,21 +34,24 @@ public class PCG {
     public PCG() {
         seed();
     }
+    public PCG(long initState, long initSeq) {
+        seed(initState, initSeq);
+    }
 
-    public int nextInt() {
+    public long nextInt() {
         long oldState = state;
         state = oldState * PERMUTATION + inc;
         int xorShifted = (int) (((oldState >>> 18) ^ oldState) >>> 27);
         int rot = (int) (oldState >>> 59);
         //return (xorShifted >>> rot) | (xorShifted << ((-rot) & 31));
-        return Integer.rotateRight(xorShifted, rot);
+        return Integer.toUnsignedLong(Integer.rotateRight(xorShifted, rot));
     }
 
-    public int nextInt(int upperBound) {
+    public long nextInt(int upperBound) {
         if (upperBound <= 0)
-            throw new IllegalArgumentException("upperBound must be positive");
+            throw new IllegalArgumentException("upperBound must be a non-zero positive integer");
         int threshold = (0x10000000 - upperBound) % upperBound;
-        int output = nextInt();
+        long output = nextInt();
         while (output < threshold)
             output = nextInt();
         return output % upperBound;
@@ -66,7 +69,7 @@ public class PCG {
         nextInt();
     }
 
-    public void seed() {
+    private void seed() {
         seed(System.nanoTime(), getHQLongSeed());
     }
 
