@@ -1,6 +1,7 @@
 package splendor.common.cards;
 
 import splendor.common.util.Constants.Colors;
+import splendor.common.util.Constants;
 
 /**
  * Card
@@ -44,13 +45,12 @@ public class Card {
 
 	public String toString(){
 		String output = "Card:: Cost: ";
-		int i = 0;
-		for(int cost : colorCost){
+		for(int i = 0; i < colorCost.length; i++){
+			int cost = colorCost[i];
 			if(cost > 0)
-				output += color.toString() + ": " + cost + " ";
-			i++;
+				output += Constants.colors[i].toString() + ": " + cost + ", ";
 		}
-		output += " | Value: " + pointValue + " | FaceUp: " + faceUp;
+		output += "[" + pointValue + "] " + (faceUp == true ? "FaceUp" : "FaceDown");
 		return output;
 	}
 }

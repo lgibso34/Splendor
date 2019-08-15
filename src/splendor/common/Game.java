@@ -13,6 +13,7 @@ public class Game{
     public static void main(String[] args) {
 
         int numberOfPlayers = 5;
+        boolean debug = true;
 
         Deck[] decks = DeckBuilder.buildDecks();
         ArrayList<CoinPile> coinPiles = new ArrayList<CoinPile>();
@@ -26,19 +27,22 @@ public class Game{
             cardRows.add(i, new CardRow(i, decks[i]));
         }
 
-        // show decks NOTE: to see full deck comment the cardRow initialize code above
-//        for(Deck d : decks){
-//            System.out.println(d.toString());
-//        }
+        if(debug) {
+            for (Deck d : decks) {
+                System.out.println(d.toString());
+            }
+            System.out.println();
 
-        // show coin piles
-//        for(CoinPile pile : coinPiles){
-//            System.out.println(pile.toString());
-//        }
+            // show coin piles
+            for (CoinPile pile : coinPiles) {
+                System.out.println(pile.toString());
+            }
+            System.out.println();
 
-        // show card row
-//        for(CardRow cr : cardRows){
-//            System.out.println(cr.toString());
-//        }
+            // show card row
+            for (CardRow cr : cardRows) {
+                System.out.println(cr.toString());
+            }
+        }
     }
 }

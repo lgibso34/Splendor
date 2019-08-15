@@ -41,7 +41,7 @@ public class Deck {
 		String output = "";
 		int counter = 1;
 		for (Card card: cards){
-			output += "Card " + counter++ + " " + card.toString() + "\n";
+			output += "(" + counter++ + ") " + card.toString() + "\n";
 		}
 
 		return output;
