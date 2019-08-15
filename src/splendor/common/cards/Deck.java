@@ -1,5 +1,7 @@
 package splendor.common.cards;
 
+import splendor.common.util.PCG;
+
 import java.util.ArrayList;
 
 /**
@@ -8,7 +10,7 @@ import java.util.ArrayList;
 public class Deck {
 
 	ArrayList<Card> cards = new ArrayList<Card>();
-	private static Pcg32 rand = new Pcg32();
+	private static PCG rand = new PCG();
 
 	public Deck(ArrayList<Card> cards) {
 		this.cards = cards;
