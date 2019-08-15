@@ -28,8 +28,9 @@ public class Game{
         }
 
         if(debug) {
-            for (Deck d : decks) {
-                System.out.println(d.toString());
+            for (int i = 0; i < decks.length; i++) {
+                System.out.println("==========Deck " + i + " ==========");
+                System.out.println(decks[i].toString());
             }
             System.out.println();
 
