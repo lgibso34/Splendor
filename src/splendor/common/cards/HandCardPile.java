@@ -1,13 +1,11 @@
-package splendor.cards;
+package splendor.common.cards;
 
 import java.util.ArrayList;
 
 public class HandCardPile {
 
-	int cardCount = 0;
-	ArrayList<Card> cards = new ArrayList<Card>();
+	private ArrayList<Card> cards = new ArrayList<>();
 
-	
 	public HandCardPile() {}
 	
 	public void add(Card card) {

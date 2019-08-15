@@ -1,4 +1,4 @@
-package splendor.cards;
+package splendor.common.cards;
 
 import java.util.ArrayList;
 
@@ -20,8 +20,15 @@ public class CardRow {
 		}
 	}
 
+	// UNTESTED
+	public Card remove(int index, Card dealtCard) {
+		Card poppedCard = cards.get(index);
+		cards.set(index, dealtCard); // replace the picked up card with the card that was dealt without losing ordering of cards
+		return poppedCard;
+	}
+
 	public String toString(){
-		String output = "Row #: " + row + " \n";
+		String output = "Row #" + row + " \n";
 		for(Card card : cards){
 			output += card.toString() + "\n";
 		}
