@@ -7,17 +7,12 @@ import splendor.common.cards.HandCardPile;
 
 public class Hand{
 	// [ white, blue, green, red, black, gold ]
-	ArrayList<HandCoinPile> handCoinPiles = new ArrayList<>(6); // six coin piles
-	// [ reserveCards, white, blue, green, red, black ]
-	ArrayList<HandCardPile> cardPiles = new ArrayList<>(6);
+	private ArrayList<HandCoinPile> handCoinPiles = new ArrayList<>(6); // 5 colors + gold
+	// [ white, blue, green, red, black, reserveCards ]
+	private ArrayList<HandCardPile> cardPiles = new ArrayList<>(6); //5 colors + reserved
 	int points = 0;
 	
 	public Hand() {
-		HandCoinPile emptyHandCoinPile = new HandCoinPile();
-		HandCardPile emptyCardPile = new HandCardPile();
-		for (int i=0; i<cardPiles.size(); i++) {
-			handCoinPiles.set(i, emptyHandCoinPile);
-			cardPiles.set(i, emptyCardPile);
-		}		
+
 	}	
 }

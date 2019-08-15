@@ -13,7 +13,7 @@ public class CoinPile {
 	private static final int MAX_GEMS_DEFAULT = 7;
 	
 	
-	public CoinPile(Integer numberOfPlayers, Colors color) {
+	public CoinPile(int numberOfPlayers, Colors color) {
 		// gold pile is always five no mater the amount of players
 		if (color.equals(Colors.Gold)) {
 			Coin goldCoin = new Coin(Colors.Gold);
