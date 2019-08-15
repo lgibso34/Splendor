@@ -7,4 +7,11 @@ public class Constants {
     }
 
     public static Colors[] colors = Colors.values();
+
+    public enum ProtocolActions
+    {
+        WithdrawCoins, BuyCard, ReserveCard, DepositCoins, AcquireNoble
+    }
+
+    public static ProtocolActions[] protocolActions = ProtocolActions.values();
 }
