@@ -2,6 +2,7 @@ package splendor.common.util;
 
 import splendor.common.cards.Card;
 import splendor.common.cards.Deck;
+import splendor.common.cards.Noble;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,22 +36,23 @@ public class DeckBuilder {
                 for(int i = 0; i < colorCost.length; i++){
                     colorCost[i] = reader.nextInt();
                 }
-                Constants.Colors color = Constants.colors[reader.nextInt()];
+                int colorInt = reader.nextInt();
                 int pointValue = reader.nextInt();
-
-                switch(deck){
-                    case 1:
-                        lv1.add(new Card(colorCost, pointValue, color));
-                        break;
-                    case 2:
-                        lv2.add(new Card(colorCost, pointValue, color));
-                        break;
-                    case 3:
-                        lv3.add(new Card(colorCost, pointValue, color));
-                        break;
-                    default:
-                        patrons.add(new Card(colorCost, pointValue, color));
-                        break;
+                if(colorInt == -1) {
+                    patrons.add(new Noble(colorCost, pointValue));
+                } else {
+                    Constants.Colors color = Constants.colors[colorInt];
+                    switch (deck) {
+                        case 1:
+                            lv1.add(new Card(colorCost, pointValue, color));
+                            break;
+                        case 2:
+                            lv2.add(new Card(colorCost, pointValue, color));
+                            break;
+                        case 3:
+                            lv3.add(new Card(colorCost, pointValue, color));
+                            break;
+                    }
                 }
                 reader.nextLine();
             }

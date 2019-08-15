@@ -1,12 +1,17 @@
 package splendor.common.cards;
 
+import splendor.common.util.Constants.Colors;
+
 import java.util.ArrayList;
 
-public class HandCardPile {
+public class CardPile {
 
 	private ArrayList<Card> cards = new ArrayList<>();
+	private Colors color;
 
-	public HandCardPile() {}
+	public CardPile(Colors color) {
+		this.color = color;
+	}
 	
 	public void add(Card card) {
 		cards.add(card);

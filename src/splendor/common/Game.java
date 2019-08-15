@@ -7,31 +7,37 @@ import splendor.common.util.DeckBuilder;
 import splendor.common.util.Constants;
 import splendor.common.util.Constants.Colors;
 
-
-import java.util.ArrayList;
-
 public class Game{
     public static void main(String[] args) {
 
-        int numberOfPlayers = 5;
+        int i = 0;
+        int numPlayers = 5;
         boolean debug = true;
 
         Deck[] decks = DeckBuilder.buildDecks();
-        ArrayList<CoinPile> coinPiles = new ArrayList<>();
-        ArrayList<CardRow> cardRows = new ArrayList<>();
+        CoinPile[] coinPiles = new CoinPile[6];
+        CardRow[] cardRows = new CardRow[4];
 
-        for(int i = 0; i < 6; i++){
-            coinPiles.add(i, new CoinPile(numberOfPlayers, Constants.colors[i]));
+        for(Colors color : Constants.colors){
+            coinPiles[i++] = new CoinPile(numPlayers, color);
         }
 
-        for(int i = 0; i < decks.length; i++){
-            cardRows.add(i, new CardRow(i, decks[i]));
+        i = 0;
+        for(Deck d : decks){
+            int dealt = 4;
+            if (i == 0)
+                dealt = numPlayers + 1;
+            cardRows[i] = new CardRow(i, decks[i], dealt);
+            i++;
         }
 
         if(debug) {
-            for (int i = 0; i < decks.length; i++) {
-                System.out.println("==========Deck " + i + " ==========");
-                System.out.println(decks[i].toString());
+            System.out.println("Number of Players: " + numPlayers);
+            System.out.println();
+            i = 0;
+            for (Deck d : decks) {
+                System.out.println("==========Deck " + i++ + " ==========");
+                System.out.println(d.toString());
             }
             System.out.println();
 

@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class Deck {
 
-	ArrayList<Card> cards = new ArrayList<Card>();
+	ArrayList<Card> cards = new ArrayList<>();
 	private static PCG rand = new PCG();
 
 	public Deck(ArrayList<Card> cards) {
@@ -34,7 +34,7 @@ public class Deck {
 	}
 
 	public Card dealCard() {
-		return cards.remove(cards.size() - 1);
+		return cards.remove(0);
 	}
 
 	public String toString() {

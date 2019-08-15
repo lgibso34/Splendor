@@ -19,6 +19,12 @@ public class Card {
 		this.color = color;
 	}
 
+	public Card(int[] colorCost, int pointValue) {
+		this.colorCost = colorCost;
+		this.pointValue = pointValue;
+		this.color = null;
+	}
+
 	public int getValue() {
 		return pointValue;
 	}
