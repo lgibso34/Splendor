@@ -11,7 +11,7 @@ public class Card {
 	private int[] colorCost;
 	private Colors color;
 	private int pointValue;
-	private Boolean faceUp = false;
+	private boolean faceUp = false;
 
 	public Card(int[] colorCost, int pointValue, Colors color) {
 		this.colorCost = colorCost;
@@ -41,7 +41,7 @@ public class Card {
 		return faceUp;
 	}
 
-	public void setFaceUp(Boolean b) {
+	public void setFaceUp(boolean b) {
 		faceUp = b;
 	}
 
@@ -57,7 +57,7 @@ public class Card {
 				output += cost + Constants.shortColors[i]  + " ";
 		}
 		output = output.substring(0, output.length() - 1);
-		output += ") [" + pointValue + "] " + (faceUp == true ? "FaceUp" : "FaceDown");
+		output += ") " + color + " [" + pointValue + "] " + (faceUp ? "FaceUp" : "FaceDown");
 		return output;
 	}
 }

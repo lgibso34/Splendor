@@ -9,7 +9,6 @@ import splendor.common.cards.Deck;
 import splendor.common.coins.CoinPile;
 import splendor.common.util.DeckBuilder;
 import splendor.common.util.Constants;
-import splendor.common.util.Constants.Colors;
 
 public class Game{
 
@@ -66,7 +65,6 @@ public class Game{
             System.out.println(cardRows[i].toString());
         }
         System.out.println();
-
     }
 
     public static void showNumberOfPlayers(){
@@ -80,7 +78,49 @@ public class Game{
         }
     }
 
+    public static int handlePlayChoice(Scanner scanner, int player, int choice, int exitDo){
+        int row = 0;
+        int cardSpot = 0;
+        switch (choice){
+            case 0:
+                exitDo = 1;
+                break;
+            case 1:
+                showCoinPiles();
+                // pick up coins
+                break;
+            case 2:
+                showCardRows();
+                // pick up card
+                System.out.println("Choose row (1-3): ");
+                row = scanner.nextInt();
+
+                System.out.println("Choose card spot (0-3): ");
+                cardSpot = scanner.nextInt();
+                Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
+                hands[player].addCard(pickedUpCard.getColorIndex(), pickedUpCard);
+
+                break;
+            case 3:
+                showHands();
+                break;
+            case 4:
+                // reserve card logic
+                break;
+            case 5:
+                // pickup card from hand reserve pile
+
+                break;
+            default:
+                break;
+        }
+
+        return exitDo;
+
+    }
+
     public static void main(String[] args) {
+        boolean play = false;
 
         if(debug) {
             Scanner scanner = new Scanner(System.in);
@@ -118,12 +158,13 @@ public class Game{
                             "2. Show Decks\n" +
                             "3. Show Coin Piles\n" +
                             "4. Show Card Rows\n" +
-                            "5. Show Hands");
+                            "5. Show Hands\n" +
+                            "6. Play game");
                     System.out.println("--------------------------------------------------------------");
 
                     temp = scanner.nextInt();
                     System.out.println();
-                    if(temp >= 0 && temp < 6){
+                    if(temp >= 0 && temp <= 6){
                         choice = temp;
                         switch (choice){
                             case 0:
@@ -143,17 +184,59 @@ public class Game{
                                 break;
                             case 5:
                                 showHands();
+                            case 6:
+                                exitDo = 1;
+                                play = true;
+                                break;
                             default:
                                 break;
                         }
                     }else{
-                        System.out.println("Choose 1-4");
+                        System.out.println("Choose 0-6");
                     }
                 }catch (InputMismatchException e){
                     System.out.println("Must enter an integer");
                     scanner.next();
                 }
             }while (exitDo == 0);
+
+            // if the programmer chooses to play ----------------------------------------------------------------------------------------------------------------------------------------------------------
+            if(play){
+                int player = 0;
+                exitDo = 0;
+                choice = 0;
+                do {
+                    try{
+                        System.out.println("--------------------------------------------------------------");
+                        System.out.println("Player " + (player+1));
+                        System.out.println("0: Exit\n" +
+                                "1. Pickup coins\n" +
+                                "2. Pick up card\n" +
+                                "3. Show Hands\n" +
+                                "4. Reserve card\n" +
+                                "5. Pickup reserve card");
+                        System.out.println("--------------------------------------------------------------");
+
+                        temp = scanner.nextInt();
+                        System.out.println();
+                        if(temp >= 0 && temp <= 5){
+                            choice = temp;
+                            exitDo = handlePlayChoice(scanner, player, choice, exitDo);
+                            if(player == numPlayers){
+                                player = 0;
+                            }else{
+                                player++;
+                            }
+
+                        }else{
+                            System.out.println("Choose 0-5");
+                        }
+                    }catch (InputMismatchException e){
+                        System.out.println("Must enter an integer");
+                        scanner.next();
+                    }
+                }while (exitDo == 0);
+            }
         }else{
             initializeGame(numPlayers);
             showNumberOfPlayers();
