@@ -1,5 +1,6 @@
 package splendor.common;
 
+import splendor.common.cards.Card;
 import splendor.common.cards.CardPile;
 import splendor.common.coins.CoinPile;
 import splendor.common.util.Constants;
@@ -12,12 +13,41 @@ public class Hand{
 	private int points = 0;
 	
 	public Hand() {
-		int i = 0;
-		for(Colors color : Constants.colors) {
-			coinPiles[i] = new CoinPile(color);
-			cardPiles[i++] = new CardPile(color);
+		//int i = 0;
+		for(int i=0; i<Constants.colors.length; i++){
+			coinPiles[i] = new CoinPile(Constants.colors[i]);
+			cardPiles[i] = new CardPile(Constants.colors[i]);
 		}
 	}
 
+	// [ white, blue, green, red, black, gold ]
+	public void addCoin(int color){
+		coinPiles[color].add();
+	}
+
+	public boolean removeCoin(int color){
+		return coinPiles[color].remove();
+	}
+
+	public void addCard(int color, Card card){
+		cardPiles[color].add(card);
+	}
+
+	public Card removeCard(int color, Card card){
+		return cardPiles[color].remove(card);
+	}
+
+	public void reserveCard(Card card){
+		cardPiles[5].add(card);
+	}
+
 	public int getPoints(){ return points; }
+
+	public String toString(){
+		String output = "Points: " + points + "\n";
+		for(int i=0; i<cardPiles.length; i++){
+			output += cardPiles[i].toString() + " " + coinPiles[i].toString() + "\n";
+		}
+		return output;
+	}
 }

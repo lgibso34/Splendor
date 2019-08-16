@@ -20,6 +20,7 @@ public class Game{
     private static Deck[] decks = new Deck[4];
     private static CoinPile[] coinPiles = new CoinPile[6];
     private static CardRow[] cardRows = new CardRow[4];
+    private static Hand[] hands = new Hand[0];
 
     private static void initializeGame(int numPlayers){
 
@@ -35,6 +36,11 @@ public class Game{
                 dealt = numPlayers + 1;
             }
             cardRows[i] = new CardRow(i, decks[i], dealt);
+        }
+
+        hands = new Hand[numPlayers];
+        for (int i=0; i<numPlayers; i++){
+            hands[i] = new Hand();
         }
     }
 
@@ -68,8 +74,13 @@ public class Game{
         System.out.println();
     }
 
-    public static void main(String[] args) {
+    public static void showHands(){
+        for(int i=0; i<numPlayers; i++){
+            System.out.println("Hand " + (i+1) + ": " + hands[i].toString());
+        }
+    }
 
+    public static void main(String[] args) {
 
         if(debug) {
             Scanner scanner = new Scanner(System.in);
@@ -107,7 +118,7 @@ public class Game{
                             "2. Show Decks\n" +
                             "3. Show Coin Piles\n" +
                             "4. Show Card Rows\n" +
-                            "5. Show Hands (not implemented)");
+                            "5. Show Hands");
                     System.out.println("--------------------------------------------------------------");
 
                     temp = scanner.nextInt();
@@ -131,8 +142,7 @@ public class Game{
                                 showCardRows();
                                 break;
                             case 5:
-                                // showHands();
-                                exitDo = 1;
+                                showHands();
                             default:
                                 break;
                         }

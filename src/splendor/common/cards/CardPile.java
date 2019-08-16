@@ -21,4 +21,8 @@ public class CardPile {
 	public Card remove(Card card) {
 		return cards.remove(cards.indexOf(card));
 	}
+
+	public String toString(){
+		return cards.size() + "x Permanent " + color + " |";
+	}
 }
