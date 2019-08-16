@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class CardPile {
 
-	private ArrayList<Card> cards = new ArrayList<>();
+	private ArrayList<Card> cards = new ArrayList<Card>();
 	private Colors color;
 
 	public CardPile(Colors color) {
@@ -21,6 +21,10 @@ public class CardPile {
 	public Card remove(Card card) {
 		return cards.remove(cards.indexOf(card));
 	}
+
+	public int getSize(){
+	    return cards.size();
+    }
 
 	public String toString(){
 		return cards.size() + "x Permanent " + color + " |";

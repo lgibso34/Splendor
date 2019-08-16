@@ -1,5 +1,6 @@
 package splendor.common;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -14,6 +15,8 @@ public class Game{
 
     private static int index = 0;
     private static int numPlayers = 5;
+    private static boolean lastRound = false;
+    private static int playerWhoInitiatedLastRound = -1;
     private static boolean debug = true;
 
     private static Deck[] decks = new Deck[4];
@@ -76,6 +79,39 @@ public class Game{
         for(int i=0; i<numPlayers; i++){
             System.out.println("Hand " + (i+1) + ": " + hands[i].toString());
         }
+    }
+
+    //UNTESTED
+    // TODO
+    private static Hand handleWinner(){
+        Hand winner = hands[playerWhoInitiatedLastRound];
+        for(Hand player : hands){
+            winner = player.getPoints() > winner.getPoints() ? player : winner;
+        }
+        ArrayList<Hand> ties = new ArrayList<>();
+        ties.add(winner);
+        for(Hand player : hands){
+            if(player.getPoints() == winner.getPoints()){
+                ties.add(player);
+            }
+        }
+
+        if(ties.size() <= 1){
+            return winner;
+        }else{
+            return handleTie(ties);
+        }
+    }
+
+    //UNTESTED
+    // TODO
+    private static Hand handleTie(ArrayList<Hand> tiedHands){
+        Hand winner = tiedHands.get(0); // start with the first hand
+        for(Hand hand : tiedHands){
+            // check if the tiedHands have less total permanent cards than the current 'winner'
+            winner = hand.totalPermanentCards() < winner.totalPermanentCards() ? hand : winner;
+        }
+        return winner;
     }
 
     public static int handlePlayChoice(Scanner scanner, int player, int choice, int exitDo){
@@ -257,6 +293,19 @@ public class Game{
                                 exitDo = handlePlayChoice(scanner, player, choice, exitDo);
                             }
 
+                            // untested
+                            // TODO
+                            if(lastRound){
+                                if((player + 1) == playerWhoInitiatedLastRound){
+                                    exitDo = 1;
+                                }
+                            }
+
+                            if(hands[player].getPoints() >= 15){
+                                lastRound = true;
+                                playerWhoInitiatedLastRound = player;
+                            }
+
                             if(player == numPlayers-1){
                                 player = 0;
                             }else{
@@ -271,6 +320,8 @@ public class Game{
                         scanner.next();
                     }
                 }while (exitDo <= 0);
+
+                handleWinner();
             }
         }else{
             initializeGame(numPlayers);

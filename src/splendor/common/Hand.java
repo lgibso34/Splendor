@@ -43,6 +43,15 @@ public class Hand{
 		cardPiles[color].add(card);
 	}
 
+	// used for ties
+	public int totalPermanentCards(){
+		int count = 0;
+		for(CardPile c : cardPiles){
+			count += c.getSize();
+		}
+		return count;
+	}
+
 	public Card removeCard(int color, Card card){
 		return cardPiles[color].remove(card);
 	}
