@@ -88,6 +88,30 @@ public class Game{
             case 1:
                 showCoinPiles();
                 // pick up coins
+                System.out.println("0: Exit\n" +
+                        "1. White\n" +
+                        "2. Blue\n" +
+                        "3. Green\n" +
+                        "4. Red\n" +
+                        "5. Black\n" +
+                        "6. Gold (reserve card)");
+                System.out.println("--------------------------------------------------------------");
+                System.out.println("Select coin color\nOnly enter colors on new lines\n" +
+                        "EX: \"1 2 3\" or \"1\"");
+
+                int coinChoice = scanner.nextInt(); // not using try catch to verify that it is an integer since this is only debug mode,
+                int secondChoice = scanner.nextInt();
+
+                if(coinChoice != secondChoice) {
+                    hands[player].addCoin(coinChoice);
+                    hands[player].addCoin(secondChoice);
+                    int thirdChoice = scanner.nextInt();
+                    hands[player].addCoin(thirdChoice);
+                }else {
+                    hands[player].addCoin(coinChoice);
+                    hands[player].addCoin(secondChoice);
+                }
+                exitDo = 0;
                 break;
             case 2:
                 showCardRows();
@@ -95,27 +119,30 @@ public class Game{
                 System.out.println("Choose row (1-3): ");
                 row = scanner.nextInt(); // not using try catch to verify that it is an integer since this is only debug mode,
 
-                System.out.println("Choose card spot (0-2): ");
+                System.out.println("Choose card spot (0-3): ");
                 cardSpot = scanner.nextInt();
 
                 // checkBalance(player);
                 if(hands[player].checkBalance(cardRows[row].peekCard(cardSpot))){
                     Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
                     hands[player].addCard(pickedUpCard.getColorIndex(), pickedUpCard);
+                    exitDo = 0;
                 }else{
                     System.out.println("You do not have the balance for this card.");
-                    exitDo = -1;
+                    exitDo = 0;
                 }
                 break;
             case 3:
                 showHands();
+                exitDo = 0;
                 break;
             case 4:
                 // reserve card logic
+                exitDo = 0;
                 break;
             case 5:
                 // pickup card from hand reserve pile
-
+                exitDo = 0;
                 break;
             default:
                 break;
@@ -149,8 +176,6 @@ public class Game{
                 }
 
             }while (exitDo == 0);
-
-
 
             initializeGame(numPlayers);
 
@@ -232,7 +257,7 @@ public class Game{
                                 exitDo = handlePlayChoice(scanner, player, choice, exitDo);
                             }
 
-                            if(player == numPlayers){
+                            if(player == numPlayers-1){
                                 player = 0;
                             }else{
                                 player++;
