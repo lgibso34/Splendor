@@ -93,13 +93,19 @@ public class Game{
                 showCardRows();
                 // pick up card
                 System.out.println("Choose row (1-3): ");
-                row = scanner.nextInt();
+                row = scanner.nextInt(); // not using try catch to verify that it is an integer since this is only debug mode,
 
-                System.out.println("Choose card spot (0-3): ");
+                System.out.println("Choose card spot (0-2): ");
                 cardSpot = scanner.nextInt();
-                Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
-                hands[player].addCard(pickedUpCard.getColorIndex(), pickedUpCard);
 
+                // checkBalance(player);
+                if(hands[player].checkBalance(cardRows[row].peekCard(cardSpot))){
+                    Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
+                    hands[player].addCard(pickedUpCard.getColorIndex(), pickedUpCard);
+                }else{
+                    System.out.println("You do not have the balance for this card.");
+                    exitDo = -1;
+                }
                 break;
             case 3:
                 showHands();
@@ -221,7 +227,11 @@ public class Game{
                         System.out.println();
                         if(temp >= 0 && temp <= 5){
                             choice = temp;
-                            exitDo = handlePlayChoice(scanner, player, choice, exitDo);
+                            exitDo = -1;
+                            while(exitDo == -1){
+                                exitDo = handlePlayChoice(scanner, player, choice, exitDo);
+                            }
+
                             if(player == numPlayers){
                                 player = 0;
                             }else{
@@ -235,7 +245,7 @@ public class Game{
                         System.out.println("Must enter an integer");
                         scanner.next();
                     }
-                }while (exitDo == 0);
+                }while (exitDo <= 0);
             }
         }else{
             initializeGame(numPlayers);

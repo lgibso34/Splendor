@@ -20,6 +20,16 @@ public class Hand{
 		}
 	}
 
+	public boolean checkBalance(Card card){
+		int [] cardCost = card.getColorCost();
+		for(int i=0; i<coinPiles.length; i++){
+			if(cardCost[i] > coinPiles[i].getSize()){
+				return false;
+			}
+		}
+		return true;
+	}
+
 	// [ white, blue, green, red, black, gold ]
 	public void addCoin(int color){
 		coinPiles[color].add();

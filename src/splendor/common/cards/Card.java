@@ -49,6 +49,10 @@ public class Card {
 		return colorCost[color];
 	}
 
+	public int[] getColorCost(){
+		return this.colorCost;
+	}
+
 	public String toString(){
 		String output = "Card: (";
 		for(int i = 0; i < colorCost.length; i++){

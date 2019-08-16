@@ -35,6 +35,10 @@ public class CoinPile {
 	public void add() {
 		size++;
 	}
+
+	public int getSize(){
+		return size;
+	}
 	
 	public boolean remove() {
 		if (size > 0) {
