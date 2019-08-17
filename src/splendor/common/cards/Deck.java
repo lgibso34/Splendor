@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class Deck {
 
-	ArrayList<Card> cards = new ArrayList<>();
+	ArrayList<Card> cards;
 	private static PCG rand = new PCG();
 
 	public Deck(ArrayList<Card> cards) {
@@ -23,10 +23,10 @@ public class Deck {
 		int numCards = cards.size();
 
 		for(int i = 0; i < numCards - 2; i++){
-			//j is a random integer such that i ≤ j < n
-			int j = rand.nextInt(numCards);
+			//j is a random integer such that i ≤ j < n, for our purposes this is always a positive int
+			int j = (int) rand.nextInt(numCards);
 			while(j < i)
-				j = rand.nextInt(numCards);
+				j = (int) rand.nextInt(numCards);
 			temp = cards.get(i);
 			cards.set(i, cards.get(j));
 			cards.set(j, temp);
@@ -38,12 +38,12 @@ public class Deck {
 	}
 
 	public String toString() {
-		String output = "";
+		StringBuilder output = new StringBuilder();
 		int counter = 1;
 		for (Card card: cards){
-			output += "(" + counter++ + ") " + card.toString() + "\n";
+			output.append("(").append(counter++).append(") ").append(card.toString()).append("\n");
 		}
 
-		return output;
+		return output.toString();
 	}
 }

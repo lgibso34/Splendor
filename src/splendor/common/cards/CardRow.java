@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class CardRow {
 
 	ArrayList<Card> cards = new ArrayList<>(4); // 4 cards per row
-	private int row = 0;
+	private int row;
 	private Deck deck;
 
 	public CardRow(int row, Deck deck, int dealt) {
@@ -32,10 +32,10 @@ public class CardRow {
 	}
 
 	public String toString(){
-		String output = "Row #" + row + " \n";
+		StringBuilder output = new StringBuilder("Row #" + row + " \n");
 		for(Card card : cards){
-			output += card.toString() + "\n";
+			output.append(card.toString()).append("\n");
 		}
-		return output;
+		return output.toString();
 	}
 }
