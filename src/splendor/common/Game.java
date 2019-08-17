@@ -117,7 +117,7 @@ public class Game{
     public static int handlePlayChoice(Scanner scanner, int player, int choice, int exitDo){
         int row = 0;
         int cardSpot = 0;
-        switch (choice){
+        switch (choice) {
             case 0:
                 exitDo = 1;
                 break;
@@ -138,12 +138,12 @@ public class Game{
                 int coinChoice = scanner.nextInt(); // not using try catch to verify that it is an integer since this is only debug mode,
                 int secondChoice = scanner.nextInt();
 
-                if(coinChoice != secondChoice) {
+                if (coinChoice != secondChoice) {
                     hands[player].addCoin(coinChoice);
                     hands[player].addCoin(secondChoice);
                     int thirdChoice = scanner.nextInt();
                     hands[player].addCoin(thirdChoice);
-                }else {
+                } else {
                     hands[player].addCoin(coinChoice);
                     hands[player].addCoin(secondChoice);
                 }
@@ -152,29 +152,50 @@ public class Game{
             case 2:
                 showCardRows();
                 // pick up card
-                System.out.println("Choose row (1-3): ");
+                System.out.println("Choose row (1-3) (0 to go back): ");
                 row = scanner.nextInt(); // not using try catch to verify that it is an integer since this is only debug mode,
+                if (row == 0) {
+                    exitDo = -2;
+                    break;
+                } else {
+                System.out.println("Choose card spot (1-4): ");
+                cardSpot = scanner.nextInt() - 1;
 
-                System.out.println("Choose card spot (0-3): ");
-                cardSpot = scanner.nextInt();
-
-                // checkBalance(player);
-                if(hands[player].checkBalance(cardRows[row].peekCard(cardSpot))){
+                if (hands[player].checkBalance(cardRows[row].peekCard(cardSpot))) {
                     Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
                     hands[player].addCard(pickedUpCard.getColorIndex(), pickedUpCard);
                     exitDo = 0;
-                }else{
+                } else {
                     System.out.println("You do not have the balance for this card.");
-                    exitDo = 0;
+                    exitDo = -2;
                 }
                 break;
+                }
             case 3:
                 showHands();
                 exitDo = 0;
                 break;
             case 4:
                 // reserve card logic
-                exitDo = 0;
+                showCardRows();
+                // pick up card
+                System.out.println("Choose row (1-3) (0 to go back): ");
+                row = scanner.nextInt(); // not using try catch to verify that it is an integer since this is only debug mode,
+                if (row == 0) {
+                    exitDo = -2;
+                    break;
+                } else {
+                    System.out.println("Choose card spot (1-4): ");
+                    cardSpot = scanner.nextInt() - 1;
+
+                    if (hands[player].checkReservedCardQuantitiy()) {
+                        Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
+                        pickedUpCard.setFaceUp(false);
+                        hands[player].addCard(pickedUpCard.getColorIndex(), pickedUpCard);
+                        hands[player].addCoin(5); // add a gold coin
+                        exitDo = 0;
+                    } }
+
                 break;
             case 5:
                 // pickup card from hand reserve pile
@@ -278,10 +299,10 @@ public class Game{
                         System.out.println("Player " + (player+1));
                         System.out.println("0: Exit\n" +
                                 "1. Pickup coins\n" +
-                                "2. Pick up card\n" +
+                                "2. Buy a card\n" +
                                 "3. Show Hands\n" +
                                 "4. Reserve card\n" +
-                                "5. Pickup reserve card");
+                                "5. Buy one of your reserve cards");
                         System.out.println("--------------------------------------------------------------");
 
                         temp = scanner.nextInt();
@@ -293,23 +314,25 @@ public class Game{
                                 exitDo = handlePlayChoice(scanner, player, choice, exitDo);
                             }
 
-                            // untested
-                            // TODO
-                            if(lastRound){
-                                if((player + 1) == playerWhoInitiatedLastRound){
-                                    exitDo = 1;
+                            if(exitDo != -2) {
+                                // untested
+                                // TODO
+                                if (lastRound) {
+                                    if ((player + 1) == playerWhoInitiatedLastRound) {
+                                        exitDo = 1;
+                                    }
                                 }
-                            }
 
-                            if(hands[player].getPoints() >= 15){
-                                lastRound = true;
-                                playerWhoInitiatedLastRound = player;
-                            }
+                                if (hands[player].getPoints() >= 15) {
+                                    lastRound = true;
+                                    playerWhoInitiatedLastRound = player;
+                                }
 
-                            if(player == numPlayers-1){
-                                player = 0;
-                            }else{
-                                player++;
+                                if (player == numPlayers - 1) {
+                                    player = 0;
+                                } else {
+                                    player++;
+                                }
                             }
 
                         }else{

@@ -27,6 +27,10 @@ public class CardPile {
     }
 
 	public String toString(){
-		return cards.size() + "x Permanent " + color + " |";
+		if(this.color == Colors.Gold){
+			return "Reserved cards: " + cards.size() + " |";
+		}else {
+			return cards.size() + "x Permanent " + color + " |";
+		}
 	}
 }

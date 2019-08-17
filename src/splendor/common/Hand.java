@@ -30,6 +30,10 @@ public class Hand{
 		return true;
 	}
 
+	public boolean checkReservedCardQuantitiy(){
+		return cardPiles[5].getSize() <=3;
+	}
+
 	// [ white, blue, green, red, black, gold ]
 	public void addCoin(int color){
 		coinPiles[color].add();
@@ -40,7 +44,11 @@ public class Hand{
 	}
 
 	public void addCard(int color, Card card){
-		cardPiles[color].add(card);
+		if(card.getFaceUp()){
+			cardPiles[color].add(card);
+		}else{
+			cardPiles[5].add(card);
+		}
 	}
 
 	// used for ties
@@ -64,7 +72,7 @@ public class Hand{
 
 	public String toString(){
 		String output = "Points: " + points + "\n";
-		for(int i=0; i<cardPiles.length; i++){
+		for(int i=0; i<cardPiles.length; i++) {
 			output += cardPiles[i].toString() + " " + coinPiles[i].toString() + "\n";
 		}
 		return output;
