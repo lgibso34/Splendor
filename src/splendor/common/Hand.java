@@ -39,20 +39,22 @@ public class Hand{
 		coinPiles[color].add();
 	}
 
-	public int removeCoin(int color){
-		return coinPiles[color].remove();
+	// TODO
+	// works but does not take into consideration of gold wildcard coins
+	public void removeCoinsFromInventory(int[] cardCost){
+		for(int i=0; i<cardCost.length; i++){
+			if(cardCost[i] > 0){
+				for (int j=0; j<cardCost[i]; j++){
+					coinPiles[i].remove();
+				}
+			}
+		}
 	}
 
 	public void addCard(Card card){
 		if(card.getFaceUp()){
 				int[] cardCost = card.getColorCost();
-				for (int i = 0; i < cardCost.length; i++) {
-					if (cardCost[i] > 0) {
-						for (int j = 0; j < cardCost[i]; j++) {
-							removeCoin(i);
-						}
-					}
-				}
+			removeCoinsFromInventory(cardCost);
 				cardPiles[card.getColorIndex()].add(card);
 		}else{
 			cardPiles[5].add(card); // add to faceDown reserve pile
@@ -81,15 +83,7 @@ public class Hand{
 		Card reservedCardBought = cardPiles[5].buyReservedCard(index);
 		reservedCardBought.setFaceUp(true);
 		int[] cardCost = reservedCardBought.getColorCost();
-
-		for(int i=0; i<cardCost.length; i++){
-			if(cardCost[i] > 0){
-				for (int j=0; j<cardCost[i]; j++){
-					removeCoin(i);
-				}
-			}
-		}
-
+		removeCoinsFromInventory(cardCost);
 		addCard(reservedCardBought);
 		return cardCost;
 	}
