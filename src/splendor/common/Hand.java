@@ -31,7 +31,7 @@ public class Hand{
 	}
 
 	public boolean checkReservedCardQuantitiy(){
-		return cardPiles[5].getSize() <=3;
+		return cardPiles[5].getSize() <3;
 	}
 
 	// [ white, blue, green, red, black, gold ]
@@ -39,7 +39,7 @@ public class Hand{
 		coinPiles[color].add();
 	}
 
-	public boolean removeCoin(int color){
+	public int removeCoin(int color){
 		return coinPiles[color].remove();
 	}
 
@@ -68,10 +68,10 @@ public class Hand{
 		return cardPiles[5].peekCard(index);
 	}
 
-	public Card buyReservedcard (int index) {
+	public int[] buyReservedcard (int index) {
 		// use removeCoin() to buy this reserved card
-		int[] cardCost = cardPiles[5].peekCard(index).getColorCost();
-		for(int i =0; i<cardCost.length; i++){
+		int[] cardCost = cardPiles[5].buyReservedCard(index).getColorCost();
+		for(int i=0; i<cardCost.length; i++){
 			if(cardCost[i] > 0){
 				for (int j=0; j<cardCost[i]; j++){
 					removeCoin(i);
@@ -79,7 +79,7 @@ public class Hand{
 			}
 		}
 
-		return cardPiles[5].buyReservedCard(index);
+		return cardCost;
 	}
 
 	public void reserveCard(Card card){

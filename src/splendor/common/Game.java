@@ -46,6 +46,14 @@ public class Game{
         }
     }
 
+    public static void addCoin(int colorIndex){
+        coinPiles[colorIndex].add();
+    }
+
+    public static int removeCoin(int color){
+        return coinPiles[color].remove();
+    }
+
     public static void showDecks(){
         for(int i=0; i<decks.length; i++){
             System.out.println("========== Deck " + i + " ==========");
@@ -85,22 +93,16 @@ public class Game{
     // TODO
     private static Hand handleWinner(){
         Hand winner = hands[playerWhoInitiatedLastRound];
-        for(Hand player : hands){
-            winner = player.getPoints() > winner.getPoints() ? player : winner;
-        }
         ArrayList<Hand> ties = new ArrayList<>();
         ties.add(winner);
         for(Hand player : hands){
             if(player.getPoints() == winner.getPoints()){
                 ties.add(player);
             }
+            winner = player.getPoints() > winner.getPoints() ? player : winner;
         }
 
-        if(ties.size() <= 1){
-            return winner;
-        }else{
-            return handleTie(ties);
-        }
+        return (ties.size() <= 1) ? winner : handleTie(ties);
     }
 
     //UNTESTED
@@ -132,8 +134,7 @@ public class Game{
                         "5. Black\n" +
                         "6. Gold (reserve card)");
                 System.out.println("--------------------------------------------------------------");
-                System.out.println("Select coin color\nOnly enter colors on new lines\n" +
-                        "EX: \"1 2 3\" or \"1\"");
+                System.out.println("Select coin color\nOnly enter colors on new lines\n");
 
                 int coinChoice = scanner.nextInt() - 1; // not using try catch to verify that it is an integer since this is only debug mode,
                 int secondChoice = scanner.nextInt() - 1;
@@ -200,9 +201,13 @@ public class Game{
                         Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
                         pickedUpCard.setFaceUp(false);
                         hands[player].reserveCard(pickedUpCard);
-                        hands[player].addCoin(5); // add a gold coin
+                        hands[player].addCoin(removeCoin(5)); // add a gold coin while removing it from this game pile
                         exitDo = 0;
-                    } }
+                    }else{
+                        System.out.println("You already have 3 reserved cards.");
+                        exitDo = -2;
+                    }
+                }
 
                 break;
             case 5:
@@ -216,7 +221,15 @@ public class Game{
                     break;
                 } else {
                     if (hands[player].checkBalance(hands[player].peekCard(row))) {
-                        Card reservedCardBought = hands[player].buyReservedcard(row);
+                        Card reservedCardBought = hands[player].peekCard(row);
+                        int[] cardCost = hands[player].buyReservedcard(row);
+                        for(int i=0; i<cardCost.length; i++){
+                            if(cardCost[i] > 0){
+                                for (int j=0; j<cardCost[i]; j++){
+                                    addCoin(i);
+                                }
+                            }
+                        }
                         reservedCardBought.setFaceUp(true);
                         hands[player].addCard(reservedCardBought.getColorIndex(), reservedCardBought);
                         exitDo = 0;

@@ -16,11 +16,6 @@ public class CardPile {
 	public void add(Card card) {
 		cards.add(card);
 	}
-	
-	// used for reserved cards, remove and return the desired card
-	public Card remove(Card card) {
-		return cards.remove(cards.indexOf(card));
-	}
 
 	public int getSize(){
 	    return cards.size();
