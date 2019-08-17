@@ -68,12 +68,18 @@ public class Hand{
 		return cardPiles[5].peekCard(index);
 	}
 
-	public Card buyReservedcard (int index){
-		return cardPiles[5].buyReservedCard(index);
-	}
+	public Card buyReservedcard (int index) {
+		// use removeCoin() to buy this reserved card
+		int[] cardCost = cardPiles[5].peekCard(index).getColorCost();
+		for(int i =0; i<cardCost.length; i++){
+			if(cardCost[i] > 0){
+				for (int j=0; j<cardCost[i]; j++){
+					removeCoin(i);
+				}
+			}
+		}
 
-	public Card removeCard(int color, Card card){
-		return cardPiles[color].remove(card);
+		return cardPiles[5].buyReservedCard(index);
 	}
 
 	public void reserveCard(Card card){

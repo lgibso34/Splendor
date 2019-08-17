@@ -199,7 +199,7 @@ public class Game{
                     if (hands[player].checkReservedCardQuantitiy()) {
                         Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
                         pickedUpCard.setFaceUp(false);
-                        hands[player].addCard(pickedUpCard.getColorIndex(), pickedUpCard);
+                        hands[player].reserveCard(pickedUpCard);
                         hands[player].addCoin(5); // add a gold coin
                         exitDo = 0;
                     } }
