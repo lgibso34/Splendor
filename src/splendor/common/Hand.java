@@ -22,7 +22,7 @@ public class Hand{
 
 	public boolean checkBalance(Card card){
 		int [] cardCost = card.getColorCost();
-		for(int i=0; i<coinPiles.length; i++){
+		for(int i=0; i<cardCost.length; i++){
 			if(cardCost[i] > coinPiles[i].getSize()){
 				return false;
 			}
@@ -58,6 +58,18 @@ public class Hand{
 			count += c.getSize();
 		}
 		return count;
+	}
+
+	public void showReservedCards(){
+		System.out.println(cardPiles[5].showCards());
+	}
+
+	public Card peekCard(int index){
+		return cardPiles[5].peekCard(index);
+	}
+
+	public Card buyReservedcard (int index){
+		return cardPiles[5].buyReservedCard(index);
 	}
 
 	public Card removeCard(int color, Card card){

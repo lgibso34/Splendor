@@ -135,16 +135,24 @@ public class Game{
                 System.out.println("Select coin color\nOnly enter colors on new lines\n" +
                         "EX: \"1 2 3\" or \"1\"");
 
-                int coinChoice = scanner.nextInt(); // not using try catch to verify that it is an integer since this is only debug mode,
-                int secondChoice = scanner.nextInt();
+                int coinChoice = scanner.nextInt() - 1; // not using try catch to verify that it is an integer since this is only debug mode,
+                int secondChoice = scanner.nextInt() - 1;
 
                 if (coinChoice != secondChoice) {
+                    coinPiles[coinChoice].remove();
                     hands[player].addCoin(coinChoice);
+
+                    coinPiles[secondChoice].remove();
                     hands[player].addCoin(secondChoice);
+
                     int thirdChoice = scanner.nextInt();
+                    coinPiles[thirdChoice].remove();
                     hands[player].addCoin(thirdChoice);
                 } else {
+                    coinPiles[coinChoice].remove();
                     hands[player].addCoin(coinChoice);
+
+                    coinPiles[secondChoice].remove();
                     hands[player].addCoin(secondChoice);
                 }
                 exitDo = 0;
@@ -173,7 +181,7 @@ public class Game{
                 }
             case 3:
                 showHands();
-                exitDo = 0;
+                exitDo = -2;
                 break;
             case 4:
                 // reserve card logic
@@ -199,7 +207,21 @@ public class Game{
                 break;
             case 5:
                 // pickup card from hand reserve pile
-                exitDo = 0;
+                hands[player].showReservedCards();
+
+                System.out.println("Choose row (0 to go back): ");
+                row = scanner.nextInt() - 1; // not using try catch to verify that it is an integer since this is only debug mode,
+                if (row == -1) {
+                    exitDo = -2;
+                    break;
+                } else {
+                    if (hands[player].checkBalance(hands[player].peekCard(row))) {
+                        Card reservedCardBought = hands[player].buyReservedcard(row);
+                        reservedCardBought.setFaceUp(true);
+                        hands[player].addCard(reservedCardBought.getColorIndex(), reservedCardBought);
+                        exitDo = 0;
+                    }
+                }
                 break;
             default:
                 break;

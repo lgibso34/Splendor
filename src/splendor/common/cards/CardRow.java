@@ -19,7 +19,7 @@ public class CardRow {
 	// UNTESTED
 	//TODO add checking for end of deck, etc
 	public Card removeAndReplace(int index, Card dealtCard) {
-		Card poppedCard = cards.remove(index);
+		Card poppedCard = cards.get(index);
 		if (dealtCard != null)
 			cards.set(index, dealtCard); // replace the picked up card with the card that was dealt without losing ordering of cards
 		return poppedCard;
