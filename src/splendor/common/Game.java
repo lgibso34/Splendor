@@ -46,8 +46,14 @@ public class Game{
         }
     }
 
-    public static void addCoin(int colorIndex){
-        coinPiles[colorIndex].add();
+    public static void addCoinsToPiles(int[] cardCost){
+        for(int i=0; i<cardCost.length; i++){
+            if(cardCost[i] > 0){
+                for (int j=0; j<cardCost[i]; j++){
+                    coinPiles[i].add();
+                }
+            }
+        }
     }
 
     public static int removeCoin(int color){
@@ -131,8 +137,7 @@ public class Game{
                         "2. Blue\n" +
                         "3. Green\n" +
                         "4. Red\n" +
-                        "5. Black\n" +
-                        "6. Gold (reserve card)");
+                        "5. Black");
                 System.out.println("--------------------------------------------------------------");
                 System.out.println("Select coin color\nOnly enter colors on new lines\n");
 
@@ -159,8 +164,9 @@ public class Game{
                 exitDo = 0;
                 break;
             case 2:
+                // buy a card logic
+                showHands();
                 showCardRows();
-                // pick up card
                 System.out.println("Choose row (1-3) (0 to go back): ");
                 row = scanner.nextInt(); // not using try catch to verify that it is an integer since this is only debug mode,
                 if (row == 0) {
@@ -171,8 +177,10 @@ public class Game{
                 cardSpot = scanner.nextInt() - 1;
 
                 if (hands[player].checkBalance(cardRows[row].peekCard(cardSpot))) {
+                    int[] cardCost = cardRows[row].peekCard(cardSpot).getColorCost();
                     Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
-                    hands[player].addCard(pickedUpCard.getColorIndex(), pickedUpCard);
+                    addCoinsToPiles(cardCost);
+                    hands[player].addCard(pickedUpCard);
                     exitDo = 0;
                 } else {
                     System.out.println("You do not have the balance for this card.");
@@ -181,7 +189,9 @@ public class Game{
                 break;
                 }
             case 3:
+                // buy a card logic
                 showHands();
+                showCardRows();
                 exitDo = -2;
                 break;
             case 4:
@@ -208,7 +218,6 @@ public class Game{
                         exitDo = -2;
                     }
                 }
-
                 break;
             case 5:
                 // pickup card from hand reserve pile
@@ -221,17 +230,8 @@ public class Game{
                     break;
                 } else {
                     if (hands[player].checkBalance(hands[player].peekCard(row))) {
-                        Card reservedCardBought = hands[player].peekCard(row);
-                        int[] cardCost = hands[player].buyReservedcard(row);
-                        for(int i=0; i<cardCost.length; i++){
-                            if(cardCost[i] > 0){
-                                for (int j=0; j<cardCost[i]; j++){
-                                    addCoin(i);
-                                }
-                            }
-                        }
-                        reservedCardBought.setFaceUp(true);
-                        hands[player].addCard(reservedCardBought.getColorIndex(), reservedCardBought);
+                        int[] cardCost = hands[player].buyReservedCard(row);
+                        addCoinsToPiles(cardCost);
                         exitDo = 0;
                     }
                 }

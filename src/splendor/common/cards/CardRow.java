@@ -36,7 +36,7 @@ public class CardRow {
 	public String toString(){
 		String output = "Row #" + row + " \n";
 		for(Card card : cards){
-			output += card.toString() + "\n";
+			output += card.toString() + "     ";
 		}
 		return output;
 	}

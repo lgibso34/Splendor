@@ -43,11 +43,19 @@ public class Hand{
 		return coinPiles[color].remove();
 	}
 
-	public void addCard(int color, Card card){
+	public void addCard(Card card){
 		if(card.getFaceUp()){
-			cardPiles[color].add(card);
+				int[] cardCost = card.getColorCost();
+				for (int i = 0; i < cardCost.length; i++) {
+					if (cardCost[i] > 0) {
+						for (int j = 0; j < cardCost[i]; j++) {
+							removeCoin(i);
+						}
+					}
+				}
+				cardPiles[card.getColorIndex()].add(card);
 		}else{
-			cardPiles[5].add(card);
+			cardPiles[5].add(card); // add to faceDown reserve pile
 		}
 	}
 
@@ -68,9 +76,12 @@ public class Hand{
 		return cardPiles[5].peekCard(index);
 	}
 
-	public int[] buyReservedcard (int index) {
+	public int[] buyReservedCard (int index) {
 		// use removeCoin() to buy this reserved card
-		int[] cardCost = cardPiles[5].buyReservedCard(index).getColorCost();
+		Card reservedCardBought = cardPiles[5].buyReservedCard(index);
+		reservedCardBought.setFaceUp(true);
+		int[] cardCost = reservedCardBought.getColorCost();
+
 		for(int i=0; i<cardCost.length; i++){
 			if(cardCost[i] > 0){
 				for (int j=0; j<cardCost[i]; j++){
@@ -79,6 +90,7 @@ public class Hand{
 			}
 		}
 
+		addCard(reservedCardBought);
 		return cardCost;
 	}
 
