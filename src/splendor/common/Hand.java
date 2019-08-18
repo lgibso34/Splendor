@@ -30,6 +30,19 @@ public class Hand{
 
 
 		int [] cardCost = card.getColorCost(); // get the color cost for the wanted card
+		int[] cardCostWithPermanents = new int[cardCost.length];
+		for(int i=0; i < cardCost.length; i++){
+			if(cardPiles[i].getSize() > 0){ // if permanent cards exist for that color...
+				(cardCostWithPermanents.length == 0) ? (cardCostWithPermanents = new int[cardCost.length]) : cardCostWithPermanents;
+				int cost = cardCost[i] - cardPiles[i].getSize();
+				if(cost < 0){ // if the cost becomes negative there are more permanent cards than the cost so it costs zero of that color
+					cardCostWithPermanents[i] = 0;
+				}else{
+					cardCostWithPermanents[i] = cardCost[i] - cardPiles[i].getSize(); // otherwise, the extra coins required are assigned to that color spot
+				}
+			}
+		}
+
 		for(int i=0; i<cardCost.length; i++){ // iterate through each color
 			if(cardCost[i] > coinPiles[i].getSize()){ // and check if the card costs more than what the player has
 				// if it does, see if the user has any gold coins that can be used to still buy the card
