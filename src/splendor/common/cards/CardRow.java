@@ -21,6 +21,7 @@ public class CardRow {
 	public Card removeAndReplace(int index, Card dealtCard) {
 		Card poppedCard = cards.get(index);
 		if (dealtCard != null)
+			dealtCard.setFaceUp(true);
 			cards.set(index, dealtCard); // replace the picked up card with the card that was dealt without losing ordering of cards
 		return poppedCard;
 	}

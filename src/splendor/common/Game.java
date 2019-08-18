@@ -71,6 +71,10 @@ public class Game{
         // show coin piles
         int counter = 1;
         for (CoinPile pile : coinPiles) {
+            if(counter == 6){
+                System.out.println(pile.toString());
+                break;
+            }
             System.out.println(counter++ + ": " + pile.toString());
         }
         System.out.println();
@@ -190,9 +194,9 @@ public class Game{
                 int playerCanBuy = hands[player].checkBalance(cardRows[row].peekCard(cardSpot));
                 int playerWillUseGoldCoin = 0;
 
-                if (playerCanBuy == 2 || playerCanBuy == 1) {
-                    if(playerCanBuy == 2){
-                        System.out.println("You must use at least one gold coin to purchase this card. Proceed?\n0 for no\n1 for yes");
+                if (playerCanBuy >= 0) {
+                    if(playerCanBuy > 0){
+                        System.out.println("You must use " + playerCanBuy +  " gold coin(s) to purchase this card. Proceed?\n0 for no\n1 for yes");
                         playerWillUseGoldCoin = scanner.nextInt();
                         if(playerWillUseGoldCoin == 0){
                             exitDo = -2;
@@ -200,9 +204,21 @@ public class Game{
                         }
                     }
                     int[] cardCost = cardRows[row].peekCard(cardSpot).getColorCost();
+                    if(playerWillUseGoldCoin == 1){
+                        int[] oldCardCost = new int[cardCost.length + 1];
+                        for(int i=0; i<cardCost.length; i++){
+                            oldCardCost[i] = cardCost[i];
+                        }
+                        oldCardCost[5] = playerCanBuy;
+
+                        cardCost = new int[cardCost.length + 1];
+                        for(int i=0; i<cardCost.length; i++){
+                            cardCost[i] = oldCardCost[i];
+                        }
+                    }
                     Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
                     addCoinsToPiles(cardCost);
-                    hands[player].addCard(pickedUpCard);
+                    hands[player].addCard(pickedUpCard, cardCost);
                     exitDo = 0;
                 } else {
                     System.out.println("You do not have the balance for this card.");
@@ -218,6 +234,7 @@ public class Game{
                 break;
             case 4:
                 // reserve card logic
+                System.out.println(coinPiles[5].toString());
                 showCardRows();
                 // pick up card
                 System.out.println("Choose row (1-3) (0 to go back): ");
@@ -243,6 +260,7 @@ public class Game{
                 break;
             case 5:
                 // buy card from hand reserve pile
+                showHands();
                 hands[player].showReservedCards();
 
                 System.out.println("Choose row (0 to go back): ");
@@ -254,16 +272,29 @@ public class Game{
                     int playerCanBuy = hands[player].checkBalance(hands[player].peekCard(row));
                     int playerWillUseGoldCoin = 0;
 
-                    if (playerCanBuy == 2 || playerCanBuy == 1) {
-                        if(playerCanBuy == 2){
-                            System.out.println("You must use at least one gold coin to purchase this card. Proceed?\n0 for no\n1 for yes");
+                    if (playerCanBuy >= 0) {
+                        if(playerCanBuy > 0){
+                            System.out.println("You must use " + playerCanBuy +  " gold coin(s) to purchase this card. Proceed?\n0 for no\n1 for yes");
                             playerWillUseGoldCoin = scanner.nextInt();
                             if(playerWillUseGoldCoin == 0){
                                 exitDo = -2;
                                 break;
                             }
                         }
-                        int[] cardCost = hands[player].buyReservedCard(row);
+                        int[] cardCost = hands[player].peekCard(row).getColorCost();
+                        if(playerWillUseGoldCoin == 1){
+                            int[] oldCardCost = new int[cardCost.length + 1];
+                            for(int i=0; i<cardCost.length; i++){
+                                oldCardCost[i] = cardCost[i];
+                            }
+                            oldCardCost[5] = playerCanBuy;
+
+                            cardCost = new int[cardCost.length + 1];
+                            for(int i=0; i<cardCost.length; i++){
+                                cardCost[i] = oldCardCost[i];
+                            }
+                        }
+                        hands[player].buyReservedCard(row, cardCost);
                         addCoinsToPiles(cardCost);
                         exitDo = 0;
                     }

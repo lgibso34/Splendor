@@ -24,19 +24,28 @@ public class Hand{
 	public int checkBalance(Card card){
 		boolean playerCanBuy = true;
 		boolean playerMustUseGoldCoin = false;
+		int goldCoinsNeeded = 0;
+		int goldCoinCount = coinPiles[5].getSize();
+		boolean playerHasAtLeastOneGoldCoin = goldCoinCount > 0;
 
-		int [] cardCost = card.getColorCost();
-		for(int i=0; i<cardCost.length; i++){
-			if(cardCost[i] > coinPiles[i].getSize()){
-				if(coinPiles[5].getSize() > 0 && cardCost[i] >= (coinPiles[i].getSize() + coinPiles[5].getSize())) {
+
+		int [] cardCost = card.getColorCost(); // get the color cost for the wanted card
+		for(int i=0; i<cardCost.length; i++){ // iterate through each color
+			if(cardCost[i] > coinPiles[i].getSize()){ // and check if the card costs more than what the player has
+				// if it does, see if the user has any gold coins that can be used to still buy the card
+				if(playerHasAtLeastOneGoldCoin && cardCost[i] >= (coinPiles[i].getSize() + goldCoinCount)) {
+					goldCoinsNeeded += cardCost[i] - coinPiles[i].getSize();
 					playerMustUseGoldCoin = true;
 				}else{
 					playerCanBuy = false;
 				}
 			}
 		}
-		// 2: must use gold coin(s) 1: player can buy 0: player can't buy
-		return playerCanBuy ? playerMustUseGoldCoin ? 2 : 1 : 0;
+		if(goldCoinsNeeded > goldCoinCount){
+			playerMustUseGoldCoin = false;
+		}
+		// -1: player can't buy, 0: player can buy, 1 or greater: number of gold coins that it will cost the player
+		return playerCanBuy ? playerMustUseGoldCoin ? goldCoinsNeeded : 0 : -1;
 	}
 
 	public boolean checkReservedCardQuantity(){
@@ -60,11 +69,14 @@ public class Hand{
 		}
 	}
 
-	public void addCard(Card card){
+	public void addCard(Card card, int[] cardCost){
 		if(card.getFaceUp()){
-				int[] cardCost = card.getColorCost();
+			int pointValue = card.getValue();
 			removeCoinsFromInventory(cardCost);
-				cardPiles[card.getColorIndex()].add(card);
+			cardPiles[card.getColorIndex()].add(card);
+			if(pointValue > 0){
+				points += pointValue;
+			}
 		}else{
 			cardPiles[5].add(card); // add to faceDown reserve pile
 		}
@@ -87,14 +99,13 @@ public class Hand{
 		return cardPiles[5].peekCard(index);
 	}
 
-	public int[] buyReservedCard (int index) {
-		// use removeCoin() to buy this reserved card
+	// cardCost must be passed in because gold coins are not in the colorCost property
+	// of the Card, the parameter passed in may contain gold coins that need to be
+	// subtracted from the user's hand
+	public void buyReservedCard (int index, int[] cardCost) {
 		Card reservedCardBought = cardPiles[5].buyReservedCard(index);
 		reservedCardBought.setFaceUp(true);
-		int[] cardCost = reservedCardBought.getColorCost();
-		removeCoinsFromInventory(cardCost);
-		addCard(reservedCardBought);
-		return cardCost;
+		addCard(reservedCardBought, cardCost);
 	}
 
 	public void reserveCard(Card card){
