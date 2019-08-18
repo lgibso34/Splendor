@@ -155,13 +155,18 @@ public class Game{
                     coinPiles[thirdChoice].remove();
                     hands[player].addCoin(thirdChoice);
                 } else {
-                    coinPiles[coinChoice].remove();
-                    hands[player].addCoin(coinChoice);
+                    if(coinPiles[coinChoice].getSize() >= 4) {
+                        coinPiles[coinChoice].remove();
+                        hands[player].addCoin(coinChoice);
 
-                    coinPiles[secondChoice].remove();
-                    hands[player].addCoin(secondChoice);
+                        coinPiles[secondChoice].remove();
+                        hands[player].addCoin(secondChoice);
+                        exitDo = 0;
+                    }else{
+                        System.out.println("There must be four coins available for you to grab two.");
+                        exitDo = -2;
+                    }
                 }
-                exitDo = 0;
                 break;
             case 2:
                 // buy a card logic
