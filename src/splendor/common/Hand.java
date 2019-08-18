@@ -14,23 +14,32 @@ public class Hand{
 	
 	public Hand() {
 		//int i = 0;
-		for(int i=0; i<Constants.colors.length; i++){
+		for (int i = 0; i < Constants.colors.length; i++) {
 			coinPiles[i] = new CoinPile(Constants.colors[i]);
 			cardPiles[i] = new CardPile(Constants.colors[i]);
 		}
 	}
 
-	public boolean checkBalance(Card card){
+	// prompt usage of a gold coin if one will be used so that the user knows for sure they will lose one or many
+	public int checkBalance(Card card){
+		boolean playerCanBuy = true;
+		boolean playerMustUseGoldCoin = false;
+
 		int [] cardCost = card.getColorCost();
 		for(int i=0; i<cardCost.length; i++){
 			if(cardCost[i] > coinPiles[i].getSize()){
-				return false;
+				if(coinPiles[5].getSize() > 0 && cardCost[i] >= (coinPiles[i].getSize() + coinPiles[5].getSize())) {
+					playerMustUseGoldCoin = true;
+				}else{
+					playerCanBuy = false;
+				}
 			}
 		}
-		return true;
+		// 2: must use gold coin(s) 1: player can buy 0: player can't buy
+		return playerCanBuy ? playerMustUseGoldCoin ? 2 : 1 : 0;
 	}
 
-	public boolean checkReservedCardQuantitiy(){
+	public boolean checkReservedCardQuantity(){
 		return cardPiles[5].getSize() <3;
 	}
 

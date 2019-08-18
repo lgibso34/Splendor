@@ -161,12 +161,13 @@ public class Game{
 
                         coinPiles[secondChoice].remove();
                         hands[player].addCoin(secondChoice);
-                        exitDo = 0;
                     }else{
                         System.out.println("There must be four coins available for you to grab two.");
                         exitDo = -2;
+                        break;
                     }
                 }
+                exitDo = 0;
                 break;
             case 2:
                 // buy a card logic
@@ -181,7 +182,18 @@ public class Game{
                 System.out.println("Choose card spot (1-4): ");
                 cardSpot = scanner.nextInt() - 1;
 
-                if (hands[player].checkBalance(cardRows[row].peekCard(cardSpot))) {
+                int playerCanBuy = hands[player].checkBalance(cardRows[row].peekCard(cardSpot));
+                int playerWillUseGoldCoin = 0;
+
+                if (playerCanBuy == 2 || playerCanBuy == 1) {
+                    if(playerCanBuy == 2){
+                        System.out.println("You must use at least one gold coin to purchase this card. Proceed?\n0 for no\n1 for yes");
+                        playerWillUseGoldCoin = scanner.nextInt();
+                        if(playerWillUseGoldCoin == 0){
+                            exitDo = -2;
+                            break;
+                        }
+                    }
                     int[] cardCost = cardRows[row].peekCard(cardSpot).getColorCost();
                     Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
                     addCoinsToPiles(cardCost);
@@ -212,7 +224,7 @@ public class Game{
                     System.out.println("Choose card spot (1-4): ");
                     cardSpot = scanner.nextInt() - 1;
 
-                    if (hands[player].checkReservedCardQuantitiy()) {
+                    if (hands[player].checkReservedCardQuantity()) {
                         Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
                         pickedUpCard.setFaceUp(false);
                         hands[player].reserveCard(pickedUpCard);
@@ -234,7 +246,18 @@ public class Game{
                     exitDo = -2;
                     break;
                 } else {
-                    if (hands[player].checkBalance(hands[player].peekCard(row))) {
+                    int playerCanBuy = hands[player].checkBalance(hands[player].peekCard(row));
+                    int playerWillUseGoldCoin = 0;
+
+                    if (playerCanBuy == 2 || playerCanBuy == 1) {
+                        if(playerCanBuy == 2){
+                            System.out.println("You must use at least one gold coin to purchase this card. Proceed?\n0 for no\n1 for yes");
+                            playerWillUseGoldCoin = scanner.nextInt();
+                            if(playerWillUseGoldCoin == 0){
+                                exitDo = -2;
+                                break;
+                            }
+                        }
                         int[] cardCost = hands[player].buyReservedCard(row);
                         addCoinsToPiles(cardCost);
                         exitDo = 0;
