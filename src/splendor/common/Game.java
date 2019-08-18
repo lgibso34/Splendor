@@ -69,8 +69,9 @@ public class Game{
 
     public static void showCoinPiles(){
         // show coin piles
+        int counter = 1;
         for (CoinPile pile : coinPiles) {
-            System.out.println(pile.toString());
+            System.out.println(counter++ + ": " + pile.toString());
         }
         System.out.println();
     }
@@ -132,17 +133,21 @@ public class Game{
             case 1:
                 showCoinPiles();
                 // pick up coins
-                System.out.println("0: Exit\n" +
-                        "1. White\n" +
-                        "2. Blue\n" +
-                        "3. Green\n" +
-                        "4. Red\n" +
-                        "5. Black");
+                System.out.println("0: Go back");
                 System.out.println("--------------------------------------------------------------");
                 System.out.println("Select coin color\nOnly enter colors on new lines\n");
 
                 int coinChoice = scanner.nextInt() - 1; // not using try catch to verify that it is an integer since this is only debug mode,
+                if(coinChoice == -1){
+                    exitDo = -2;
+                    break;
+                }
                 int secondChoice = scanner.nextInt() - 1;
+                if(secondChoice == -1){
+                    exitDo = -2;
+                    break;
+                }
+
 
                 if (coinChoice != secondChoice) {
                     coinPiles[coinChoice].remove();
@@ -206,7 +211,7 @@ public class Game{
                 break;
                 }
             case 3:
-                // buy a card logic
+                // show hands and card rows
                 showHands();
                 showCardRows();
                 exitDo = -2;
@@ -237,7 +242,7 @@ public class Game{
                 }
                 break;
             case 5:
-                // pickup card from hand reserve pile
+                // buy card from hand reserve pile
                 hands[player].showReservedCards();
 
                 System.out.println("Choose row (0 to go back): ");
@@ -365,7 +370,7 @@ public class Game{
                                 "2. Buy a card\n" +
                                 "3. Show Hands\n" +
                                 "4. Reserve card\n" +
-                                "5. Buy one of your reserve cards");
+                                "5. Buy one of your reserved cards");
                         System.out.println("--------------------------------------------------------------");
 
                         temp = scanner.nextInt();
