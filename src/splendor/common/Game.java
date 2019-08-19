@@ -22,6 +22,11 @@ public class Game {
     private static CardRow[] cardRows = new CardRow[4];
     private static Hand[] hands = new Hand[0];
 
+    /**
+     * Initializes the game by creating decks and dealing cards to their respective rows.
+     * Hands are created for each player
+     * @param numPlayers - Number of players in the game
+     */
     private static void initializeGame(int numPlayers) {
 
         decks = DeckBuilder.buildDecks();
@@ -44,11 +49,11 @@ public class Game {
         }
     }
 
-    public static Noble removeNoble(int index) {
+    private static Noble removeNoble(int index) {
         return (Noble) cardRows[0].remove(index);
     }
 
-    public static int[] checkForNobles(Hand player) {
+    private static int[] checkForNobles(Hand player) {
         int[] permCards = player.getPermanentCardCount();
         Card[] Nobles = cardRows[0].getCards();
         int[] noblesThatCanBeBought = new int[Nobles.length];
@@ -68,7 +73,7 @@ public class Game {
         return noblesThatCanBeBought;
     }
 
-    public static void addCoinsToPiles(int[] cardCost) {
+    private static void addCoinsToPiles(int[] cardCost) {
         for (int i = 0; i < cardCost.length; i++) {
             if (cardCost[i] > 0) {
                 for (int j = 0; j < cardCost[i]; j++) {
@@ -78,31 +83,28 @@ public class Game {
         }
     }
 
-    public static int removeCoin(int color) {
+    private static int removeCoin(int color) {
         return coinPiles[color].remove();
     }
 
-    public static void showDecks() {
+    private static void showDecks() {
         for (int i = 0; i < decks.length; i++) {
             System.out.println("========== Deck " + i + " ==========");
             System.out.println(decks[i].toString());
         }
     }
 
-    public static void showCoinPiles() {
+    private static void showCoinPiles() {
         // show coin piles
-        int counter = 1;
-        for (CoinPile pile : coinPiles) {
-            if (counter == 6) {
-                System.out.println(pile.toString());
-                break;
-            }
-            System.out.println(counter++ + ": " + pile.toString());
+        System.out.println(coinPiles[coinPiles.length-1].toString()); // show just the gold coins
+
+        for(int i=0; i<coinPiles.length-1; i++){
+            System.out.println(i + ": " + coinPiles[i].toString());
         }
         System.out.println();
     }
 
-    public static void showCardRows() {
+    private static void showCardRows() {
         // show card row
         System.out.println(cardRows[0].toString());
         for (int i = 3; i > 0; i--) {
@@ -111,12 +113,12 @@ public class Game {
         System.out.println();
     }
 
-    public static void showNumberOfPlayers() {
+    private static void showNumberOfPlayers() {
         System.out.println("Number of Players: " + numPlayers);
         System.out.println();
     }
 
-    public static void showHands() {
+    private static void showHands() {
         for (int i = 0; i < numPlayers; i++) {
             System.out.println("Hand " + (i + 1) + ": " + hands[i].toString());
         }
@@ -149,7 +151,7 @@ public class Game {
         return winner;
     }
 
-    public static int handlePlayChoice(Scanner scanner, int player, int choice, int exitDo) {
+    private static int handlePlayChoice(Scanner scanner, int player, int choice, int exitDo) {
         int row = 0;
         int cardSpot = 0;
         switch (choice) {
@@ -170,12 +172,12 @@ public class Game {
                     exitDo = -2;
                     break;
                 }
+
                 int secondChoice = scanner.nextInt() - 1;
                 if (secondChoice == -1) {
                     exitDo = -2;
                     break;
                 }
-
 
                 if (coinChoice != secondChoice) {
                     if (playerCoinCount < 8) {
@@ -196,7 +198,6 @@ public class Game {
                         exitDo = -2;
                         break;
                     }
-
                 } else if (coinPiles[coinChoice].getSize() >= 4) {
                     if (playerCoinCount < 9) {
                         coinPiles[coinChoice].remove();
@@ -210,8 +211,6 @@ public class Game {
                         break;
                     }
                 }
-
-
                 exitDo = 0;
                 break;
             case 2:
@@ -347,6 +346,8 @@ public class Game {
         return exitDo;
     }
 
+    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
     public static void main(String[] args) {
         boolean play = false;
 
@@ -430,12 +431,10 @@ public class Game {
             if (play) {
                 int player = 0;
                 exitDo = 0;
-                choice = 0;
                 do {
                     if (lastRound) {
                         if ((player) == playerWhoInitiatedLastRound) {
-                            exitDo = 1;
-                            break;
+                            break; //exit the doWhile loop to handleWinner()
                         }
                     }
                     try {
@@ -459,10 +458,6 @@ public class Game {
                             }
 
                             if (exitDo != -2) {
-                                // untested
-                                // TODO
-
-
                                 //if a user can buy a noble the index location will have a 1 in it. The user can pickup the noble at that index
                                 int[] noblesPlayerCanBuy = checkForNobles(hands[player]);
                                 boolean playerCantPickupNobles = true;
@@ -480,8 +475,8 @@ public class Game {
                                 }
 
                                 if (hands[player].getPoints() >= 15 && !lastRound) {
-                                        lastRound = true;
-                                        playerWhoInitiatedLastRound = player;
+                                    lastRound = true;
+                                    playerWhoInitiatedLastRound = player;
                                 }
 
                                 if (player == numPlayers - 1) {
