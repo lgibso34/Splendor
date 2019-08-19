@@ -203,7 +203,8 @@ public class Game{
                             break;
                         }
                     }
-                    int[] cardCost = cardRows[row].peekCard(cardSpot).getColorCost();
+
+                    int[] cardCost = hands[player].getCost(cardRows[row].peekCard(cardSpot));
                     if(playerWillUseGoldCoin == 1){
                         int[] oldCardCost = new int[cardCost.length + 1];
                         for(int i=0; i<cardCost.length; i++){
@@ -281,7 +282,8 @@ public class Game{
                                 break;
                             }
                         }
-                        int[] cardCost = hands[player].peekCard(row).getColorCost();
+                        int[] cardCost = hands[player].getCost(hands[player].peekCard(row));
+
                         if(playerWillUseGoldCoin == 1){
                             int[] oldCardCost = new int[cardCost.length + 1];
                             for(int i=0; i<cardCost.length; i++){
@@ -297,15 +299,16 @@ public class Game{
                         hands[player].buyReservedCard(row, cardCost);
                         addCoinsToPiles(cardCost);
                         exitDo = 0;
+                        break;
+                    }else{
+                        System.out.println("you do not have the balance for that card");
                     }
                 }
                 break;
             default:
                 break;
         }
-
         return exitDo;
-
     }
 
     public static void main(String[] args) {

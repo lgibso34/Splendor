@@ -20,49 +20,70 @@ public class Hand{
 		}
 	}
 
-	// prompt usage of a gold coin if one will be used so that the user knows for sure they will lose one or many
-	public int checkBalance(Card card){
-		boolean playerCanBuy = true;
-		boolean playerMustUseGoldCoin = false;
+	public int[] getCost(Card card){
+		int [] cardCost = card.getColorCost(); // get the color cost for the wanted card
+		int[] cardCostWithPermanentsAndGold = new int[cardCost.length+1];
+		for(int i=0; i < cardCost.length; i++){
+			if(cardPiles[i].getSize() > 0){ // if permanent cards exist for that color...
+				int cost = cardCost[i] - cardPiles[i].getSize();
+				if(cost < 0){ // if the cost becomes negative there are more permanent cards than the cost so it costs zero of that color
+					cardCostWithPermanentsAndGold[i] = 0;
+				}else{
+					cardCostWithPermanentsAndGold[i] = cost; // otherwise, the extra coins required are assigned to that color spot
+				}
+			}else{
+				cardCostWithPermanentsAndGold[i] = cardCost[i]; // cost stays the same
+			}
+		}
+
 		int goldCoinsNeeded = 0;
 		int goldCoinCount = coinPiles[5].getSize();
 		boolean playerHasAtLeastOneGoldCoin = goldCoinCount > 0;
 
-
-		int [] cardCost = card.getColorCost(); // get the color cost for the wanted card
-		int[] cardCostWithPermanents = new int[cardCost.length];
-		for(int i=0; i < cardCost.length; i++){
-			if(cardPiles[i].getSize() > 0){ // if permanent cards exist for that color...
-				(cardCostWithPermanents.length == 0) ? (cardCostWithPermanents = new int[cardCost.length]) : cardCostWithPermanents;
-				int cost = cardCost[i] - cardPiles[i].getSize();
-				if(cost < 0){ // if the cost becomes negative there are more permanent cards than the cost so it costs zero of that color
-					cardCostWithPermanents[i] = 0;
-				}else{
-					cardCostWithPermanents[i] = cardCost[i] - cardPiles[i].getSize(); // otherwise, the extra coins required are assigned to that color spot
-				}
-			}
-		}
-
-		for(int i=0; i<cardCost.length; i++){ // iterate through each color
-			if(cardCost[i] > coinPiles[i].getSize()){ // and check if the card costs more than what the player has
+		for(int i=0; i<cardCostWithPermanentsAndGold.length; i++){ // iterate through each color
+			if(cardCostWithPermanentsAndGold[i] > coinPiles[i].getSize()){ // and check if the card costs more than what the player has
 				// if it does, see if the user has any gold coins that can be used to still buy the card
-				if(playerHasAtLeastOneGoldCoin && cardCost[i] >= (coinPiles[i].getSize() + goldCoinCount)) {
-					goldCoinsNeeded += cardCost[i] - coinPiles[i].getSize();
-					playerMustUseGoldCoin = true;
-				}else{
-					playerCanBuy = false;
+				if(playerHasAtLeastOneGoldCoin && cardCostWithPermanentsAndGold[i] <= (coinPiles[i].getSize() + goldCoinCount)) {
+					int difference = cardCostWithPermanentsAndGold[i] - coinPiles[i].getSize(); // how many gold coins are needed for this color
+					goldCoinsNeeded += difference; // add to total gold coins needed for this card
+					cardCostWithPermanentsAndGold[i] = cardCostWithPermanentsAndGold[i] - difference; // subtract gold coin usage from color cost
 				}
 			}
 		}
+
+		cardCostWithPermanentsAndGold[5] = goldCoinsNeeded; // amount of gold coins needed for this card
+
+		return cardCostWithPermanentsAndGold;
+	}
+
+	public int checkBalance(Card card){
+		boolean playerCanBuy = true;
+		boolean goldRequired = false;
+		int goldCoinsNeeded = 0;
+		int goldCoinCount = coinPiles[5].getSize();
+
+		int[] cardCostWithPermanents = getCost(card);
+
+		if(cardCostWithPermanents[5] > 0){
+			goldRequired = true;
+			goldCoinsNeeded = cardCostWithPermanents[5];
+		}
+
+		for(int i=0; i<cardCostWithPermanents.length; i++){ // iterate through each color
+			if(cardCostWithPermanents[i] > coinPiles[i].getSize()){ // and check if the card costs more than what the player has
+					playerCanBuy = false;
+			}
+		}
+
 		if(goldCoinsNeeded > goldCoinCount){
-			playerMustUseGoldCoin = false;
+			goldRequired = false;
 		}
 		// -1: player can't buy, 0: player can buy, 1 or greater: number of gold coins that it will cost the player
-		return playerCanBuy ? playerMustUseGoldCoin ? goldCoinsNeeded : 0 : -1;
+		return playerCanBuy ? goldRequired ? goldCoinsNeeded : 0 : -1;
 	}
 
 	public boolean checkReservedCardQuantity(){
-		return cardPiles[5].getSize() <3;
+		return cardPiles[5].getSize() < 3;
 	}
 
 	// [ white, blue, green, red, black, gold ]
