@@ -35,13 +35,18 @@ public class CoinPile {
 	public void add() {
 		size++;
 	}
-	
-	public boolean remove() {
+
+	public int getSize(){
+		return size;
+	}
+
+	// returns -1 coins are at zero, otherwise returns the color index
+	public int remove() {
 		if (size > 0) {
 			size--;
-			return true;
+			return color.ordinal();
 		}
-		return false;
+		return -1;
 	}
 
 	public String toString() {

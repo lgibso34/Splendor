@@ -23,11 +23,11 @@ public class DeckBuilder {
         ArrayList<Card> lv1 = new ArrayList<>();
         ArrayList<Card> lv2 = new ArrayList<>();
         ArrayList<Card> lv3 = new ArrayList<>();
-        ArrayList<Card> patrons =  new ArrayList<>();
+        ArrayList<Noble> patrons =  new ArrayList<>();
 
         Scanner reader;
         try {
-            reader = new Scanner(new File("lib/CardList.csv"));
+            reader = new Scanner(new File("src/lib/CardList.csv"));
             reader.useDelimiter(Pattern.compile("[\\s,]+"));
             reader.nextLine(); //skip the header
             while(reader.hasNextLine()){

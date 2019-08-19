@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class CardRow {
 
 	ArrayList<Card> cards = new ArrayList<>(4); // 4 cards per row
-	private int row;
+	private int row = 0;
 	private Deck deck;
 
 	public CardRow(int row, Deck deck, int dealt) {
@@ -21,20 +21,36 @@ public class CardRow {
 	// UNTESTED
 	//TODO add checking for end of deck, etc
 	public Card removeAndReplace(int index, Card dealtCard) {
-		Card poppedCard = cards.remove(index);
+		Card poppedCard = cards.get(index);
 		if (dealtCard != null)
+			dealtCard.setFaceUp(true);
 			cards.set(index, dealtCard); // replace the picked up card with the card that was dealt without losing ordering of cards
 		return poppedCard;
+	}
+
+	public Card peekCard(int index){
+		return cards.get(index);
 	}
 
 	public Card remove(int index, Card dealtCard) {
 		return cards.remove(index);
 	}
 
+	// used for Nobles
+	public Card remove(int index) {
+		return cards.remove(index);
+	}
+
+	// used for Nobles
+	public Card[] getCards(){
+		return cards.toArray(new Card[cards.size()]); // returns an array of Card objects
+	}
+
+
 	public String toString(){
 		StringBuilder output = new StringBuilder("Row #" + row + " \n");
 		for(Card card : cards){
-			output.append(card.toString()).append("\n");
+			output.append(card.toString()).append("     ");
 		}
 		return output.toString();
 	}

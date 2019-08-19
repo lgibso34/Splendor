@@ -12,8 +12,9 @@ public class Deck {
 	ArrayList<Card> cards;
 	private static PCG rand = new PCG();
 
-	public Deck(ArrayList<Card> cards) {
-		this.cards = cards;
+	// wild card generic allows for Card or Noble objects
+	public Deck(ArrayList<? extends Card> cards) {
+		this.cards = (ArrayList<Card>) cards; // must be casted for this to work
 		shuffle();
 	}
 
