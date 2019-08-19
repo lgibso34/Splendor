@@ -27,7 +27,7 @@ public class DeckBuilder {
 
         Scanner reader;
         try {
-            reader = new Scanner(new File("lib/CardList.csv"));
+            reader = new Scanner(new File("src/lib/CardList.csv"));
             reader.useDelimiter(Pattern.compile("[\\s,]+"));
             reader.nextLine(); //skip the header
             while(reader.hasNextLine()){
