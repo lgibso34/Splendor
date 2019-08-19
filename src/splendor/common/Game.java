@@ -154,12 +154,13 @@ class Game {
     private static int handlePlayChoice(Scanner scanner, int player, int choice, int exitDo) {
         int row;
         int cardSpot;
+        Hand playerHand = hands[player];
         switch (choice) {
             case 0:
                 exitDo = 1;
                 break;
             case 1:
-                int playerCoinCount = hands[player].getCoinCount();
+                int playerCoinCount = playerHand.getCoinCount();
                 showCoinPiles();
                 // pick up coins
                 System.out.println("Total coin count: " + playerCoinCount);
@@ -182,14 +183,14 @@ class Game {
                 if (coinChoice != secondChoice) {
                     if (playerCoinCount < 8) {
                         coinPiles[coinChoice].remove();
-                        hands[player].addCoin(coinChoice);
+                        playerHand.addCoin(coinChoice);
 
                         coinPiles[secondChoice].remove();
-                        hands[player].addCoin(secondChoice);
+                        playerHand.addCoin(secondChoice);
 
                         int thirdChoice = scanner.nextInt() - 1;
                         coinPiles[thirdChoice].remove();
-                        hands[player].addCoin(thirdChoice);
+                        playerHand.addCoin(thirdChoice);
 
                     } else {
                         // this will contain a bug until this is cleaned up
@@ -201,10 +202,10 @@ class Game {
                 } else if (coinPiles[coinChoice].getSize() >= 4) {
                     if (playerCoinCount < 9) {
                         coinPiles[coinChoice].remove();
-                        hands[player].addCoin(coinChoice);
+                        playerHand.addCoin(coinChoice);
 
                         coinPiles[secondChoice].remove();
-                        hands[player].addCoin(secondChoice);
+                        playerHand.addCoin(secondChoice);
                     } else {
                         System.out.println("There must be four coins available for you to grab two or you would go over 10 coins.");
                         exitDo = -2;
@@ -226,7 +227,7 @@ class Game {
                     System.out.println("Choose card spot (1-4): ");
                     cardSpot = scanner.nextInt() - 1;
 
-                    int playerCanBuy = hands[player].checkBalance(cardRows[row].peekCard(cardSpot));
+                    int playerCanBuy = playerHand.checkBalance(cardRows[row].peekCard(cardSpot));
                     int playerWillUseGoldCoin = 0;
 
                     if (playerCanBuy >= 0) {
@@ -239,7 +240,7 @@ class Game {
                             }
                         }
 
-                        int[] cardCost = hands[player].getCost(cardRows[row].peekCard(cardSpot));
+                        int[] cardCost = playerHand.getCost(cardRows[row].peekCard(cardSpot));
                         if (playerWillUseGoldCoin == 1) {
                             int[] oldCardCost = new int[cardCost.length + 1];
                             System.arraycopy(cardCost, 0, oldCardCost, 0, cardCost.length);
@@ -250,7 +251,7 @@ class Game {
                         }
                         Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
                         addCoinsToPiles(cardCost);
-                        hands[player].addCard(pickedUpCard, cardCost);
+                        playerHand.addCard(pickedUpCard, cardCost);
                         exitDo = 0;
                     } else {
                         System.out.println("You do not have the balance for this card.");
@@ -278,11 +279,11 @@ class Game {
                     System.out.println("Choose card spot (1-4): ");
                     cardSpot = scanner.nextInt() - 1;
 
-                    if (hands[player].checkReservedCardQuantity()) {
+                    if (playerHand.checkReservedCardQuantity()) {
                         Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
                         pickedUpCard.setFaceUp(false);
-                        hands[player].reserveCard(pickedUpCard);
-                        hands[player].addCoin(removeCoin(5)); // add a gold coin while removing it from this game pile
+                        playerHand.reserveCard(pickedUpCard);
+                        playerHand.addCoin(removeCoin(5)); // add a gold coin while removing it from this game pile
                         exitDo = 0;
                     } else {
                         System.out.println("You already have 3 reserved cards.");
@@ -293,7 +294,7 @@ class Game {
             case 5:
                 // buy card from hand reserve pile
                 showHands();
-                hands[player].showReservedCards();
+                playerHand.showReservedCards();
 
                 System.out.println("Choose row (0 to go back): ");
                 row = scanner.nextInt() - 1; // not using try catch to verify that it is an integer since this is only debug mode,
@@ -301,7 +302,7 @@ class Game {
                     exitDo = -2;
                     break;
                 } else {
-                    int playerCanBuy = hands[player].checkBalance(hands[player].peekCard(row));
+                    int playerCanBuy = playerHand.checkBalance(playerHand.peekCard(row));
                     int playerWillUseGoldCoin = 0;
 
                     if (playerCanBuy >= 0) {
@@ -313,7 +314,7 @@ class Game {
                                 break;
                             }
                         }
-                        int[] cardCost = hands[player].getCost(hands[player].peekCard(row));
+                        int[] cardCost = playerHand.getCost(playerHand.peekCard(row));
 
                         if (playerWillUseGoldCoin == 1) {
                             int[] oldCardCost = new int[cardCost.length + 1];
@@ -323,7 +324,7 @@ class Game {
                             cardCost = new int[cardCost.length + 1];
                             System.arraycopy(oldCardCost, 0, cardCost, 0, cardCost.length);
                         }
-                        hands[player].buyReservedCard(row, cardCost);
+                        playerHand.buyReservedCard(row, cardCost);
                         addCoinsToPiles(cardCost);
                         exitDo = 0;
                         break;
@@ -450,8 +451,9 @@ class Game {
                             }
 
                             if (exitDo != -2) {
+                                Hand playerHand = hands[player];
                                 //if a user can buy a noble the index location will have a 1 in it. The user can pickup the noble at that index
-                                boolean[] noblesPlayerCanBuy = checkForNobles(hands[player]);
+                                boolean[] noblesPlayerCanBuy = checkForNobles(playerHand);
                                 boolean playerCantPickupNobles = true;
                                 for (int i = 0; i < noblesPlayerCanBuy.length; i++) {
                                     if (noblesPlayerCanBuy[i]) {
@@ -463,10 +465,10 @@ class Game {
                                 if (!playerCantPickupNobles) {
                                     System.out.println("Choose a noble to pickup: ");
                                     int nobleChoice = scanner.nextInt();
-                                    hands[player].addNobleToHand(removeNoble(nobleChoice));
+                                    playerHand.addNobleToHand(removeNoble(nobleChoice));
                                 }
 
-                                if (hands[player].getPoints() >= 15 && !lastRound) {
+                                if (playerHand.getPoints() >= 15 && !lastRound) {
                                     lastRound = true;
                                     playerWhoInitiatedLastRound = player;
                                 }

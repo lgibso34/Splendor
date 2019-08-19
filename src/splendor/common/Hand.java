@@ -5,6 +5,7 @@ import splendor.common.cards.CardPile;
 import splendor.common.cards.Noble;
 import splendor.common.coins.CoinPile;
 import splendor.common.util.Constants;
+import splendor.common.util.Constants.Colors;
 
 import java.util.ArrayList;
 
@@ -56,7 +57,7 @@ class Hand {
         }
 
         int goldCoinsNeeded = 0;
-        int goldCoinCount = coinPiles[5].getSize();
+        int goldCoinCount = coinPiles[Colors.Gold.ordinal()].getSize();
         boolean playerHasAtLeastOneGoldCoin = goldCoinCount > 0;
 
         for (int i = 0; i < cardCostWithPermanentsAndGold.length; i++) { // iterate through each color
@@ -70,7 +71,7 @@ class Hand {
             }
         }
 
-        cardCostWithPermanentsAndGold[5] = goldCoinsNeeded; // amount of gold coins needed for this card
+        cardCostWithPermanentsAndGold[Colors.Gold.ordinal()] = goldCoinsNeeded; // amount of gold coins needed for this card
 
         return cardCostWithPermanentsAndGold;
     }
@@ -79,13 +80,13 @@ class Hand {
         boolean playerCanBuy = true;
         boolean goldRequired = false;
         int goldCoinsNeeded = 0;
-        int goldCoinCount = coinPiles[5].getSize();
+        int goldCoinCount = coinPiles[Colors.Gold.ordinal()].getSize();
 
         int[] cardCostWithPermanents = getCost(card);
 
-        if (cardCostWithPermanents[5] > 0) {
+        if (cardCostWithPermanents[Colors.Gold.ordinal()] > 0) {
             goldRequired = true;
-            goldCoinsNeeded = cardCostWithPermanents[5];
+            goldCoinsNeeded = cardCostWithPermanents[Colors.Gold.ordinal()];
         }
 
         for (int i = 0; i < cardCostWithPermanents.length; i++) { // iterate through each color
@@ -103,7 +104,7 @@ class Hand {
     }
 
     public boolean checkReservedCardQuantity() {
-        return cardPiles[5].getSize() < 3;
+        return cardPiles[Colors.Gold.ordinal()].getSize() < 3;
     }
 
     // [ white, blue, green, red, black, gold ]
@@ -130,7 +131,7 @@ class Hand {
                 points += pointValue;
             }
         } else {
-            cardPiles[5].add(card); // add to faceDown reserve pile
+            cardPiles[Colors.Gold.ordinal()].add(card); // add to faceDown reserve pile
         }
     }
 
@@ -150,24 +151,24 @@ class Hand {
     }
 
     public void showReservedCards() {
-        System.out.println(cardPiles[5].showCards());
+        System.out.println(cardPiles[Colors.Gold.ordinal()].showCards());
     }
 
     public Card peekCard(int index) {
-        return cardPiles[5].peekCard(index);
+        return cardPiles[Colors.Gold.ordinal()].peekCard(index);
     }
 
     // cardCost must be passed in because gold coins are not in the colorCost property
     // of the Card, the parameter passed in may contain gold coins that need to be
     // subtracted from the user's hand
     public void buyReservedCard(int index, int[] cardCost) {
-        Card reservedCardBought = cardPiles[5].buyReservedCard(index);
+        Card reservedCardBought = cardPiles[Colors.Gold.ordinal()].buyReservedCard(index);
         reservedCardBought.setFaceUp(true);
         addCard(reservedCardBought, cardCost);
     }
 
     public void reserveCard(Card card) {
-        cardPiles[5].add(card);
+        cardPiles[Colors.Gold.ordinal()].add(card);
     }
 
     public int getPoints() {
