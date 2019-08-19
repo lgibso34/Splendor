@@ -2,8 +2,8 @@ package lib.test;
 
 import splendor.common.util.PCG;
 
-public class testPRNG {
-    private static PCG rand = new PCG();
+class testPRNG {
+    private static final PCG rand = new PCG();
     private static int numNegative = 0;
     private static int numHeads = 0;
     private static int fourPlus = 0;

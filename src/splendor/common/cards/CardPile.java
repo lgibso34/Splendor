@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class CardPile {
 
-	private ArrayList<Card> cards = new ArrayList<Card>();
-	private Colors color;
+	private ArrayList<Card> cards;
+	private final Colors color;
 
 	public CardPile(Colors color) {
 		this.color = color;
@@ -30,11 +30,11 @@ public class CardPile {
 	}
 
 	public String showCards(){
-		String output = "";
+		StringBuilder output = new StringBuilder();
 		for(Card c : cards){
-			output += c.toString() + "\n";
+			output.append(c.toString()).append("\n");
 		}
-		return output;
+		return output.toString();
 	}
 
 	public String toString(){

@@ -8,9 +8,9 @@ import splendor.common.util.Constants;
  */
 public class Card {
 
-	private int[] colorCost;
-	private Colors color;
-	private int pointValue;
+	private final int[] colorCost;
+	private final Colors color;
+	private final int pointValue;
 	private boolean faceUp = false;
 
 	public Card(int[] colorCost, int pointValue, Colors color) {
@@ -19,7 +19,7 @@ public class Card {
 		this.color = color;
 	}
 
-	public Card(int[] colorCost, int pointValue) {
+	Card(int[] colorCost, int pointValue) {
 		this.colorCost = colorCost;
 		this.pointValue = pointValue;
 		this.color = null;
@@ -45,9 +45,9 @@ public class Card {
 		faceUp = b;
 	}
 
-	public int getColorValue(int color) {
-		return colorCost[color];
-	}
+	//public int getColorValue(int color) {
+	//	return colorCost[color];
+	//}
 
 	public int[] getColorCost(){
 		return this.colorCost;

@@ -5,7 +5,7 @@ import splendor.common.util.Constants.Colors;
 
 public class CoinPile {
 
-	private Colors color;
+	private final Colors color;
 	private int size;
 	
 	public CoinPile(int numPlayers, Colors color) {

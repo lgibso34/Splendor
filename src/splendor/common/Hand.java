@@ -5,15 +5,14 @@ import splendor.common.cards.CardPile;
 import splendor.common.cards.Noble;
 import splendor.common.coins.CoinPile;
 import splendor.common.util.Constants;
-import splendor.common.util.Constants.Colors;
 
 import java.util.ArrayList;
 
-public class Hand {
+class Hand {
 
     private CoinPile[] coinPiles = new CoinPile[6]; // 5 colors + gold: [ white, blue, green, red, black, gold ]
     private CardPile[] cardPiles = new CardPile[6]; // 5 colors + reserved: [ white, blue, green, red, black, reserveCards ]
-    private ArrayList<Noble> noblePile = new ArrayList<>();
+    private ArrayList<Noble> noblePile;
     private int points = 0;
 
     public Hand() {
@@ -112,9 +111,7 @@ public class Hand {
         coinPiles[color].add();
     }
 
-    // TODO
-    // works but does not take into consideration of gold wildcard coins
-    public void removeCoinsFromInventory(int[] cardCost) {
+    private void removeCoinsFromInventory(int[] cardCost) {
         for (int i = 0; i < cardCost.length; i++) {
             if (cardCost[i] > 0) {
                 for (int j = 0; j < cardCost[i]; j++) {
@@ -178,10 +175,10 @@ public class Hand {
     }
 
     public String toString() {
-        String output = "Points: " + points + "\n";
+        StringBuilder output = new StringBuilder("Points: " + points + "\n");
         for (int i = 0; i < cardPiles.length; i++) {
-            output += cardPiles[i].toString() + " " + coinPiles[i].toString() + "\n";
+            output.append(cardPiles[i].toString()).append(" ").append(coinPiles[i].toString()).append("\n");
         }
-        return output;
+        return output.toString();
     }
 }

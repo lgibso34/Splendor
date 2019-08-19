@@ -4,13 +4,11 @@ import java.util.ArrayList;
 
 public class CardRow {
 
-	ArrayList<Card> cards = new ArrayList<>(4); // 4 cards per row
-	private int row = 0;
-	private Deck deck;
+	private ArrayList<Card> cards = new ArrayList<>(4); // 4 cards per row
+	private int row;
 
 	public CardRow(int row, Deck deck, int dealt) {
 		this.row = row;
-		this.deck = deck;
 		// deal cards and place in corresponding spot in CardRow
 		for (int i = 0; i < dealt; i++) {
 			cards.add(i, deck.dealCard());
@@ -32,9 +30,9 @@ public class CardRow {
 		return cards.get(index);
 	}
 
-	public Card remove(int index, Card dealtCard) {
-		return cards.remove(index);
-	}
+	//public Card remove(int index, Card dealtCard) {
+	//	return cards.remove(index);
+	//}
 
 	// used for Nobles
 	public Card remove(int index) {
@@ -42,10 +40,9 @@ public class CardRow {
 	}
 
 	// used for Nobles
-	public Card[] getCards(){
-		return cards.toArray(new Card[cards.size()]); // returns an array of Card objects
+	public ArrayList<Card> getCards(){
+		return cards;
 	}
-
 
 	public String toString(){
 		StringBuilder output = new StringBuilder("Row #" + row + " \n");

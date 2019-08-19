@@ -9,8 +9,8 @@ import java.util.ArrayList;
  */
 public class Deck {
 
-	ArrayList<Card> cards;
-	private static PCG rand = new PCG();
+	private ArrayList<Card> cards;
+	private static final PCG rand = new PCG();
 
 	// wild card generic allows for Card or Noble objects
 	public Deck(ArrayList<? extends Card> cards) {

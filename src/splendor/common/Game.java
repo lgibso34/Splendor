@@ -9,13 +9,13 @@ import splendor.common.coins.CoinPile;
 import splendor.common.util.DeckBuilder;
 import splendor.common.util.Constants;
 
-public class Game {
+class Game {
 
-    private static int index = 0;
+    //private static int index = 0;
     private static int numPlayers = 5;
     private static boolean lastRound = false;
     private static int playerWhoInitiatedLastRound = -1;
-    private static boolean debug = true;
+    private static final boolean debug = true;
 
     private static Deck[] decks = new Deck[4];
     private static CoinPile[] coinPiles = new CoinPile[6];
@@ -53,22 +53,22 @@ public class Game {
         return (Noble) cardRows[0].remove(index);
     }
 
-    private static int[] checkForNobles(Hand player) {
+    private static boolean[] checkForNobles(Hand player) {
         int[] permCards = player.getPermanentCardCount();
-        Card[] Nobles = cardRows[0].getCards();
-        int[] noblesThatCanBeBought = new int[Nobles.length];
+        ArrayList<Card> nobles = cardRows[0].getCards();
+        boolean[] noblesThatCanBeBought = new boolean[nobles.size()];
         boolean playerCanBuy = true;
 
 
-        for (int i = 0; i < Nobles.length; i++) {
-            int[] cost = Nobles[i].getColorCost();
+        for (int i = 0; i < nobles.size(); i++) {
+            int[] cost = nobles.get(i).getColorCost();
             for (int j = 0; j < cost.length; j++) {
                 if (permCards[j] < cost[j]) {
                     playerCanBuy = false;
                     j = cost.length; // break out of the loop
                 }
             }
-            noblesThatCanBeBought[i] = playerCanBuy ? 1 : 0;
+            noblesThatCanBeBought[i] = playerCanBuy;
         }
         return noblesThatCanBeBought;
     }
@@ -152,8 +152,8 @@ public class Game {
     }
 
     private static int handlePlayChoice(Scanner scanner, int player, int choice, int exitDo) {
-        int row = 0;
-        int cardSpot = 0;
+        int row;
+        int cardSpot;
         switch (choice) {
             case 0:
                 exitDo = 1;
@@ -242,15 +242,11 @@ public class Game {
                         int[] cardCost = hands[player].getCost(cardRows[row].peekCard(cardSpot));
                         if (playerWillUseGoldCoin == 1) {
                             int[] oldCardCost = new int[cardCost.length + 1];
-                            for (int i = 0; i < cardCost.length; i++) {
-                                oldCardCost[i] = cardCost[i];
-                            }
+                            System.arraycopy(cardCost, 0, oldCardCost, 0, cardCost.length);
                             oldCardCost[5] = playerCanBuy;
 
                             cardCost = new int[cardCost.length + 1];
-                            for (int i = 0; i < cardCost.length; i++) {
-                                cardCost[i] = oldCardCost[i];
-                            }
+                            System.arraycopy(oldCardCost, 0, cardCost, 0, cardCost.length);
                         }
                         Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
                         addCoinsToPiles(cardCost);
@@ -321,15 +317,11 @@ public class Game {
 
                         if (playerWillUseGoldCoin == 1) {
                             int[] oldCardCost = new int[cardCost.length + 1];
-                            for (int i = 0; i < cardCost.length; i++) {
-                                oldCardCost[i] = cardCost[i];
-                            }
+                            System.arraycopy(cardCost, 0, oldCardCost, 0, cardCost.length);
                             oldCardCost[5] = playerCanBuy;
 
                             cardCost = new int[cardCost.length + 1];
-                            for (int i = 0; i < cardCost.length; i++) {
-                                cardCost[i] = oldCardCost[i];
-                            }
+                            System.arraycopy(oldCardCost, 0, cardCost, 0, cardCost.length);
                         }
                         hands[player].buyReservedCard(row, cardCost);
                         addCoinsToPiles(cardCost);
@@ -355,7 +347,7 @@ public class Game {
             Scanner scanner = new Scanner(System.in);
 
             int exitDo = 0;
-            int temp = 0;
+            int temp;
             do {
                 try {
                     System.out.print("Enter number of players: ");
@@ -376,7 +368,7 @@ public class Game {
             initializeGame(numPlayers);
 
             exitDo = 0;
-            int choice = 0;
+            int choice;
             do {
                 try {
                     System.out.println("--------------------------------------------------------------");
@@ -459,12 +451,12 @@ public class Game {
 
                             if (exitDo != -2) {
                                 //if a user can buy a noble the index location will have a 1 in it. The user can pickup the noble at that index
-                                int[] noblesPlayerCanBuy = checkForNobles(hands[player]);
+                                boolean[] noblesPlayerCanBuy = checkForNobles(hands[player]);
                                 boolean playerCantPickupNobles = true;
                                 for (int i = 0; i < noblesPlayerCanBuy.length; i++) {
-                                    if (noblesPlayerCanBuy[i] == 1) {
+                                    if (noblesPlayerCanBuy[i]) {
                                         playerCantPickupNobles = false;
-                                        System.out.println(cardRows[0].peekCard(noblesPlayerCanBuy[i]).toString());
+                                        System.out.println(cardRows[0].peekCard(i).toString());
                                     }
                                 }
 
