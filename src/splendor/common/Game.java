@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import splendor.common.cards.Card;
-import splendor.common.cards.CardRow;
-import splendor.common.cards.Deck;
+import splendor.common.cards.*;
 import splendor.common.coins.CoinPile;
 import splendor.common.util.DeckBuilder;
 import splendor.common.util.Constants;
@@ -44,6 +42,30 @@ public class Game {
         for (int i = 0; i < numPlayers; i++) {
             hands[i] = new Hand();
         }
+    }
+
+    public static Noble removeNoble(int index) {
+        return (Noble) cardRows[0].remove(index);
+    }
+
+    public static int[] checkForNobles(Hand player) {
+        int[] permCards = player.getPermanentCardCount();
+        Card[] Nobles = cardRows[0].getCards();
+        int[] noblesThatCanBeBought = new int[Nobles.length];
+        boolean playerCanBuy = true;
+
+
+        for (int i = 0; i < Nobles.length; i++) {
+            int[] cost = Nobles[i].getColorCost();
+            for (int j = 0; j < cost.length; j++) {
+                if (permCards[j] < cost[j]) {
+                    playerCanBuy = false;
+                    j = cost.length; // break out of the loop
+                }
+            }
+            noblesThatCanBeBought[i] = playerCanBuy ? 1 : 0;
+        }
+        return noblesThatCanBeBought;
     }
 
     public static void addCoinsToPiles(int[] cardCost) {
@@ -410,6 +432,12 @@ public class Game {
                 exitDo = 0;
                 choice = 0;
                 do {
+                    if (lastRound) {
+                        if ((player) == playerWhoInitiatedLastRound) {
+                            exitDo = 1;
+                            break;
+                        }
+                    }
                     try {
                         System.out.println("--------------------------------------------------------------");
                         System.out.println("Player " + (player + 1));
@@ -433,15 +461,27 @@ public class Game {
                             if (exitDo != -2) {
                                 // untested
                                 // TODO
-                                if (lastRound) {
-                                    if ((player + 1) == playerWhoInitiatedLastRound) {
-                                        exitDo = 1;
+
+
+                                //if a user can buy a noble the index location will have a 1 in it. The user can pickup the noble at that index
+                                int[] noblesPlayerCanBuy = checkForNobles(hands[player]);
+                                boolean playerCantPickupNobles = true;
+                                for (int i = 0; i < noblesPlayerCanBuy.length; i++) {
+                                    if (noblesPlayerCanBuy[i] == 1) {
+                                        playerCantPickupNobles = false;
+                                        System.out.println(cardRows[0].peekCard(noblesPlayerCanBuy[i]).toString());
                                     }
                                 }
 
-                                if (hands[player].getPoints() >= 15) {
-                                    lastRound = true;
-                                    playerWhoInitiatedLastRound = player;
+                                if (!playerCantPickupNobles) {
+                                    System.out.println("Choose a noble to pickup: ");
+                                    int nobleChoice = scanner.nextInt();
+                                    hands[player].addNobleToHand(removeNoble(nobleChoice));
+                                }
+
+                                if (hands[player].getPoints() >= 15 && !lastRound) {
+                                        lastRound = true;
+                                        playerWhoInitiatedLastRound = player;
                                 }
 
                                 if (player == numPlayers - 1) {

@@ -23,7 +23,7 @@ public class DeckBuilder {
         ArrayList<Card> lv1 = new ArrayList<>();
         ArrayList<Card> lv2 = new ArrayList<>();
         ArrayList<Card> lv3 = new ArrayList<>();
-        ArrayList<Card> patrons =  new ArrayList<>();
+        ArrayList<Noble> patrons =  new ArrayList<>();
 
         Scanner reader;
         try {

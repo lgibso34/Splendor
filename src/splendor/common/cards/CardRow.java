@@ -34,6 +34,17 @@ public class CardRow {
 		return cards.remove(index);
 	}
 
+	// used for Nobles
+	public Card remove(int index) {
+		return cards.remove(index);
+	}
+
+	// used for Nobles
+	public Card[] getCards(){
+		return cards.toArray(new Card[cards.size()]); // returns an array of Card objects
+	}
+
+
 	public String toString(){
 		String output = "Row #" + row + " \n";
 		for(Card card : cards){

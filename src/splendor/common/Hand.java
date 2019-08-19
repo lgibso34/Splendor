@@ -2,14 +2,18 @@ package splendor.common;
 
 import splendor.common.cards.Card;
 import splendor.common.cards.CardPile;
+import splendor.common.cards.Noble;
 import splendor.common.coins.CoinPile;
 import splendor.common.util.Constants;
 import splendor.common.util.Constants.Colors;
+
+import java.util.ArrayList;
 
 public class Hand {
 
     private CoinPile[] coinPiles = new CoinPile[6]; // 5 colors + gold: [ white, blue, green, red, black, gold ]
     private CardPile[] cardPiles = new CardPile[6]; // 5 colors + reserved: [ white, blue, green, red, black, reserveCards ]
+    private ArrayList<Noble> noblePile = new ArrayList<>();
     private int points = 0;
 
     public Hand() {
@@ -18,6 +22,14 @@ public class Hand {
             coinPiles[i] = new CoinPile(Constants.colors[i]);
             cardPiles[i] = new CardPile(Constants.colors[i]);
         }
+    }
+
+    public int[] getPermanentCardCount() {
+        int[] retArr = new int[cardPiles.length];
+        for (int i = 0; i < cardPiles.length; i++) {
+            retArr[i] = cardPiles[i].getSize();
+        }
+        return retArr;
     }
 
     public int getCoinCount() {
@@ -80,6 +92,7 @@ public class Hand {
         for (int i = 0; i < cardCostWithPermanents.length; i++) { // iterate through each color
             if (cardCostWithPermanents[i] > coinPiles[i].getSize()) { // and check if the card costs more than what the player has
                 playerCanBuy = false;
+                i = cardCostWithPermanents.length; // break out of the loop
             }
         }
 
@@ -122,6 +135,12 @@ public class Hand {
         } else {
             cardPiles[5].add(card); // add to faceDown reserve pile
         }
+    }
+
+    // used for pickup nobles
+    public void addNobleToHand(Noble noble) {
+        noblePile.add(noble);
+        points += noble.getValue();
     }
 
     // used for ties
