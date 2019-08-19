@@ -54,14 +54,14 @@ public class Card {
 	}
 
 	public String toString(){
-		String output = "Card: (";
+		StringBuilder output = new StringBuilder("Card: (");
 		for(int i = 0; i < colorCost.length; i++){
 			int cost = colorCost[i];
 			if(cost > 0)
-				output += cost + Constants.shortColors[i]  + " ";
+				output.append(cost).append(Constants.shortColors[i]).append(" ");
 		}
-		output = output.substring(0, output.length() - 1);
-		output += ") " + color + " [" + pointValue + "] " + (faceUp ? "FaceUp" : "FaceDown");
-		return output;
+		output = new StringBuilder(output.substring(0, output.length() - 1));
+		output.append(") ").append(color).append(" [").append(pointValue).append("] ").append(faceUp ? "FaceUp" : "FaceDown");
+		return output.toString();
 	}
 }

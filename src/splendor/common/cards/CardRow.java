@@ -6,9 +6,11 @@ public class CardRow {
 
 	ArrayList<Card> cards = new ArrayList<>(4); // 4 cards per row
 	private int row = 0;
+	private Deck deck;
 
 	public CardRow(int row, Deck deck, int dealt) {
 		this.row = row;
+		this.deck = deck;
 		// deal cards and place in corresponding spot in CardRow
 		for (int i = 0; i < dealt; i++) {
 			cards.add(i, deck.dealCard());
@@ -46,10 +48,10 @@ public class CardRow {
 
 
 	public String toString(){
-		String output = "Row #" + row + " \n";
+		StringBuilder output = new StringBuilder("Row #" + row + " \n");
 		for(Card card : cards){
-			output += card.toString() + "     ";
+			output.append(card.toString()).append("     ");
 		}
-		return output;
+		return output.toString();
 	}
 }
