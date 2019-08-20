@@ -19,9 +19,9 @@ class Game {
     private static final int MAX_PLAYER_COINS = 10;
 
     private static Deck[] decks = new Deck[4];
-    private static CoinBank gameBank;
+    private static CoinBank gameCoins;
     private static CardRow[] cardRows = new CardRow[4];
-    private static Hand[] hands = new Hand[0];
+    private static Hand[] hands;
 
     /**
      * Initializes the game by creating decks and dealing cards to their respective rows.
@@ -31,7 +31,7 @@ class Game {
      */
     private static void initializeGame(int numPlayers) {
 
-        gameBank = new CoinBank(numPlayers);
+        gameCoins = new CoinBank(numPlayers);
         decks = DeckBuilder.buildDecks();
 
         for (int i = 0; i < decks.length; i++) {
@@ -75,13 +75,13 @@ class Game {
     private static void addCoinsToGameBank(int[] cardCost) {
         for (int i = 0; i < cardCost.length; i++) {
             if (cardCost[i] > 0) {
-                gameBank.addCoins(Color.colors[i], cardCost[i]);
+                gameCoins.addCoins(Color.colors[i], cardCost[i]);
             }
         }
     }
 
     private static boolean removeCoin(Color color) {
-        return gameBank.removeCoins(color);
+        return gameCoins.removeCoins(color);
     }
 
     private static void showDecks() {
@@ -93,7 +93,7 @@ class Game {
 
     private static void showGameBank() {
         for(Color c : Color.colors){
-            System.out.println(gameBank.pileToString(c));
+            System.out.println(gameCoins.pileToString(c));
         }
         System.out.println();
     }
@@ -140,7 +140,7 @@ class Game {
         Hand winner = tiedHands.get(0); // start with the first hand, if perm cards are equal between two players, the playerWhoInitiatedLastRound wins
         for (Hand hand : tiedHands) { // could possibly use for loop to prevent one iteration by starting at index 1 in tiedHands
             // check if the tiedHands have less total permanent cards than the current 'winner'
-            if (hand.totalPermanentCards() < winner.totalPermanentCards())
+            if (hand.getTotalPermanentCount() < winner.getTotalPermanentCount())
                 winner = hand;
         }
         return winner;
@@ -164,7 +164,7 @@ class Game {
                 System.out.println("You currently have a total of " + playerHand.getCoinCount() + " coins consisting of:");
                 System.out.println(playerHand.coinsToString());
                 System.out.println("Available coins:");
-                System.out.println(gameBank.toString());
+                System.out.println(gameCoins.toString());
                 System.out.println("Select coin color(s) and amount(s), in the format: 1b 1k 1g\n");
 
                 int amount1 = -1, amount2, amount3;
@@ -184,8 +184,8 @@ class Game {
 
                 if (amount1 == 2) {
                     //check coin piles
-                    if (gameBank.canTake(color1, amount1)) {
-                        gameBank.removeCoins(color1, amount1);
+                    if (gameCoins.canTake(color1, amount1)) {
+                        gameCoins.removeCoins(color1, amount1);
                         playerHand.addCoins(color1, amount1);
                     } else {
                         System.out.println("You may not take 2 " + color1 + " coins right now.");
@@ -212,10 +212,10 @@ class Game {
                     }
 
                     //check coin piles
-                    if (gameBank.canTake(color1, amount1) && gameBank.canTake(color2, amount2) && gameBank.canTake(color3, amount3)) {
-                        gameBank.removeCoins(color1, amount1);
-                        gameBank.removeCoins(color2, amount2);
-                        gameBank.removeCoins(color3, amount3);
+                    if (gameCoins.canTake(color1, amount1) && gameCoins.canTake(color2, amount2) && gameCoins.canTake(color3, amount3)) {
+                        gameCoins.removeCoins(color1, amount1);
+                        gameCoins.removeCoins(color2, amount2);
+                        gameCoins.removeCoins(color3, amount3);
                         //add coins
                         playerHand.addCoins(color1, amount1);
                         playerHand.addCoins(color2, amount2);
@@ -279,7 +279,7 @@ class Game {
                             }
                         }
 
-                        int[] cardCost = playerHand.getCost(cardRows[row].peekCard(cardSpot));
+                        int[] cardCost = playerHand.getModifiedCost(cardRows[row].peekCard(cardSpot));
                         if (playerWillUseGoldCoin == 1) {
                             int[] oldCardCost = new int[cardCost.length + 1];
                             System.arraycopy(cardCost, 0, oldCardCost, 0, cardCost.length);
@@ -307,7 +307,7 @@ class Game {
                 break;
             case 4:
                 // reserve card logic
-                System.out.println(gameBank.pileToString(Color.Gold));
+                System.out.println(gameCoins.pileToString(Color.Gold));
                 showCardRows();
                 // pick up card
                 System.out.println("Choose row (1-3) (0 to go back): ");
@@ -355,7 +355,7 @@ class Game {
                                 break;
                             }
                         }
-                        int[] cardCost = playerHand.getCost(playerHand.peekCard(row));
+                        int[] cardCost = playerHand.getModifiedCost(playerHand.peekCard(row));
 
                         if (playerWillUseGoldCoin == 1) {
                             int[] oldCardCost = new int[cardCost.length + 1];
