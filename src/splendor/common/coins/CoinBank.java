@@ -45,7 +45,7 @@ public class CoinBank {
     }
 
     public boolean canTake(Color c, int amount){
-        return bank[c.ordinal()].getSize() >= amount;
+        return bank[c.ordinal()].canTake(amount);
     }
 
     public String pileToString(Color c){
@@ -53,11 +53,11 @@ public class CoinBank {
     }
 
     public String toString(){
-        String ret = null;
+        StringBuilder output = new StringBuilder("");
         for(Color c : Color.colors){
-            ret += bank[c.ordinal()].toString();
+            output.append(bank[c.ordinal()].toString()).append(", ");
         }
-        return ret;
+        return output.substring(0, output.length() - 2);
     }
 
 }

@@ -19,7 +19,7 @@ class Game {
     private static final int MAX_PLAYER_COINS = 10;
 
     private static Deck[] decks = new Deck[4];
-    private static CoinBank gameBank = new CoinBank();
+    private static CoinBank gameBank;
     private static CardRow[] cardRows = new CardRow[4];
     private static Hand[] hands = new Hand[0];
 
@@ -30,6 +30,7 @@ class Game {
      */
     private static void initializeGame(int numPlayers) {
 
+        gameBank = new CoinBank(numPlayers);
         decks = DeckBuilder.buildDecks();
 
         for (int i = 0; i < decks.length; i++) {
@@ -189,7 +190,7 @@ class Game {
                         gameBank.removeCoins(color1, amount1);
                         playerHand.addCoins(color1, amount1);
                     } else {
-                        System.out.println("That combination of coins is not a valid choice.");
+                        System.out.println("You may not take 2 " + color1 + " coins right now.");
                         exitDo = -2;
                         break;
                     }
