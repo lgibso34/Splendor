@@ -3,7 +3,7 @@ package splendor.common.coins;
 import splendor.common.util.Constants;
 import splendor.common.util.Constants.Color;
 
-public class CoinPile {
+class CoinPile {
 
 	private final Color color;
 	private int size;
@@ -31,10 +31,6 @@ public class CoinPile {
 		this.color = color;
 		size = 0;
 	}
-	
-	public void add() {
-		size++;
-	}
 
 	public void add(int amount) {
 		if(amount > 0)
@@ -43,15 +39,6 @@ public class CoinPile {
 
 	public int getSize(){
 		return size;
-	}
-
-	// returns -1 coins are at zero, otherwise returns the color index
-	public boolean remove() {
-		if (size > 0) {
-			size--;
-			return true;
-		}
-		return false;
 	}
 
 	public boolean removeCoins(int amount) {

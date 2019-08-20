@@ -133,10 +133,6 @@ class Hand {
         System.out.println(playerCards.pileToString(Color.Gold));
     }
 
-    public Card peekCard(int index) {
-        return playerCards.peekCard(index);
-    }
-
     // cardCost must be passed in because gold coins are not in the colorCost property
     // of the Card, the parameter passed in may contain gold coins that need to be
     // subtracted from the user's hand

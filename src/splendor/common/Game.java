@@ -71,10 +71,6 @@ class Game {
         }
     }
 
-    private static boolean removeCoin(Color color) {
-        return gameCoins.removeCoins(color);
-    }
-
     private static void showDecks() {
         for (int i = 0; i < decks.length; i++) {
             System.out.println("========== Deck " + i + " ==========");
@@ -304,7 +300,7 @@ class Game {
                         Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
                         pickedUpCard.setFaceUp(false);
                         playerHand.reserveCard(pickedUpCard);
-                        if (removeCoin(Color.Gold))
+                        if (gameCoins.removeCoins(Color.Gold))
                             playerHand.addCoin(Color.Gold); // add a gold coin if one was in the pile
                         exitDo = 0;
                     } else {

@@ -30,6 +30,8 @@ public class CoinBank {
     }
 
     public boolean removeCoins(Color c, int amount){
+        if(c == null)
+            return true;
         return bank[c.ordinal()].removeCoins(amount);
     }
 
@@ -45,6 +47,8 @@ public class CoinBank {
     }
 
     public boolean canTake(Color c, int amount){
+        if(c == null)
+            return true;
         return bank[c.ordinal()].canTake(amount);
     }
 
@@ -53,7 +57,7 @@ public class CoinBank {
     }
 
     public String toString(){
-        StringBuilder output = new StringBuilder("");
+        StringBuilder output = new StringBuilder();
         for(Color c : Color.colors){
             output.append(bank[c.ordinal()].toString()).append(", ");
         }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class CardRow {
 
 	private ArrayList<Card> cards = new ArrayList<>(4); // 4 cards per row
-	private int row;
+	private final int row;
 
 	public CardRow(int row, Deck deck, int dealt) {
 		this.row = row;
@@ -45,9 +45,9 @@ public class CardRow {
 	}
 
 	public String toString(){
-		StringBuilder output = new StringBuilder("");
+		StringBuilder output = new StringBuilder();
 		if(row != 0)
-			output.append("Level" + row + ": ");
+			output.append("Level").append(row).append(": ");
 		else
 			output.append("Nobles: ");
 		for(Card card : cards){

@@ -3,7 +3,7 @@ package splendor.common.cards;
 import splendor.common.util.Constants.Color;
 
 public class Colors {
-    private int[] colors = new int[Color.colors.length];
+    private final int[] colors = new int[Color.colors.length];
 
     public Colors(int[] colors){
         for(Color c : Color.colors) {

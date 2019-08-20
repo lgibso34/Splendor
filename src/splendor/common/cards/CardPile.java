@@ -4,7 +4,7 @@ import splendor.common.util.Constants.Color;
 
 import java.util.ArrayList;
 
-public class CardPile {
+class CardPile {
 
 	private ArrayList<Card> cards = new ArrayList<>();
 	private final Color color;
@@ -27,14 +27,6 @@ public class CardPile {
 
 	public Card buyReservedCard(int index){
 		return cards.remove(index);
-	}
-
-	public String showCards(){
-		StringBuilder output = new StringBuilder();
-		for(Card c : cards){
-			output.append(c.toString()).append("\n");
-		}
-		return output.toString();
 	}
 
 	public String toString(){

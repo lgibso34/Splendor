@@ -5,7 +5,7 @@ public class Constants {
     {
     	White("w"), Blue("b"), Green("g"), Red("r"), Black("k"), Gold("o");
 
-        private String shortName;
+        private final String shortName;
 
         Color(String shortName) {
             this.shortName = shortName;
@@ -27,14 +27,12 @@ public class Constants {
         }
     }
 
-
-
-    public enum ProtocolActions
+    public enum ProtocolAction
     {
-        WithdrawCoins, BuyCard, ReserveCard, DepositCoins, AcquireNoble
-    }
+        WithdrawCoins, BuyCard, ReserveCard, DepositCoins, AcquireNoble;
 
-    public static final ProtocolActions[] protocolActions = ProtocolActions.values();
+        public static final ProtocolAction[] protocolActions = ProtocolAction.values();
+    }
 
     public static final int MAX_GEMS_2PLAYER = 4;
     public static final int MAX_GEMS_3PLAYER = 5;
