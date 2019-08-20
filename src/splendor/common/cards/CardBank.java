@@ -41,6 +41,16 @@ public class CardBank {
         return count;
     }
 
+    public Colors getPermanentCounts(){
+        int[] counts = new int[Color.colors.length];
+        for (Color c : Color.colors) {
+            if(c == Color.Gold)
+                continue;
+            counts[c.ordinal()] = bank[c.ordinal()].getSize();
+        }
+        return new Colors(counts);
+    }
+
     public String pileToString(Color c){
         return bank[c.ordinal()].toString();
     }

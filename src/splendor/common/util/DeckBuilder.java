@@ -1,6 +1,7 @@
 package splendor.common.util;
 
 import splendor.common.cards.Card;
+import splendor.common.cards.Colors;
 import splendor.common.cards.Deck;
 import splendor.common.cards.Noble;
 
@@ -34,12 +35,13 @@ public class DeckBuilder {
             reader.nextLine(); //skip the header
             while(reader.hasNextLine()){
                 int deck = reader.nextInt();
-                int[] colorCost = new int[5];
-                for(int i = 0; i < colorCost.length; i++){
-                    colorCost[i] = reader.nextInt();
+                int[] colorCostInt = new int[5];
+                for(int i = 0; i < colorCostInt.length; i++){
+                    colorCostInt[i] = reader.nextInt();
                 }
                 int colorInt = reader.nextInt();
                 int pointValue = reader.nextInt();
+                Colors colorCost = new Colors(colorCostInt);
                 if(colorInt == -1) {
                     patrons.add(new Noble(colorCost, pointValue));
                 } else {

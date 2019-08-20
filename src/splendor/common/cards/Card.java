@@ -1,25 +1,24 @@
 package splendor.common.cards;
 
 import splendor.common.util.Constants.Color;
-import splendor.common.util.Constants;
 
 /**
  * Card
  */
 public class Card {
 
-	private final int[] colorCost;
+	private final Colors colorCost;
 	private final Color color;
 	private final int pointValue;
 	private boolean faceUp = false;
 
-	public Card(int[] colorCost, int pointValue, Color color) {
+	public Card(Colors colorCost, int pointValue, Color color) {
 		this.colorCost = colorCost;
 		this.pointValue = pointValue;
 		this.color = color;
 	}
 
-	Card(int[] colorCost, int pointValue) {
+	Card(Colors colorCost, int pointValue) {
 		this.colorCost = colorCost;
 		this.pointValue = pointValue;
 		this.color = null;
@@ -33,10 +32,6 @@ public class Card {
 		return color;
 	}
 
-	public int getColorIndex() {
-		return color.ordinal();
-	}
-
 	public Boolean getFaceUp() {
 		return faceUp;
 	}
@@ -45,7 +40,7 @@ public class Card {
 		faceUp = b;
 	}
 
-	public int[] getColorCost(){
+	public Colors getColorCost(){
 		return this.colorCost;
 	}
 
@@ -54,7 +49,7 @@ public class Card {
 		for(Color c : Color.colors){
 			if(c == Color.Gold)
 				continue;
-			int cost = colorCost[c.ordinal()];
+			int cost = colorCost.getCost(c);
 			if(cost > 0)
 				output.append(cost).append(c.getShortName()).append(" ");
 		}

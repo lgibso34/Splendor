@@ -53,29 +53,20 @@ class Game {
     }
 
     private static boolean[] checkForNobles(Hand player) {
-        int[] permCards = player.getPermanentCardCount();
+        Colors permCards = player.getPermanentCardCount();
         ArrayList<Card> nobles = cardRows[0].getCards();
         boolean[] noblesThatCanBeBought = new boolean[nobles.size()];
-        boolean playerCanBuy = true;
-
-
-        for (int i = 0; i < nobles.size(); i++) {
-            int[] cost = nobles.get(i).getColorCost();
-            for (int j = 0; j < cost.length; j++) {
-                if (permCards[j] < cost[j]) {
-                    playerCanBuy = false;
-                    j = cost.length; // break out of the loop
-                }
-            }
-            noblesThatCanBeBought[i] = playerCanBuy;
+        int i = 0;
+        for(Card n : nobles){
+            noblesThatCanBeBought[i++] = permCards.greaterOrEqualTo(n.getColorCost());
         }
         return noblesThatCanBeBought;
     }
 
-    private static void addCoinsToGameBank(int[] cardCost) {
-        for (int i = 0; i < cardCost.length; i++) {
-            if (cardCost[i] > 0) {
-                gameCoins.addCoins(Color.colors[i], cardCost[i]);
+    private static void addCoinsToGameBank(Colors cardCost) {
+        for (Color c : Color.colors) {
+            if (cardCost.getCost(c) > 0) {
+                gameCoins.addCoins(c, cardCost.getCost(c));
             }
         }
     }
@@ -265,32 +256,22 @@ class Game {
                 } else {
                     System.out.println("Choose card spot (1-4): ");
                     cardSpot = scanner.nextInt() - 1;
+                    Card card = cardRows[row].peekCard(cardSpot);
+                    Colors modifiedCost = playerHand.getModifiedCost(card);
 
-                    int playerCanBuy = playerHand.checkBalance(cardRows[row].peekCard(cardSpot));
-                    int playerWillUseGoldCoin = 0;
-
-                    if (playerCanBuy >= 0) {
-                        if (playerCanBuy > 0) {
-                            System.out.println("You must use " + playerCanBuy + " gold coin(s) to purchase this card. Proceed?\n0 for no\n1 for yes");
-                            playerWillUseGoldCoin = scanner.nextInt();
-                            if (playerWillUseGoldCoin == 0) {
+                    if (playerHand.canBuy(card, modifiedCost)) {
+                        if (modifiedCost.getCost(Color.Gold) > 0) {
+                            System.out.println("You must use " + modifiedCost.getCost(Color.Gold) + " gold coin(s) to purchase this card. Proceed?\n0 for no\n1 for yes");
+                            int useGoldCoins = scanner.nextInt();
+                            if (useGoldCoins == 0) {
                                 exitDo = -2;
                                 break;
                             }
                         }
-
-                        int[] cardCost = playerHand.getModifiedCost(cardRows[row].peekCard(cardSpot));
-                        if (playerWillUseGoldCoin == 1) {
-                            int[] oldCardCost = new int[cardCost.length + 1];
-                            System.arraycopy(cardCost, 0, oldCardCost, 0, cardCost.length);
-                            oldCardCost[5] = playerCanBuy;
-
-                            cardCost = new int[cardCost.length + 1];
-                            System.arraycopy(oldCardCost, 0, cardCost, 0, cardCost.length);
-                        }
                         Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
-                        addCoinsToGameBank(cardCost);
-                        playerHand.addCard(pickedUpCard, cardCost);
+
+                        addCoinsToGameBank(modifiedCost);
+                        playerHand.addCard(pickedUpCard, modifiedCost);
                         exitDo = 0;
                     } else {
                         System.out.println("You do not have the balance for this card.");
@@ -343,34 +324,24 @@ class Game {
                     exitDo = -2;
                     break;
                 } else {
-                    int playerCanBuy = playerHand.checkBalance(playerHand.peekCard(row));
-                    int playerWillUseGoldCoin = 0;
-
-                    if (playerCanBuy >= 0) {
-                        if (playerCanBuy > 0) {
-                            System.out.println("You must use " + playerCanBuy + " gold coin(s) to purchase this card. Proceed?\n0 for no\n1 for yes");
-                            playerWillUseGoldCoin = scanner.nextInt();
-                            if (playerWillUseGoldCoin == 0) {
+                    Card card = cardRows[row].peekCard(row);
+                    Colors modifiedCost = playerHand.getModifiedCost(card);
+                    if (playerHand.canBuy(card, modifiedCost)) {
+                        if (modifiedCost.getCost(Color.Gold) > 0) {
+                            System.out.println("You must use " + modifiedCost.getCost(Color.Gold) + " gold coin(s) to purchase this card. Proceed?\n0 for no\n1 for yes");
+                            int useGoldCoins = scanner.nextInt();
+                            if (useGoldCoins == 0) {
                                 exitDo = -2;
                                 break;
                             }
                         }
-                        int[] cardCost = playerHand.getModifiedCost(playerHand.peekCard(row));
 
-                        if (playerWillUseGoldCoin == 1) {
-                            int[] oldCardCost = new int[cardCost.length + 1];
-                            System.arraycopy(cardCost, 0, oldCardCost, 0, cardCost.length);
-                            oldCardCost[5] = playerCanBuy;
-
-                            cardCost = new int[cardCost.length + 1];
-                            System.arraycopy(oldCardCost, 0, cardCost, 0, cardCost.length);
-                        }
-                        playerHand.buyReservedCard(row, cardCost);
-                        addCoinsToGameBank(cardCost);
+                        addCoinsToGameBank(modifiedCost);
+                        playerHand.buyReservedCard(row, modifiedCost);
                         exitDo = 0;
-                        break;
                     } else {
-                        System.out.println("you do not have the balance for that card");
+                        System.out.println("You do not have the balance for this card.");
+                        exitDo = -2;
                     }
                 }
                 break;
