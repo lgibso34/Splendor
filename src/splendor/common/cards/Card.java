@@ -45,23 +45,21 @@ public class Card {
 		faceUp = b;
 	}
 
-	//public int getColorValue(int color) {
-	//	return colorCost[color];
-	//}
-
 	public int[] getColorCost(){
 		return this.colorCost;
 	}
 
 	public String toString(){
 		StringBuilder output = new StringBuilder("Card: (");
-		for(int i = 0; i < colorCost.length; i++){
-			int cost = colorCost[i];
+		for(Color c : Color.colors){
+			if(c == Color.Gold)
+				continue;
+			int cost = colorCost[c.ordinal()];
 			if(cost > 0)
-				output.append(cost).append(Color.colors[i]).append(" ");
+				output.append(cost).append(c.getShortName()).append(" ");
 		}
 		output = new StringBuilder(output.substring(0, output.length() - 1));
-		output.append(") ").append(color).append(" [").append(pointValue).append("] ").append(faceUp ? "FaceUp" : "FaceDown");
+		output.append(") ").append(color != null ? color : "Noble").append(" [").append(pointValue).append("] "); //.append(faceUp ? "FaceUp" : "FaceDown")
 		return output.toString();
 	}
 }

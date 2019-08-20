@@ -45,10 +45,15 @@ public class CardRow {
 	}
 
 	public String toString(){
-		StringBuilder output = new StringBuilder("Row #" + row + " \n");
+		StringBuilder output = new StringBuilder("");
+		if(row != 0)
+			output.append("Level" + row + ": ");
+		else
+			output.append("Nobles: ");
 		for(Card card : cards){
 			output.append(card.toString()).append("     ");
 		}
+		output.append("\n");
 		return output.toString();
 	}
 }
