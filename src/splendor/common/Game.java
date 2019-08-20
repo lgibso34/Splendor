@@ -1,6 +1,7 @@
 package splendor.common;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -8,6 +9,7 @@ import splendor.common.cards.*;
 import splendor.common.coins.CoinPile;
 import splendor.common.util.DeckBuilder;
 import splendor.common.util.Constants;
+import splendor.common.util.Constants.Color;
 
 class Game {
 
@@ -16,6 +18,7 @@ class Game {
     private static boolean lastRound = false;
     private static int playerWhoInitiatedLastRound = -1;
     private static final boolean debug = true;
+    private static final int MAX_PLAYER_GEMS = 10;
 
     private static Deck[] decks = new Deck[4];
     private static CoinPile[] coinPiles = new CoinPile[6];
@@ -31,8 +34,8 @@ class Game {
 
         decks = DeckBuilder.buildDecks();
 
-        for (int i = 0; i < Constants.colors.length; i++) {
-            coinPiles[i] = new CoinPile(numPlayers, Constants.colors[i]);
+        for (int i = 0; i < Color.colors.length; i++) {
+            coinPiles[i] = new CoinPile(numPlayers, Color.colors[i]);
         }
 
         for (int i = 0; i < decks.length; i++) {
@@ -83,8 +86,8 @@ class Game {
         }
     }
 
-    private static int removeCoin(int color) {
-        return coinPiles[color].remove();
+    private static boolean removeCoin(Color color) {
+        return coinPiles[color.ordinal()].remove();
     }
 
     private static void showDecks() {
@@ -166,52 +169,90 @@ class Game {
                 System.out.println("Total coin count: " + playerCoinCount);
                 System.out.println("0: Go back");
                 System.out.println("--------------------------------------------------------------");
-                System.out.println("Select coin color\nOnly enter colors on new lines\n");
+                System.out.println("White(\"w\"), Blue(\"b\"), Green(\"g\"), Red(\"r\"), Black(\"k\")");
+                System.out.println("Select coin color(s) and amount(s), in the format: 1b 1k 1g\n");
 
-                int coinChoice = scanner.nextInt() - 1; // not using try catch to verify that it is an integer since this is only debug mode,
-                if (coinChoice == -1) {
+                int amount1 = -1, amount2 = 0, amount3 = 0;
+                Color color1 = null, color2 = null, color3 = null;
+
+                while (0 > amount1 || amount1 > 2 || color1 == null){ //first amount can be 1 or 2, 0 to go back
+                    color1 = null;
+                    String input = scanner.next();
+                    amount1 = Integer.parseInt(input.substring(0,1));
+                    if (input.length() > 1)
+                        color1 = Color.fromShortName(input.substring(1,2));
+                }
+                if (amount1 == 0) {
                     exitDo = -2;
                     break;
                 }
 
-                int secondChoice = scanner.nextInt() - 1;
-                if (secondChoice == -1) {
-                    exitDo = -2;
-                    break;
-                }
+                if (amount1 == 2) {
+                    //check coin piles
+                    if (coinPiles[color1.ordinal()].canTake(amount1)) {
+                        coinPiles[color1.ordinal()].remove();
+                        playerHand.addCoins(color1, amount1);
+                    }
+                } else {
+                    amount2 = -1;
+                    amount3 = -1;
+                    while (0 > amount2 || amount2 > 1) { //second amount can be 0 or 1
+                        color2 = null;
+                        String input = scanner.next();
+                        amount2 = Integer.parseInt(input.substring(0, 1));
+                        if (input.length() > 1)
+                            color2 = Color.fromShortName(input.substring(1, 2));
+                    }
 
-                if (coinChoice != secondChoice) {
-                    if (playerCoinCount < 8) {
-                        coinPiles[coinChoice].remove();
-                        playerHand.addCoin(coinChoice);
+                    while (0 > amount3 || amount3 > 1) { //third amount can be 0 or 1
+                        color3 = null;
+                        String input = scanner.next();
+                        amount3 = Integer.parseInt(input.substring(0, 1));
+                        if (input.length() > 1)
+                            color3 = Color.fromShortName(input.substring(1, 2));
+                    }
 
-                        coinPiles[secondChoice].remove();
-                        playerHand.addCoin(secondChoice);
-
-                        int thirdChoice = scanner.nextInt() - 1;
-                        coinPiles[thirdChoice].remove();
-                        playerHand.addCoin(thirdChoice);
-
+                    //check coin piles
+                    if (coinPiles[color1.ordinal()].canTake(amount1) && coinPiles[color2.ordinal()].canTake(amount2) && coinPiles[color3.ordinal()].canTake(amount3)) {
+                        coinPiles[color1.ordinal()].remove();
+                        coinPiles[color2.ordinal()].remove();
+                        coinPiles[color3.ordinal()].remove();
+                        //add coins
+                        playerHand.addCoins(color1, amount1);
+                        playerHand.addCoins(color2, amount2);
+                        playerHand.addCoins(color3, amount3);
                     } else {
-                        // this will contain a bug until this is cleaned up
-                        // for instance if the user can only grab two coins of different colors
-                        System.out.println("You would go over 10 coins.");
+                        System.out.println("That combination of coins is not a valid choice.");
                         exitDo = -2;
                         break;
                     }
-                } else if (coinPiles[coinChoice].getSize() >= 4) {
-                    if (playerCoinCount < 9) {
-                        coinPiles[coinChoice].remove();
-                        playerHand.addCoin(coinChoice);
+                }
 
-                        coinPiles[secondChoice].remove();
-                        playerHand.addCoin(secondChoice);
-                    } else {
-                        System.out.println("There must be four coins available for you to grab two or you would go over 10 coins.");
-                        exitDo = -2;
-                        break;
+                //check if player has too many gems
+                if(playerHand.getCoinCount() > MAX_PLAYER_GEMS){
+                    System.out.println("You may not own more than 10 gems. You currently have " + playerHand.getCoinCount() + " gems.");
+                    //TODO add gems
+                    System.out.println("You must dispose of some until you only have 10.");
+                    System.out.println("--------------------------------------------------------------");
+                    System.out.println("White(\"w\"), Blue(\"b\"), Green(\"g\"), Red(\"r\"), Black(\"k\"), Gold(\"o\")");
+                    System.out.println("Select coin color(s) and amount(s), ONE PER LINE, in the format: 3b\n");
+                    while (playerHand.getCoinCount() > MAX_PLAYER_GEMS){
+                        int amount = -1;
+                        Color color = null;
+                        while (0 > amount || color == null) {
+                            color = null;
+                            String input = scanner.next();
+                            amount = Integer.parseInt(input.substring(0, 1));
+                            if (input.length() > 1)
+                                color = Color.fromShortName(input.substring(1, 2));
+                            //check hand coins
+                            if (playerHand.getCoinAmount(color) >= amount)
+                                playerHand.removeCoins(color, amount);
+                        }
+
                     }
                 }
+
                 exitDo = 0;
                 break;
             case 2:
@@ -283,7 +324,8 @@ class Game {
                         Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
                         pickedUpCard.setFaceUp(false);
                         playerHand.reserveCard(pickedUpCard);
-                        playerHand.addCoin(removeCoin(5)); // add a gold coin while removing it from this game pile
+                        if (removeCoin(Color.Gold))
+                            playerHand.addCoin(Color.Gold); // add a gold coin if one was in the pile
                         exitDo = 0;
                     } else {
                         System.out.println("You already have 3 reserved cards.");

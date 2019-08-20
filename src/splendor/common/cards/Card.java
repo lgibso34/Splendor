@@ -1,6 +1,6 @@
 package splendor.common.cards;
 
-import splendor.common.util.Constants.Colors;
+import splendor.common.util.Constants.Color;
 import splendor.common.util.Constants;
 
 /**
@@ -9,11 +9,11 @@ import splendor.common.util.Constants;
 public class Card {
 
 	private final int[] colorCost;
-	private final Colors color;
+	private final Color color;
 	private final int pointValue;
 	private boolean faceUp = false;
 
-	public Card(int[] colorCost, int pointValue, Colors color) {
+	public Card(int[] colorCost, int pointValue, Color color) {
 		this.colorCost = colorCost;
 		this.pointValue = pointValue;
 		this.color = color;
@@ -29,7 +29,7 @@ public class Card {
 		return pointValue;
 	}
 
-	public Colors getColor() {
+	public Color getColor() {
 		return color;
 	}
 
@@ -58,7 +58,7 @@ public class Card {
 		for(int i = 0; i < colorCost.length; i++){
 			int cost = colorCost[i];
 			if(cost > 0)
-				output.append(cost).append(Constants.shortColors[i]).append(" ");
+				output.append(cost).append(Color.colors[i]).append(" ");
 		}
 		output = new StringBuilder(output.substring(0, output.length() - 1));
 		output.append(") ").append(color).append(" [").append(pointValue).append("] ").append(faceUp ? "FaceUp" : "FaceDown");

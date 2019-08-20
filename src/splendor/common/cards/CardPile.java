@@ -1,15 +1,15 @@
 package splendor.common.cards;
 
-import splendor.common.util.Constants.Colors;
+import splendor.common.util.Constants.Color;
 
 import java.util.ArrayList;
 
 public class CardPile {
 
-	private ArrayList<Card> cards;
-	private final Colors color;
+	private ArrayList<Card> cards = new ArrayList<>();
+	private final Color color;
 
-	public CardPile(Colors color) {
+	public CardPile(Color color) {
 		this.color = color;
 	}
 	
@@ -38,7 +38,9 @@ public class CardPile {
 	}
 
 	public String toString(){
-		if(this.color == Colors.Gold){
+		if(cards == null)
+			return null;
+		if(this.color == Color.Gold){
 			return "Reserved cards: " + cards.size() + " |";
 		}else {
 			return cards.size() + "x Permanent " + color + " |";

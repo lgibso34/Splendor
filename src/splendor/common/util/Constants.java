@@ -1,13 +1,33 @@
 package splendor.common.util;
 
 public class Constants {
-    public enum Colors
+    public enum Color
     {
-    	White, Blue, Green, Red, Black, Gold
+    	White("w"), Blue("b"), Green("g"), Red("r"), Black("k"), Gold("o");
+
+        private String shortName;
+
+        Color(String shortName) {
+            this.shortName = shortName;
+        }
+
+        public static final Color[] colors = Color.values();
+
+        public String getShortName() {
+            return this.shortName;
+        }
+
+        public static Color fromShortName(String text) {
+            for (Color c : Color.values()) {
+                if (c.shortName.equalsIgnoreCase(text)) {
+                    return c;
+                }
+            }
+            return null;
+        }
     }
 
-    public static final Colors[] colors = Colors.values();
-    public static final String[] shortColors = { "w", "b", "g", "r", "k", "o"};
+
 
     public enum ProtocolActions
     {

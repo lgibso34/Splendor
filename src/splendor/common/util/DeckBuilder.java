@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import splendor.common.util.Constants.Color;
+
 /**
  * This class is solely responsible for reading the CSV file with the card information and constructing decks from it
  */
@@ -41,7 +43,7 @@ public class DeckBuilder {
                 if(colorInt == -1) {
                     patrons.add(new Noble(colorCost, pointValue));
                 } else {
-                    Constants.Colors color = Constants.colors[colorInt];
+                    Color color = Color.colors[colorInt];
                     switch (deck) {
                         case 1:
                             lv1.add(new Card(colorCost, pointValue, color));
