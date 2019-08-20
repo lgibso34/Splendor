@@ -11,7 +11,6 @@ import splendor.common.util.Constants.Color;
 
 class Game {
 
-    //private static int index = 0;
     private static int numPlayers = 5;
     private static boolean lastRound = false;
     private static int playerWhoInitiatedLastRound = -1;
@@ -143,7 +142,6 @@ class Game {
                 break;
             case 1:
                 int playerCoinCount = playerHand.getCoinCount();
-                //showCoinPiles();
                 // pick up coins
                 System.out.println("Total coin count: " + playerCoinCount);
                 System.out.println("0: Go back");
@@ -506,7 +504,6 @@ class Game {
             showNumberOfPlayers();
             showDecks();
             showGameBank();
-            // showHands();
         }
     }
 

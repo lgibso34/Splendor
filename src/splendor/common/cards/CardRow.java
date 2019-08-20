@@ -30,10 +30,6 @@ public class CardRow {
         return cards.get(index);
     }
 
-    //public Card remove(int index, Card dealtCard) {
-    //	return cards.remove(index);
-    //}
-
     // used for Nobles
     public Card remove(int index) {
         return cards.remove(index);
