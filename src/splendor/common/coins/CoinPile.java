@@ -55,6 +55,8 @@ public class CoinPile {
 	}
 
 	public boolean removeCoins(int amount) {
+		if(amount < 0)
+			return true;
 		if (size >= amount) {
 			size -= amount;
 			return true;
@@ -73,7 +75,7 @@ public class CoinPile {
 	}
 
 	public String toString() {
-		return size + "x " + color.toString();
+		return size + "x " + color.toString() + "(" + color.getShortName() + ")";
 	}
 
 }

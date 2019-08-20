@@ -3,23 +3,22 @@ package splendor.common;
 import splendor.common.cards.Card;
 import splendor.common.cards.CardPile;
 import splendor.common.cards.Noble;
-import splendor.common.coins.CoinPile;
+import splendor.common.coins.CoinBank;
 import splendor.common.util.Constants.Color;
 
 import java.util.ArrayList;
 
 class Hand {
 
-    private CoinPile[] coinPiles = new CoinPile[6]; // 5 colors + gold: [ white, blue, green, red, black, gold ]
+    //private CoinPile[] coinPiles = new CoinPile[6]; // 5 colors + gold: [ white, blue, green, red, black, gold ]
+    private CoinBank playerBank = new CoinBank();
     private CardPile[] cardPiles = new CardPile[6]; // 5 colors + reserved: [ white, blue, green, red, black, reserveCards ]
     private ArrayList<Noble> noblePile;
     private int points = 0;
 
     public Hand() {
-        //int i = 0;
-        for (int i = 0; i < Color.colors.length; i++) {
-            coinPiles[i] = new CoinPile(Color.colors[i]);
-            cardPiles[i] = new CardPile(Color.colors[i]);
+        for (Color c : Color.colors) {
+            cardPiles[c.ordinal()] = new CardPile(c);
         }
     }
 
@@ -32,28 +31,24 @@ class Hand {
     }
 
     public int getCoinCount() {
-        int counter = 0;
-        for (CoinPile c : coinPiles) {
-            counter += c.getSize();
-        }
-        return counter;
+        return playerBank.getCoinCount();
     }
 
     public int getCoinAmount(Color color) {
-        return coinPiles[color.ordinal()].getSize();
+        return playerBank.numCoins(color);
     }
 
     public void removeCoins(Color color, int amount) {
-        coinPiles[color.ordinal()].removeCoins(amount);
+        playerBank.removeCoins(color, amount);
     }
 
     public int[] getCost(Card card) {
         int[] cardCost = card.getColorCost(); // get the color cost for the wanted card
-        int[] cardCostWithPermanentsAndGold = new int[cardCost.length + 1];
+        int[] cardCostWithPermanentsAndGold = new int[Color.colors.length];
         for (int i = 0; i < cardCost.length; i++) {
             if (cardPiles[i].getSize() > 0) { // if permanent cards exist for that color...
                 int cost = cardCost[i] - cardPiles[i].getSize();
-                if (cost < 0) { // if the cost becomes negative there are more permanent cards than the cost so it costs zero of that color
+                if (cost <= 0) { // if the cost becomes negative there are more permanent cards than the cost so it costs zero of that color
                     cardCostWithPermanentsAndGold[i] = 0;
                 } else {
                     cardCostWithPermanentsAndGold[i] = cost; // otherwise, the extra coins required are assigned to that color spot
@@ -64,16 +59,16 @@ class Hand {
         }
 
         int goldCoinsNeeded = 0;
-        int goldCoinCount = coinPiles[Color.Gold.ordinal()].getSize();
+        int goldCoinCount = playerBank.numCoins(Color.Gold);
         boolean playerHasAtLeastOneGoldCoin = goldCoinCount > 0;
 
-        for (int i = 0; i < cardCostWithPermanentsAndGold.length; i++) { // iterate through each color
-            if (cardCostWithPermanentsAndGold[i] > coinPiles[i].getSize()) { // and check if the card costs more than what the player has
+        for (Color c : Color.colors) { // iterate through each color
+            if (cardCostWithPermanentsAndGold[c.ordinal()] > playerBank.numCoins(c)) { // and check if the card costs more than what the player has
                 // if it does, see if the user has any gold coins that can be used to still buy the card
-                if (playerHasAtLeastOneGoldCoin && cardCostWithPermanentsAndGold[i] <= (coinPiles[i].getSize() + goldCoinCount)) {
-                    int difference = cardCostWithPermanentsAndGold[i] - coinPiles[i].getSize(); // how many gold coins are needed for this color
+                if (playerHasAtLeastOneGoldCoin && cardCostWithPermanentsAndGold[c.ordinal()] <= (playerBank.numCoins(c) + goldCoinCount)) {
+                    int difference = cardCostWithPermanentsAndGold[c.ordinal()] - playerBank.numCoins(c); // how many gold coins are needed for this color
                     goldCoinsNeeded += difference; // add to total gold coins needed for this card
-                    cardCostWithPermanentsAndGold[i] = cardCostWithPermanentsAndGold[i] - difference; // subtract gold coin usage from color cost
+                    cardCostWithPermanentsAndGold[c.ordinal()] = cardCostWithPermanentsAndGold[c.ordinal()] - difference; // subtract gold coin usage from color cost
                 }
             }
         }
@@ -87,7 +82,7 @@ class Hand {
         boolean playerCanBuy = true;
         boolean goldRequired = false;
         int goldCoinsNeeded = 0;
-        int goldCoinCount = coinPiles[Color.Gold.ordinal()].getSize();
+        int goldCoinCount = playerBank.numCoins(Color.Gold);
 
         int[] cardCostWithPermanents = getCost(card);
 
@@ -96,10 +91,10 @@ class Hand {
             goldCoinsNeeded = cardCostWithPermanents[Color.Gold.ordinal()];
         }
 
-        for (int i = 0; i < cardCostWithPermanents.length; i++) { // iterate through each color
-            if (cardCostWithPermanents[i] > coinPiles[i].getSize()) { // and check if the card costs more than what the player has
+        for (Color c : Color.colors) { // iterate through each color
+            if (cardCostWithPermanents[c.ordinal()] > playerBank.numCoins(c)) { // and check if the card costs more than what the player has
                 playerCanBuy = false;
-                i = cardCostWithPermanents.length; // break out of the loop
+                break; // break out of the loop
             }
         }
 
@@ -116,19 +111,17 @@ class Hand {
 
     // [ white, blue, green, red, black, gold ]
     public void addCoin(Color color) {
-        coinPiles[color.ordinal()].add();
+        playerBank.addCoins(color);
     }
 
     public void addCoins(Color color, int amount) {
-        coinPiles[color.ordinal()].add(amount);
+        playerBank.addCoins(color, amount);
     }
 
     private void removeCoinsFromInventory(int[] cardCost) {
-        for (int i = 0; i < cardCost.length; i++) {
-            if (cardCost[i] > 0) {
-                for (int j = 0; j < cardCost[i]; j++) {
-                    coinPiles[i].remove();
-                }
+        for (Color c : Color.colors) {
+            if (cardCost[c.ordinal()] > 0) {
+                playerBank.removeCoins(c, cardCost[c.ordinal()]);
             }
         }
     }
@@ -188,9 +181,13 @@ class Hand {
 
     public String toString() {
         StringBuilder output = new StringBuilder("Points: " + points + "\n");
-        for (int i = 0; i < cardPiles.length; i++) {
-            output.append(cardPiles[i].toString()).append(" ").append(coinPiles[i].toString()).append("\n");
+        for (Color c : Color.colors) {
+            output.append(cardPiles[c.ordinal()].toString()).append(" ").append(playerBank.pileToString(c)).append("\n");
         }
         return output.toString();
+    }
+
+    public String coinsToString(){
+        return playerBank.toString();
     }
 }

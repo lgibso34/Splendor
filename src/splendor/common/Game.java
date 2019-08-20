@@ -5,7 +5,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import splendor.common.cards.*;
-import splendor.common.coins.CoinPile;
+import splendor.common.coins.CoinBank;
 import splendor.common.util.DeckBuilder;
 import splendor.common.util.Constants.Color;
 
@@ -19,7 +19,7 @@ class Game {
     private static final int MAX_PLAYER_COINS = 10;
 
     private static Deck[] decks = new Deck[4];
-    private static CoinPile[] coinPiles = new CoinPile[6];
+    private static CoinBank gameBank = new CoinBank();
     private static CardRow[] cardRows = new CardRow[4];
     private static Hand[] hands = new Hand[0];
 
@@ -31,10 +31,6 @@ class Game {
     private static void initializeGame(int numPlayers) {
 
         decks = DeckBuilder.buildDecks();
-
-        for (int i = 0; i < Color.colors.length; i++) {
-            coinPiles[i] = new CoinPile(numPlayers, Color.colors[i]);
-        }
 
         for (int i = 0; i < decks.length; i++) {
             int dealt = 4;
@@ -74,18 +70,16 @@ class Game {
         return noblesThatCanBeBought;
     }
 
-    private static void addCoinsToPiles(int[] cardCost) {
+    private static void addCoinsToGameBank(int[] cardCost) {
         for (int i = 0; i < cardCost.length; i++) {
             if (cardCost[i] > 0) {
-                for (int j = 0; j < cardCost[i]; j++) {
-                    coinPiles[i].add();
-                }
+                gameBank.addCoins(Color.colors[i], cardCost[i]);
             }
         }
     }
 
     private static boolean removeCoin(Color color) {
-        return coinPiles[color.ordinal()].remove();
+        return gameBank.removeCoins(color);
     }
 
     private static void showDecks() {
@@ -97,10 +91,11 @@ class Game {
 
     private static void showCoinPiles() {
         // show coin piles
-        System.out.println(coinPiles[coinPiles.length-1].toString()); // show just the gold coins
+        System.out.println(gameBank.pileToString(Color.Gold)); // show just the gold coins
 
-        for(int i=0; i<coinPiles.length-1; i++){
-            System.out.println(i + ": " + coinPiles[i].toString());
+        int i = 0;
+        for(Color c : Color.colors){
+            System.out.println(i++ + ": " + gameBank.pileToString(c));
         }
         System.out.println();
     }
@@ -168,9 +163,9 @@ class Game {
                 System.out.println("0: Go back");
                 System.out.println("--------------------------------------------------------------");
                 System.out.println("You currently have a total of " + playerHand.getCoinCount() + " coins consisting of:");
-                System.out.println(playerHand.getCoinAmount(Color.White) + "x White(w), " + playerHand.getCoinAmount(Color.Blue) + "x Blue(b), " + playerHand.getCoinAmount(Color.Green) + "x Green(g), " + playerHand.getCoinAmount(Color.Red) + "x Red(r), " + playerHand.getCoinAmount(Color.Black) + "x Black(k), and " + playerHand.getCoinAmount(Color.Gold) + "x Gold(o) coins.");
+                System.out.println(playerHand.coinsToString());
                 System.out.println("Available coins:");
-                System.out.println(coinPiles[Color.White.ordinal()].toString() + "(w), " + coinPiles[Color.Blue.ordinal()].toString() + "(b), " + coinPiles[Color.Green.ordinal()].toString() + "(g), " + coinPiles[Color.Red.ordinal()].toString() + "(r), " + coinPiles[Color.Black.ordinal()].toString() + "(k), and " + coinPiles[coinPiles.length-1].toString() + "(o) coins.");
+                System.out.println(gameBank.toString());
                 System.out.println("Select coin color(s) and amount(s), in the format: 1b 1k 1g\n");
 
                 int amount1 = -1, amount2, amount3;
@@ -190,8 +185,8 @@ class Game {
 
                 if (amount1 == 2) {
                     //check coin piles
-                    if (coinPiles[color1.ordinal()].canTake(amount1)) {
-                        coinPiles[color1.ordinal()].remove();
+                    if (gameBank.canTake(color1, amount1)) {
+                        gameBank.removeCoins(color1, amount1);
                         playerHand.addCoins(color1, amount1);
                     } else {
                         System.out.println("That combination of coins is not a valid choice.");
@@ -218,10 +213,10 @@ class Game {
                     }
 
                     //check coin piles
-                    if (coinPiles[color1.ordinal()].canTake(amount1) && coinPiles[color2.ordinal()].canTake(amount2) && coinPiles[color3.ordinal()].canTake(amount3)) {
-                        coinPiles[color1.ordinal()].remove();
-                        coinPiles[color2.ordinal()].remove();
-                        coinPiles[color3.ordinal()].remove();
+                    if (gameBank.canTake(color1, amount1) && gameBank.canTake(color2, amount2) && gameBank.canTake(color3, amount3)) {
+                        gameBank.removeCoins(color1, amount1);
+                        gameBank.removeCoins(color2, amount2);
+                        gameBank.removeCoins(color3, amount3);
                         //add coins
                         playerHand.addCoins(color1, amount1);
                         playerHand.addCoins(color2, amount2);
@@ -295,7 +290,7 @@ class Game {
                             System.arraycopy(oldCardCost, 0, cardCost, 0, cardCost.length);
                         }
                         Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
-                        addCoinsToPiles(cardCost);
+                        addCoinsToGameBank(cardCost);
                         playerHand.addCard(pickedUpCard, cardCost);
                         exitDo = 0;
                     } else {
@@ -312,7 +307,7 @@ class Game {
                 break;
             case 4:
                 // reserve card logic
-                System.out.println(coinPiles[5].toString());
+                System.out.println(gameBank.pileToString(Color.Gold));
                 showCardRows();
                 // pick up card
                 System.out.println("Choose row (1-3) (0 to go back): ");
@@ -371,7 +366,7 @@ class Game {
                             System.arraycopy(oldCardCost, 0, cardCost, 0, cardCost.length);
                         }
                         playerHand.buyReservedCard(row, cardCost);
-                        addCoinsToPiles(cardCost);
+                        addCoinsToGameBank(cardCost);
                         exitDo = 0;
                         break;
                     } else {
