@@ -26,6 +26,7 @@ class Game {
     /**
      * Initializes the game by creating decks and dealing cards to their respective rows.
      * Hands are created for each player
+     *
      * @param numPlayers - Number of players in the game
      */
     private static void initializeGame(int numPlayers) {
@@ -117,29 +118,30 @@ class Game {
         }
     }
 
-    //UNTESTED
-    // TODO
     private static Hand handleWinner() {
         Hand winner = hands[playerWhoInitiatedLastRound];
         ArrayList<Hand> ties = new ArrayList<>();
-        ties.add(winner);
-        for (Hand player : hands) {
-            if (player.getPoints() == winner.getPoints()) {
-                ties.add(player);
-            }
-            winner = player.getPoints() > winner.getPoints() ? player : winner;
+
+        // add the hand to the first index [0] of the ties array
+        ties.add(winner); // handle ties uses the first index to determine the winner if the two or more people have the same number of permanent cards
+
+        for (int i = 0; i < hands.length; i++) {
+            if (i != playerWhoInitiatedLastRound && hands[i].getPoints() == winner.getPoints())
+                ties.add(hands[i]);
+
+            if (hands[i].getPoints() > winner.getPoints())
+                winner = hands[i];
         }
 
         return (ties.size() <= 1) ? winner : handleTie(ties);
     }
 
-    //UNTESTED
-    // TODO
     private static Hand handleTie(ArrayList<Hand> tiedHands) {
-        Hand winner = tiedHands.get(0); // start with the first hand
-        for (Hand hand : tiedHands) {
+        Hand winner = tiedHands.get(0); // start with the first hand, if perm cards are equal between two players, the playerWhoInitiatedLastRound wins
+        for (Hand hand : tiedHands) { // could possibly use for loop to prevent one iteration by starting at index 1 in tiedHands
             // check if the tiedHands have less total permanent cards than the current 'winner'
-            winner = hand.totalPermanentCards() < winner.totalPermanentCards() ? hand : winner;
+            if (hand.totalPermanentCards() < winner.totalPermanentCards())
+                winner = hand;
         }
         return winner;
     }
@@ -168,12 +170,12 @@ class Game {
                 int amount1 = -1, amount2, amount3;
                 Color color1 = null, color2 = null, color3 = null;
 
-                while (0 > amount1 || amount1 > 2 || color1 == null){ //first amount can be 1 or 2, 0 to go back
+                while (0 > amount1 || amount1 > 2 || color1 == null) { //first amount can be 1 or 2, 0 to go back
                     color1 = null;
                     String input = scanner.next();
-                    amount1 = Integer.parseInt(input.substring(0,1));
+                    amount1 = Integer.parseInt(input.substring(0, 1));
                     if (input.length() > 1)
-                        color1 = Color.fromShortName(input.substring(1,2));
+                        color1 = Color.fromShortName(input.substring(1, 2));
                 }
                 if (amount1 == 0) {
                     exitDo = -2;
@@ -226,13 +228,13 @@ class Game {
                 }
 
                 //check if player has too many gems
-                if(playerHand.getCoinCount() > MAX_PLAYER_COINS){
+                if (playerHand.getCoinCount() > MAX_PLAYER_COINS) {
                     System.out.println("You may not own more than 10 coins. You currently have " + playerHand.getCoinCount() + " coins.");
                     System.out.println(playerHand.getCoinAmount(Color.White) + "x White(w), " + playerHand.getCoinAmount(Color.Blue) + "x Blue(b), " + playerHand.getCoinAmount(Color.Green) + "x Green(g), " + playerHand.getCoinAmount(Color.Red) + "x Red(r), " + playerHand.getCoinAmount(Color.Black) + "x Black(k), and " + playerHand.getCoinAmount(Color.Gold) + "x Gold(o) coins.");
                     System.out.println("You must dispose of some until you only have 10.");
                     System.out.println("--------------------------------------------------------------");
                     System.out.println("Select coin color(s) and amount(s), ONE PER LINE, in the format: 3b\n");
-                    while (playerHand.getCoinCount() > MAX_PLAYER_COINS){
+                    while (playerHand.getCoinCount() > MAX_PLAYER_COINS) {
                         int amount = -1;
                         Color color = null;
                         while (0 > amount || color == null) {
@@ -528,7 +530,9 @@ class Game {
                     }
                 } while (exitDo <= 0);
 
-                handleWinner();
+                Hand WINNER = handleWinner();
+                System.out.println("WINNER:");
+                System.out.println(WINNER.toString());
             }
         } else {
             initializeGame(numPlayers);

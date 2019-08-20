@@ -148,8 +148,8 @@ class Hand {
     // used for ties
     public int totalPermanentCards() {
         int count = 0;
-        for (CardPile c : cardPiles) {
-            count += c.getSize();
+        for(int i=0; i<cardPiles.length -1; i++){ // length minus one to avoid counting reserved cards as perm cards
+            count += cardPiles[i].getSize();
         }
         return count;
     }
