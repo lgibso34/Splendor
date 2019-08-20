@@ -47,4 +47,8 @@ public class Deck {
 
         return output.toString();
     }
+
+    public boolean isEmpty(){
+        return cards.isEmpty();
+    }
 }

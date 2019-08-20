@@ -6,9 +6,11 @@ public class CardRow {
 
     private ArrayList<Card> cards = new ArrayList<>(4); // 4 cards per row
     private final int row;
+    private final Deck deck;
 
     public CardRow(int row, Deck deck, int dealt) {
         this.row = row;
+        this.deck = deck;
         // deal cards and place in corresponding spot in CardRow
         for (int i = 0; i < dealt; i++) {
             cards.add(i, deck.dealCard());
@@ -17,13 +19,14 @@ public class CardRow {
     }
 
     // UNTESTED
-    //TODO add checking for end of deck, etc
-    public Card removeAndReplace(int index, Card dealtCard) {
-        Card poppedCard = cards.get(index);
-        if (dealtCard != null)
-            dealtCard.setFaceUp(true);
-        cards.set(index, dealtCard); // replace the picked up card with the card that was dealt without losing ordering of cards
-        return poppedCard;
+    public Card removeAndReplace(int index) {
+        if (deck.isEmpty()){
+            return cards.remove(index);
+        } else {
+            Card poppedCard = cards.get(index);
+            cards.set(index, deck.dealCard().setFaceUp(true)); // replace the picked up card with the card that was dealt without losing ordering of cards
+            return poppedCard;
+        }
     }
 
     public Card peekCard(int index) {

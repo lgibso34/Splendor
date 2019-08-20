@@ -36,8 +36,9 @@ public class Card {
         return faceUp;
     }
 
-    public void setFaceUp(boolean b) {
+    public Card setFaceUp(boolean b) {
         faceUp = b;
+        return this;
     }
 
     public Colors getColorCost() {

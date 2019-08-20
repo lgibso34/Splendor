@@ -132,6 +132,31 @@ class Game {
         return winner;
     }
 
+    private static void checkCoinOverflow(Hand playerHand, Scanner scanner){
+        //check if player has too many gems
+        if (playerHand.getCoinCount() > MAX_PLAYER_COINS) {
+            System.out.println("You may not own more than 10 coins. You currently have " + playerHand.getCoinCount() + " coins.");
+            System.out.println(playerHand.coinsToString());
+            System.out.println("You must dispose of some until you only have 10.");
+            System.out.println("--------------------------------------------------------------");
+            System.out.println("Select coin color(s) and amount(s), ONE PER LINE, in the format: 3b\n");
+            while (playerHand.getCoinCount() > MAX_PLAYER_COINS) {
+                int amount = -1;
+                Color color = null;
+                while (0 > amount || color == null) {
+                    color = null;
+                    String input = scanner.next();
+                    amount = Integer.parseInt(input.substring(0, 1));
+                    if (input.length() > 1)
+                        color = Color.fromShortName(input.substring(1, 2));
+                    //check hand coins
+                    if (playerHand.getCoinAmount(color) >= amount)
+                        playerHand.removeCoins(color, amount);
+                }
+            }
+        }
+    }
+
     private static int handlePlayChoice(Scanner scanner, int player, int choice, int exitDo) {
         int row;
         int cardSpot;
@@ -144,13 +169,13 @@ class Game {
                 int playerCoinCount = playerHand.getCoinCount();
                 // pick up coins
                 System.out.println("Total coin count: " + playerCoinCount);
-                System.out.println("0: Go back");
+                System.out.println("0g: Go back");
                 System.out.println("--------------------------------------------------------------");
                 System.out.println("You currently have a total of " + playerHand.getCoinCount() + " coins consisting of:");
                 System.out.println(playerHand.coinsToString());
                 System.out.println("Available coins:");
                 System.out.println(gameCoins.toString());
-                System.out.println("Select coin color(s) and amount(s), in the format: 1b 1k 1g\n");
+                System.out.println("Select coin color(s) and amount(s), in the format: 1b 1k 0\n");
 
                 int amount1 = -1, amount2, amount3;
                 Color color1 = null, color2 = null, color3 = null;
@@ -211,38 +236,14 @@ class Game {
                         break;
                     }
                 }
-
-                //check if player has too many gems
-                if (playerHand.getCoinCount() > MAX_PLAYER_COINS) {
-                    System.out.println("You may not own more than 10 coins. You currently have " + playerHand.getCoinCount() + " coins.");
-                    System.out.println(playerHand.getCoinAmount(Color.White) + "x White(w), " + playerHand.getCoinAmount(Color.Blue) + "x Blue(b), " + playerHand.getCoinAmount(Color.Green) + "x Green(g), " + playerHand.getCoinAmount(Color.Red) + "x Red(r), " + playerHand.getCoinAmount(Color.Black) + "x Black(k), and " + playerHand.getCoinAmount(Color.Gold) + "x Gold(o) coins.");
-                    System.out.println("You must dispose of some until you only have 10.");
-                    System.out.println("--------------------------------------------------------------");
-                    System.out.println("Select coin color(s) and amount(s), ONE PER LINE, in the format: 3b\n");
-                    while (playerHand.getCoinCount() > MAX_PLAYER_COINS) {
-                        int amount = -1;
-                        Color color = null;
-                        while (0 > amount || color == null) {
-                            color = null;
-                            String input = scanner.next();
-                            amount = Integer.parseInt(input.substring(0, 1));
-                            if (input.length() > 1)
-                                color = Color.fromShortName(input.substring(1, 2));
-                            //check hand coins
-                            if (playerHand.getCoinAmount(color) >= amount)
-                                playerHand.removeCoins(color, amount);
-                        }
-
-                    }
-                }
-
+                checkCoinOverflow(playerHand, scanner);
                 exitDo = 0;
                 break;
             case 2:
                 // buy a card logic
                 showHands();
                 showCardRows();
-                System.out.println("Choose row (1-3) (0 to go back): ");
+                System.out.println("Choose level (1-3) (0 to go back): ");
                 row = scanner.nextInt(); // not using try catch to verify that it is an integer since this is only debug mode,
                 if (row == 0) {
                     exitDo = -2;
@@ -262,7 +263,7 @@ class Game {
                                 break;
                             }
                         }
-                        Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
+                        Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot);
 
                         addCoinsToGameBank(modifiedCost);
                         playerHand.addCard(pickedUpCard, modifiedCost);
@@ -285,7 +286,7 @@ class Game {
                 System.out.println(gameCoins.pileToString(Color.Gold));
                 showCardRows();
                 // pick up card
-                System.out.println("Choose row (1-3) (0 to go back): ");
+                System.out.println("Choose level (1-3) (0 to go back): ");
                 row = scanner.nextInt(); // not using try catch to verify that it is an integer since this is only debug mode,
                 if (row == 0) {
                     exitDo = -2;
@@ -295,11 +296,13 @@ class Game {
                     cardSpot = scanner.nextInt() - 1;
 
                     if (playerHand.checkReservedCardQuantity()) {
-                        Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot, decks[row].dealCard());
+                        Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot);
                         pickedUpCard.setFaceUp(false);
                         playerHand.reserveCard(pickedUpCard);
-                        if (gameCoins.removeCoins(Color.Gold))
+                        if (gameCoins.removeCoins(Color.Gold)){
                             playerHand.addCoin(Color.Gold); // add a gold coin if one was in the pile
+                            checkCoinOverflow(playerHand, scanner);
+                        }
                         exitDo = 0;
                     } else {
                         System.out.println("You already have 3 reserved cards.");
@@ -312,7 +315,7 @@ class Game {
                 showHands();
                 playerHand.showReservedCards();
 
-                System.out.println("Choose row (0 to go back): ");
+                System.out.println("Choose card number (0 to go back): ");
                 row = scanner.nextInt() - 1; // not using try catch to verify that it is an integer since this is only debug mode,
                 if (row == -1) {
                     exitDo = -2;
