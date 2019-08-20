@@ -63,11 +63,13 @@ public class CoinPile {
 	}
 
 	public boolean canTake(int amount){
+		if (amount == 0)
+			return true;
 		if (amount > 2)
 			return false;
 		if(amount == 2)
 			return size >= 4;
-		return size > amount;
+		return size >= amount;
 	}
 
 	public String toString() {

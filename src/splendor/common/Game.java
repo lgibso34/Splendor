@@ -1,14 +1,12 @@
 package splendor.common;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import splendor.common.cards.*;
 import splendor.common.coins.CoinPile;
 import splendor.common.util.DeckBuilder;
-import splendor.common.util.Constants;
 import splendor.common.util.Constants.Color;
 
 class Game {
@@ -18,7 +16,7 @@ class Game {
     private static boolean lastRound = false;
     private static int playerWhoInitiatedLastRound = -1;
     private static final boolean debug = true;
-    private static final int MAX_PLAYER_GEMS = 10;
+    private static final int MAX_PLAYER_COINS = 10;
 
     private static Deck[] decks = new Deck[4];
     private static CoinPile[] coinPiles = new CoinPile[6];
@@ -164,15 +162,18 @@ class Game {
                 break;
             case 1:
                 int playerCoinCount = playerHand.getCoinCount();
-                showCoinPiles();
+                //showCoinPiles();
                 // pick up coins
                 System.out.println("Total coin count: " + playerCoinCount);
                 System.out.println("0: Go back");
                 System.out.println("--------------------------------------------------------------");
-                System.out.println("White(\"w\"), Blue(\"b\"), Green(\"g\"), Red(\"r\"), Black(\"k\")");
+                System.out.println("You currently have a total of " + playerHand.getCoinCount() + " coins consisting of:");
+                System.out.println(playerHand.getCoinAmount(Color.White) + "x White(w), " + playerHand.getCoinAmount(Color.Blue) + "x Blue(b), " + playerHand.getCoinAmount(Color.Green) + "x Green(g), " + playerHand.getCoinAmount(Color.Red) + "x Red(r), " + playerHand.getCoinAmount(Color.Black) + "x Black(k), and " + playerHand.getCoinAmount(Color.Gold) + "x Gold(o) coins.");
+                System.out.println("Available coins:");
+                System.out.println(coinPiles[Color.White.ordinal()].toString() + "(w), " + coinPiles[Color.Blue.ordinal()].toString() + "(b), " + coinPiles[Color.Green.ordinal()].toString() + "(g), " + coinPiles[Color.Red.ordinal()].toString() + "(r), " + coinPiles[Color.Black.ordinal()].toString() + "(k), and " + coinPiles[coinPiles.length-1].toString() + "(o) coins.");
                 System.out.println("Select coin color(s) and amount(s), in the format: 1b 1k 1g\n");
 
-                int amount1 = -1, amount2 = 0, amount3 = 0;
+                int amount1 = -1, amount2, amount3;
                 Color color1 = null, color2 = null, color3 = null;
 
                 while (0 > amount1 || amount1 > 2 || color1 == null){ //first amount can be 1 or 2, 0 to go back
@@ -192,6 +193,10 @@ class Game {
                     if (coinPiles[color1.ordinal()].canTake(amount1)) {
                         coinPiles[color1.ordinal()].remove();
                         playerHand.addCoins(color1, amount1);
+                    } else {
+                        System.out.println("That combination of coins is not a valid choice.");
+                        exitDo = -2;
+                        break;
                     }
                 } else {
                     amount2 = -1;
@@ -229,14 +234,13 @@ class Game {
                 }
 
                 //check if player has too many gems
-                if(playerHand.getCoinCount() > MAX_PLAYER_GEMS){
-                    System.out.println("You may not own more than 10 gems. You currently have " + playerHand.getCoinCount() + " gems.");
-                    //TODO add gems
+                if(playerHand.getCoinCount() > MAX_PLAYER_COINS){
+                    System.out.println("You may not own more than 10 coins. You currently have " + playerHand.getCoinCount() + " coins.");
+                    System.out.println(playerHand.getCoinAmount(Color.White) + "x White(w), " + playerHand.getCoinAmount(Color.Blue) + "x Blue(b), " + playerHand.getCoinAmount(Color.Green) + "x Green(g), " + playerHand.getCoinAmount(Color.Red) + "x Red(r), " + playerHand.getCoinAmount(Color.Black) + "x Black(k), and " + playerHand.getCoinAmount(Color.Gold) + "x Gold(o) coins.");
                     System.out.println("You must dispose of some until you only have 10.");
                     System.out.println("--------------------------------------------------------------");
-                    System.out.println("White(\"w\"), Blue(\"b\"), Green(\"g\"), Red(\"r\"), Black(\"k\"), Gold(\"o\")");
                     System.out.println("Select coin color(s) and amount(s), ONE PER LINE, in the format: 3b\n");
-                    while (playerHand.getCoinCount() > MAX_PLAYER_GEMS){
+                    while (playerHand.getCoinCount() > MAX_PLAYER_COINS){
                         int amount = -1;
                         Color color = null;
                         while (0 > amount || color == null) {
