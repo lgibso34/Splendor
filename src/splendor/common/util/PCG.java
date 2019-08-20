@@ -34,6 +34,7 @@ public class PCG {
     public PCG() {
         seed();
     }
+
     public PCG(long initState, long initSeq) {
         seed(initState, initSeq);
     }

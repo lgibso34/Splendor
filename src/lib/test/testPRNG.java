@@ -10,18 +10,18 @@ class testPRNG {
 
     public static void main(String[] args) {
         int numTrials = 10000;
-        for(int i = 0; i < numTrials; i++){
-            if(rand.nextInt() < 0)
+        for (int i = 0; i < numTrials; i++) {
+            if (rand.nextInt() < 0)
                 numNegative++;
         }
 
-        for(int i = 0; i < numTrials; i++){
-            if(rand.nextInt(6) > 2) //0..5 represents 1..6, >2 => 3,4,5 == 4,5,6
+        for (int i = 0; i < numTrials; i++) {
+            if (rand.nextInt(6) > 2) //0..5 represents 1..6, >2 => 3,4,5 == 4,5,6
                 fourPlus++;
         }
 
-        for(int i = 0; i < numTrials; i++){
-            if(rand.nextBoolean())
+        for (int i = 0; i < numTrials; i++) {
+            if (rand.nextBoolean())
                 numHeads++;
         }
 

@@ -5,64 +5,64 @@ import splendor.common.util.Constants.Color;
 
 class CoinPile {
 
-	private final Color color;
-	private int size;
-	
-	public CoinPile(int numPlayers, Color color) {
-		this.color = color;
-		if (color.equals(Color.Gold)) {
-			size = Constants.MAX_GOLD_COINS;
-		} else {
-			switch (numPlayers) {
-			case 2:
-				size = Constants.MAX_GEMS_2PLAYER;
-				break;
-			case 3:
-				size = Constants.MAX_GEMS_3PLAYER;
-				break;
-			default:
-				size = Constants.MAX_GEMS_DEFAULT;
-				break;
-			}
-		}
-	}
+    private final Color color;
+    private int size;
 
-	public CoinPile(Color color) {
-		this.color = color;
-		size = 0;
-	}
+    public CoinPile(int numPlayers, Color color) {
+        this.color = color;
+        if (color.equals(Color.Gold)) {
+            size = Constants.MAX_GOLD_COINS;
+        } else {
+            switch (numPlayers) {
+                case 2:
+                    size = Constants.MAX_GEMS_2PLAYER;
+                    break;
+                case 3:
+                    size = Constants.MAX_GEMS_3PLAYER;
+                    break;
+                default:
+                    size = Constants.MAX_GEMS_DEFAULT;
+                    break;
+            }
+        }
+    }
 
-	public void add(int amount) {
-		if(amount > 0)
-			size += amount;
-	}
+    public CoinPile(Color color) {
+        this.color = color;
+        size = 0;
+    }
 
-	public int getSize(){
-		return size;
-	}
+    public void add(int amount) {
+        if (amount > 0)
+            size += amount;
+    }
 
-	public boolean removeCoins(int amount) {
-		if(amount < 0)
-			return true;
-		if (size >= amount) {
-			size -= amount;
-			return true;
-		}
-		return false;
-	}
+    public int getSize() {
+        return size;
+    }
 
-	public boolean canTake(int amount){
-		if (amount == 0)
-			return true;
-		if (amount > 2)
-			return false;
-		if(amount == 2)
-			return size >= 4;
-		return size >= amount;
-	}
+    public boolean removeCoins(int amount) {
+        if (amount < 0)
+            return true;
+        if (size >= amount) {
+            size -= amount;
+            return true;
+        }
+        return false;
+    }
 
-	public String toString() {
-		return size + "x " + color.toString() + "(" + color.getShortName() + ")";
-	}
+    public boolean canTake(int amount) {
+        if (amount == 0)
+            return true;
+        if (amount > 2)
+            return false;
+        if (amount == 2)
+            return size >= 4;
+        return size >= amount;
+    }
+
+    public String toString() {
+        return size + "x " + color.toString() + "(" + color.getShortName() + ")";
+    }
 
 }

@@ -20,29 +20,30 @@ public class DeckBuilder {
 
     /**
      * this method builds all three decks at once, based off of the CSV file
+     *
      * @return an array containing all three levels of deck, where each level's index is the level number - 1
      */
     public static Deck[] buildDecks() {
         ArrayList<Card> lv1 = new ArrayList<>();
         ArrayList<Card> lv2 = new ArrayList<>();
         ArrayList<Card> lv3 = new ArrayList<>();
-        ArrayList<Noble> patrons =  new ArrayList<>();
+        ArrayList<Noble> patrons = new ArrayList<>();
 
         Scanner reader;
         try {
             reader = new Scanner(new File("src/lib/CardList.csv"));
             reader.useDelimiter(Pattern.compile("[\\s,]+"));
             reader.nextLine(); //skip the header
-            while(reader.hasNextLine()){
+            while (reader.hasNextLine()) {
                 int deck = reader.nextInt();
                 int[] colorCostInt = new int[5];
-                for(int i = 0; i < colorCostInt.length; i++){
+                for (int i = 0; i < colorCostInt.length; i++) {
                     colorCostInt[i] = reader.nextInt();
                 }
                 int colorInt = reader.nextInt();
                 int pointValue = reader.nextInt();
                 Colors colorCost = new Colors(colorCostInt);
-                if(colorInt == -1) {
+                if (colorInt == -1) {
                     patrons.add(new Noble(colorCost, pointValue));
                 } else {
                     Color color = Color.colors[colorInt];
@@ -60,7 +61,7 @@ public class DeckBuilder {
                 }
                 reader.nextLine();
             }
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Error reading card list.");
         }

@@ -57,7 +57,7 @@ class Game {
         ArrayList<Card> nobles = cardRows[0].getCards();
         boolean[] noblesThatCanBeBought = new boolean[nobles.size()];
         int i = 0;
-        for(Card n : nobles){
+        for (Card n : nobles) {
             noblesThatCanBeBought[i++] = permCards.greaterOrEqualTo(n.getColorCost());
         }
         return noblesThatCanBeBought;
@@ -79,7 +79,7 @@ class Game {
     }
 
     private static void showGameBank() {
-        for(Color c : Color.colors){
+        for (Color c : Color.colors) {
             System.out.println(gameCoins.pileToString(c));
         }
         System.out.println();

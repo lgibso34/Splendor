@@ -16,7 +16,8 @@ class Hand {
     private ArrayList<Noble> noblePile = new ArrayList<>();
     private int points = 0;
 
-    public Hand() {}
+    public Hand() {
+    }
 
     public Colors getPermanentCardCount() {
         return playerCards.getPermanentCounts();
@@ -38,11 +39,11 @@ class Hand {
         Colors cardCost = card.getColorCost(); // get the color cost for the wanted card
         Colors permanents = getPermanentCardCount();
 
-        for(Color c : Color.colors){
-            if(c == Color.Gold)
+        for (Color c : Color.colors) {
+            if (c == Color.Gold)
                 continue;
             int diff = cardCost.getCost(c) - permanents.getCost(c);
-            if(diff <= 0)
+            if (diff <= 0)
                 cardCost.setCost(c, 0);
             else {
                 cardCost.setCost(c, diff);
@@ -80,7 +81,7 @@ class Hand {
 ////        return playerCanBuy ? goldRequired ? goldCoinsNeeded : 0 : -1;
 ////    }
 
-    public boolean canBuy(Card card, Colors c){
+    public boolean canBuy(Card card, Colors c) {
         return c.greaterOrEqualTo(card.getColorCost());
     }
 
@@ -114,6 +115,7 @@ class Hand {
                 points += pointValue;
             }
         } else {
+            card.setFaceUp(false);
             playerCards.reserve(card); // add to faceDown reserve pile
         }
     }
@@ -158,7 +160,7 @@ class Hand {
         return output.toString();
     }
 
-    public String coinsToString(){
+    public String coinsToString() {
         return playerCoins.toString();
     }
 }

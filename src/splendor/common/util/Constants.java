@@ -1,9 +1,8 @@
 package splendor.common.util;
 
 public class Constants {
-    public enum Color
-    {
-    	White("w"), Blue("b"), Green("g"), Red("r"), Black("k"), Gold("o");
+    public enum Color {
+        White("w"), Blue("b"), Green("g"), Red("r"), Black("k"), Gold("o");
 
         private final String shortName;
 
@@ -27,8 +26,7 @@ public class Constants {
         }
     }
 
-    public enum ProtocolAction
-    {
+    public enum ProtocolAction {
         WithdrawCoins, BuyCard, ReserveCard, DepositCoins, AcquireNoble;
 
         public static final ProtocolAction[] protocolActions = ProtocolAction.values();
