@@ -90,13 +90,9 @@ class Game {
         }
     }
 
-    private static void showCoinPiles() {
-        // show coin piles
-        System.out.println(gameBank.pileToString(Color.Gold)); // show just the gold coins
-
-        int i = 0;
+    private static void showGameBank() {
         for(Color c : Color.colors){
-            System.out.println(i++ + ": " + gameBank.pileToString(c));
+            System.out.println(gameBank.pileToString(c));
         }
         System.out.println();
     }
@@ -302,6 +298,7 @@ class Game {
                 }
             case 3:
                 // show hands and card rows
+                showGameBank();
                 showHands();
                 showCardRows();
                 exitDo = -2;
@@ -439,7 +436,7 @@ class Game {
                                 showDecks();
                                 break;
                             case 3:
-                                showCoinPiles();
+                                showGameBank();
                                 break;
                             case 4:
                                 showCardRows();
@@ -478,7 +475,7 @@ class Game {
                         System.out.println("0: Exit\n" +
                                 "1. Pickup coins\n" +
                                 "2. Buy a card\n" +
-                                "3. Show Hands\n" +
+                                "3. Show Game State\n" +
                                 "4. Reserve card\n" +
                                 "5. Buy one of your reserved cards");
                         System.out.println("--------------------------------------------------------------");
@@ -537,7 +534,7 @@ class Game {
             initializeGame(numPlayers);
             showNumberOfPlayers();
             showDecks();
-            showCoinPiles();
+            showGameBank();
             // showHands();
         }
     }
