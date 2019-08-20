@@ -54,33 +54,6 @@ class Hand {
         return cardCost;
     }
 
-//    public int checkBalance(Card card) {
-////        boolean playerCanBuy = true;
-////        boolean goldRequired = false;
-////        int goldCoinsNeeded = 0;
-////        int goldCoinCount = playerCoins.numCoins(Color.Gold);
-////
-////        Colors modifiedCost = getModifiedCost(card);
-////
-////        if (modifiedCost.getCost(Color.Gold) > 0) {
-////            goldRequired = true;
-////            goldCoinsNeeded = modifiedCost.getCost(Color.Gold);
-////        }
-////
-////        for (Color c : Color.colors) { // iterate through each color
-////            if (modifiedCost.getCost(c) > playerCoins.numCoins(c)) { // and check if the card costs more than what the player has
-////                playerCanBuy = false;
-////                break; // break out of the loop
-////            }
-////        }
-////
-////        if (goldCoinsNeeded > goldCoinCount) {
-////            playerCanBuy = false;
-////        }
-////        // -1: player can't buy, 0: player can buy, 1 or greater: number of gold coins that it will cost the player
-////        return playerCanBuy ? goldRequired ? goldCoinsNeeded : 0 : -1;
-////    }
-
     public boolean canBuy(Card card, Colors c) {
         return c.greaterOrEqualTo(card.getColorCost());
     }
