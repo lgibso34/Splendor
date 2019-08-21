@@ -42,12 +42,17 @@ class Hand {
         for (Color c : Color.colors) {
             if (c == Color.Gold)
                 continue;
-            int diff = cardCost.getCost(c) - permanents.getCost(c);
-            if (diff <= 0)
+            int totalCoinsNeeded = cardCost.getCost(c) - permanents.getCost(c);
+            if (totalCoinsNeeded <= 0)
                 cardCost.setCost(c, 0);
             else {
-                cardCost.setCost(c, diff);
-                cardCost.addCost(Color.Gold, diff);
+                int goldDiff = totalCoinsNeeded - playerCoins.numCoins(c);
+                if (goldDiff <= 0) {
+                    cardCost.setCost(c, totalCoinsNeeded);
+                } else {
+                    cardCost.setCost(c, totalCoinsNeeded - goldDiff);
+                    cardCost.addCost(Color.Gold, goldDiff);
+                }
             }
         }
 

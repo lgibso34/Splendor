@@ -24,12 +24,13 @@ package splendor.common.util;
 
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class PCG {
-    private long state;
+    private AtomicLong state;
     private long inc;
 
-    private final static long PERMUTATION = 6364136223846793005L;
+    private final static long MULTIPLIER = 6364136223846793005L;
 
     public PCG() {
         seed();
@@ -39,34 +40,48 @@ public class PCG {
         seed(initState, initSeq);
     }
 
-    public long nextInt() {
-        long oldState = state;
-        state = oldState * PERMUTATION + inc;
-        int xorShifted = (int) (((oldState >>> 18) ^ oldState) >>> 27);
-        int rot = (int) (oldState >>> 59);
-        //return (xorShifted >>> rot) | (xorShifted << ((-rot) & 31));
-        return Integer.toUnsignedLong(Integer.rotateRight(xorShifted, rot));
+    public int next(int bits) {
+        long oldState, nextState;
+        AtomicLong seed = this.state;
+        do {
+            oldState = seed.get();
+            nextState = oldState * MULTIPLIER + inc;
+        } while (!seed.compareAndSet(oldState, nextState));
+
+        int xorShifted = (int) (((nextState >>> 18) ^ nextState) >>> 27);
+        int rot = (int) (nextState >>> 59);
+        return Integer.rotateRight(xorShifted, rot) >>> (32 - bits);
     }
 
-    public long nextInt(int upperBound) {
+    public int nextInt() {
+        return next(32);
+    }
+
+    public long nextInt(int upperBound) { //stolen from Java.util.Random
         if (upperBound <= 0)
             throw new IllegalArgumentException("upperBound must be a non-zero positive integer");
-        int threshold = (0x10000000 - upperBound) % upperBound;
-        long output = nextInt();
-        while (output < threshold)
-            output = nextInt();
-        return output % upperBound;
+
+        int r = next(31);
+        int m = upperBound - 1;
+        if ((upperBound & m) == 0)  // i.e., bound is a power of 2
+            r = (int)((upperBound * (long)r) >> 31);
+        else {
+            for (int u = r;
+                 u - (r = u % upperBound) + m < 0;
+                 u = next(31));
+        }
+        return r;
     }
 
     public boolean nextBoolean() {
-        return nextInt(2) == 1;
+        return next(1) != 1;
     }
 
     private void seed(long initState, long initSeq) {
-        state = 0;
+        this.state = new AtomicLong(0);
         inc = 2 * initSeq + 1;
         nextInt();
-        state += initState;
+        this.state.set(state.get() + initState);
         nextInt();
     }
 
