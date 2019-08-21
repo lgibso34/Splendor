@@ -130,6 +130,9 @@ class Hand {
         for (Color c : Color.colors) {
             output.append(playerCards.pileToString(c)).append(" ").append(playerCoins.pileToString(c)).append("\n");
         }
+        for (Noble n : noblePile) {
+            output.append(n.toString());
+        }
         return output.toString();
     }
 

@@ -46,12 +46,14 @@ public class CardRow {
     public String toString() {
         StringBuilder output = new StringBuilder();
         if (row != 0)
-            output.append("Level").append(row).append(": ");
+            output.append("Level ").append(row).append(": ");
         else
             output.append("Nobles: ");
         for (Card card : cards) {
             output.append(card.toString()).append("     ");
         }
+        if (row != 0)
+            output.append("     Cards in deck: ").append(deck.numCards());
         output.append("\n");
         return output.toString();
     }

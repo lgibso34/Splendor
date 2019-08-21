@@ -24,7 +24,7 @@ public class Deck {
         int numCards = cards.size();
 
         for (int i = 0; i < numCards - 2; i++) {
-            //j is a random integer such that i ≤ j < n, for our purposes this is always a positive int
+            //j is a random integer such that i ≤ j < n
             int j = (int) rand.nextInt(numCards);
             while (j < i)
                 j = (int) rand.nextInt(numCards);
@@ -50,5 +50,9 @@ public class Deck {
 
     public boolean isEmpty(){
         return cards.isEmpty();
+    }
+
+    public int numCards(){
+        return cards.size();
     }
 }

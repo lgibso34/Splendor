@@ -21,10 +21,6 @@ class CardPile {
         return cards.size();
     }
 
-    public Card peekCard(int index) {
-        return cards.get(index);
-    }
-
     public Card buyReservedCard(int index) {
         return cards.remove(index);
     }

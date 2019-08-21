@@ -27,10 +27,6 @@ public class CardBank {
         return bank[Color.Gold.ordinal()].buyReservedCard(index);
     }
 
-    public Card peekCard(int index) {
-        return bank[Color.Gold.ordinal()].peekCard(index);
-    }
-
     public int getTotalPermanentCount() {
         int count = 0;
         for (Color c : Color.colors) {
