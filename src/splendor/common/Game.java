@@ -15,7 +15,7 @@ class Game {
     private static boolean lastRound = false;
     private static int playerWhoInitiatedLastRound = -1;
     private static final boolean debug = true;
-    private static final int MAX_PLAYER_COINS = 10;
+    private static int MAX_PLAYER_COINS;
 
     private static Deck[] decks = new Deck[4];
     private static CoinBank gameCoins;
@@ -29,6 +29,7 @@ class Game {
      * @param numPlayers - Number of players in the game
      */
     private static void initializeGame(int numPlayers) {
+        MAX_PLAYER_COINS = numPlayers == 5 ? 7 : 10;
 
         gameCoins = new CoinBank(numPlayers);
         decks = DeckBuilder.buildDecks();
@@ -94,8 +95,7 @@ class Game {
     }
 
     private static void showNumberOfPlayers() {
-        System.out.println("Number of Players: " + numPlayers);
-        System.out.println();
+        System.out.println("Number of Players: " + numPlayers + "\n");
     }
 
     private static void showHands() {
