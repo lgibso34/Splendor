@@ -498,9 +498,12 @@ class Game {
                     }
                 } while (exitDo <= 0);
 
-                Hand WINNER = handleWinner();
-                System.out.println("WINNER:");
-                System.out.println(WINNER.toString());
+                if(playerWhoInitiatedLastRound != -1){
+                    Hand WINNER = handleWinner();
+                    System.out.println("WINNER:");
+                    System.out.println(WINNER.toString());
+                }
+
             }
         } else {
             initializeGame(numPlayers);
