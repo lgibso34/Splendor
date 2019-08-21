@@ -434,11 +434,7 @@ class Game {
                 int player = 0;
                 exitDo = 0;
                 do {
-                    if (lastRound) {
-                        if ((player) == playerWhoInitiatedLastRound) {
-                            break; //exit the doWhile loop to handleWinner()
-                        }
-                    }
+
                     try {
                         System.out.println("--------------------------------------------------------------");
                         System.out.println("Player " + (player + 1));
@@ -481,6 +477,10 @@ class Game {
                                     lastRound = true;
                                     playerWhoInitiatedLastRound = player;
                                 }
+
+                                if (lastRound && player == numPlayers-1)
+                                    break; //exit the doWhile loop to handleWinner()
+
 
                                 if (player == numPlayers - 1) {
                                     player = 0;
