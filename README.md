@@ -10,7 +10,7 @@ The client initiates connection with the server by obtaining a player name (1-4)
 
 Once the client is connected, it can make requests. You can type these into the GUI for now. Client requests should begin with an ACTION keyword: WITHDRAW, BUY, or RESERVE.
 
-**WITHDRAW** requests should somewhow represent the coins that the player wants to withdraw; maybe like so:
+**WITHDRAW** requests should somehow represent the coins that the player wants to withdraw; maybe like so:
 
 ` WITHDRAW 11010 `
 
@@ -27,4 +27,4 @@ If the request is invalid, the server will send **REJECT**. Right now there's no
 
 I'll leave it here for a while so you guys can work on adding the game logic and integrating the client and server into the rest of the project.
 
---Dallin
+-- Dallin

@@ -1,47 +1,37 @@
 package splendor.common.cards;
 
-import splendor.common.util.Constants.Colors;
+import splendor.common.util.Constants.Color;
 
 import java.util.ArrayList;
 
-public class CardPile {
+class CardPile {
 
-	private ArrayList<Card> cards = new ArrayList<Card>();
-	private Colors color;
+    private ArrayList<Card> cards = new ArrayList<>();
+    private final Color color;
 
-	public CardPile(Colors color) {
-		this.color = color;
-	}
-	
-	public void add(Card card) {
-		cards.add(card);
-	}
-
-	public int getSize(){
-	    return cards.size();
+    public CardPile(Color color) {
+        this.color = color;
     }
 
-	public Card peekCard(int index){
-		return cards.get(index);
-	}
+    public void add(Card card) {
+        cards.add(card);
+    }
 
-	public Card buyReservedCard(int index){
-		return cards.remove(index);
-	}
+    public int getSize() {
+        return cards.size();
+    }
 
-	public String showCards(){
-		String output = "";
-		for(Card c : cards){
-			output += c.toString() + "\n";
-		}
-		return output;
-	}
+    public Card buyReservedCard(int index) {
+        return cards.remove(index);
+    }
 
-	public String toString(){
-		if(this.color == Colors.Gold){
-			return "Reserved cards: " + cards.size() + " |";
-		}else {
-			return cards.size() + "x Permanent " + color + " |";
-		}
-	}
+    public String toString() {
+        if (cards == null)
+            return null;
+        if (this.color == Color.Gold) {
+            return "Reserved cards: " + cards.size() + " |";
+        } else {
+            return cards.size() + "x Permanent " + color + " |";
+        }
+    }
 }
