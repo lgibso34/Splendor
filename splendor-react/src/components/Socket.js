@@ -1,5 +1,5 @@
 const DefaultConfig = {
-    PROTOCOL: 'wss://',
+    PROTOCOL: 'ws://',
     HOST: 'localhost',
     PORT: ':59001'
 }
