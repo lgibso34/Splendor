@@ -14,16 +14,16 @@ import java.util.concurrent.Executors;
  * with "NAMEACCEPTED". Then all messages from that client will be broadcast to all other
  * clients that have submitted a unique screen name. The broadcast messages are prefixed
  * with "MESSAGE".
- *
+ * <p>
  * This is just a teaching example so it can be enhanced in many ways, e.g., better
  * logging. Another is to accept a lot of fun commands, like Slack.
  */
 public class splendorServer {
-    
+
     // All client names, so we can check for duplicates upon registration.
     private static Set<String> names = new HashSet<>();
 
-     // The set of all the print writers for all the clients, used for broadcast.
+    // The set of all the print writers for all the clients, used for broadcast.
     private static Set<PrintWriter> writers = new HashSet<>();
 
     public static void main(String[] args) throws Exception {
@@ -62,13 +62,18 @@ public class splendorServer {
          */
         public void run() {
             try {
+                System.out.println("discovered connection");
                 in = new Scanner(socket.getInputStream());
+                System.out.println("got input stream");
                 out = new PrintWriter(socket.getOutputStream(), true);
+                System.out.println("got output stream");
 
                 // Keep requesting a name until we get a unique one.
                 while (true) {
                     out.println("SUBMITNAME");
+                    System.out.println("submitted.");
                     name = in.nextLine();
+                    System.out.println(name);
                     if (name == null) {
                         return;
                     }
@@ -99,14 +104,14 @@ public class splendorServer {
                         // this is what actually fires when a client sends a message to the server
                         message = validateAction(input);
                     }
-                    if(message != "") {
+                    if (message != "") {
                         for (PrintWriter writer : writers) {
                             writer.println(message);
                         }
                     }
                 }
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
             } finally {
                 if (out != null) {
                     writers.remove(out);
@@ -118,17 +123,21 @@ public class splendorServer {
                         writer.println("MESSAGE " + name + " has left");
                     }
                 }
-                try { socket.close(); } catch (IOException e) {}
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                }
             }
         }
+
         String validateAction(String input) {
             String msg = "";
-            if(input.startsWith("WITHDRAW")) msg = validateWithdraw(input);
-            else if(input.startsWith("BUY"))      msg = validateBuy(input);
-            else if(input.startsWith("RESERVE"))  msg = validateReserve(input);
-            // ... additional else-ifs to cover all input actions
+            if (input.startsWith("WITHDRAW")) msg = validateWithdraw(input);
+            else if (input.startsWith("BUY")) msg = validateBuy(input);
+            else if (input.startsWith("RESERVE")) msg = validateReserve(input);
+                // ... additional else-ifs to cover all input actions
             else msg = "REJECT";
-          return msg;
+            return msg;
         }
 
         String validateWithdraw(String input) {
@@ -152,4 +161,12 @@ public class splendorServer {
             return retVal;
         }
     }
+
+//    private class jsonData {
+//        public String key, value;
+//
+//        public jsonData(String jsonMessage) {
+//
+//        }
+//    }
 }
