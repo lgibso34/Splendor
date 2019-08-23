@@ -1,3 +1,6 @@
+import jdk.net.SocketFlow;
+import jdk.net.Sockets;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -67,6 +70,8 @@ public class splendorServer {
                 System.out.println("got input stream");
                 out = new PrintWriter(socket.getOutputStream(), true);
                 System.out.println("got output stream");
+                System.out.println(SocketFlow.Status.OK);
+                
 
                 // Keep requesting a name until we get a unique one.
                 while (true) {

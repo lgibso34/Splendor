@@ -19,6 +19,10 @@ class SplendorClient extends Component {
         this.socket.onmessage = (response) => {
             console.log(response.data)
         }
+
+        this.socket.onopen = () => {
+            console.log("joined")
+        }
     }
 }
 
