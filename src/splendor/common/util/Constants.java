@@ -27,7 +27,7 @@ public class Constants {
     }
 
     public enum ProtocolAction {
-        WithdrawCoins, BuyCard, ReserveCard, DepositCoins, AcquireNoble, SyncTime, SyncGameState, SendChat, SetDisplayName, CheckAlive, Acknowledge;
+        WithdrawCoins, BuyCard, ReserveCard, DepositCoins, AcquireNoble, SyncTime, SyncGameState, SyncChat, SendChat, SetDisplayName, CheckAlive, Acknowledge;
 
         public static final ProtocolAction[] protocolActions = ProtocolAction.values();
     }
@@ -36,4 +36,6 @@ public class Constants {
     public static final int MAX_GEMS_3PLAYER = 5;
     public static final int MAX_GEMS_DEFAULT = 7;
     public static final int MAX_GOLD_COINS = 5;
+
+    public static final int MAX_CLIENTS = 10;
 }

@@ -1,10 +1,23 @@
 package splendor.client;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.control.TextField;
+import splendor.common.util.Constants;
+import splendor.common.util.Constants.ProtocolAction;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,7 +50,9 @@ import javax.swing.JTextField;
 public class Client extends Application {
 
     String serverAddress;
-    String playerID = "0";
+    int playerID = 0;
+    private static final int MAX_PLAYERS = 5;
+
     Scanner in;
     PrintWriter out;
     JFrame frame = new JFrame("Player");
@@ -51,84 +66,122 @@ public class Client extends Application {
      * only becomes editable AFTER the client receives the NAMEACCEPTED message from
      * the server.
      */
-    public Client(String serverAddress) {
-        this.serverAddress = serverAddress;
-
-        textField.setEditable(false);
-        messageArea.setEditable(false);
-        frame.getContentPane().add(textField, BorderLayout.SOUTH);
-        frame.getContentPane().add(new JScrollPane(messageArea), BorderLayout.CENTER);
-        frame.pack();
-
-        // Send on enter then clear to prepare for next message
-        textField.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                out.println(textField.getText());
-                textField.setText("");
-            }
-        });
+    public Client() { //String serverAddress
+//        this.serverAddress = serverAddress;
+//
+//        textField.setEditable(false);
+//        messageArea.setEditable(false);
+//        frame.getContentPane().add(textField, BorderLayout.SOUTH);
+//        frame.getContentPane().add(new JScrollPane(messageArea), BorderLayout.CENTER);
+//        frame.pack();
+//
+//        // Send on enter then clear to prepare for next message
+//        textField.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                out.println(textField.getText());
+//                textField.setText("");
+//            }
+//        });
     }
 
     // Starting at 1, increment playerID upwards as new players are added
     // All players above 4 will be rejected
-    private String addPlayer() {
-        int temp = Integer.parseInt(playerID) + 1;
-        playerID = Integer.toString(temp);
-        if (temp > 4) terminate();
-        return playerID;
-    }
-
-    private void run() throws IOException {
-        try {
-            var socket = new Socket(serverAddress, 59001);
-            in = new Scanner(socket.getInputStream());
-            out = new PrintWriter(socket.getOutputStream(), true);
-
-            while (in.hasNextLine()) {
-                var line = in.nextLine();
-                if (line.startsWith("SUBMITNAME")) {
-                    out.println(addPlayer());
-                } else if (line.startsWith("NAMEACCEPTED")) {
-                    this.frame.setTitle("Player " + line.substring(13));
-                    textField.setEditable(true);
-                } else if (line.startsWith("REJECT")) {
-                    messageArea.append("Invalid move was rejected\n");
-                } else {
-                    // directly echo the server response into the chat area
-                    messageArea.append(line + "\n");
-                }
-            }
-        } finally {
+    //TODO move this to server side
+    private int addPlayer() {
+        if (playerID >= Constants.MAX_CLIENTS)
             terminate();
-        }
+        return ++playerID;
     }
 
     void terminate() {
-        System.out.println("Terminating!");
-        frame.setVisible(false);
-        frame.dispose();
+//        System.out.println("Terminating!");
+//        frame.setVisible(false);
+//        frame.dispose();
         System.exit(0);
     }
 
     public static void main(String[] args) throws Exception {
-        if (args.length != 1) {
-            System.err.println("Pass the server IP as the sole command line argument");
-            return;
-        }
-        var client = new Client(args[0]);
-        client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        client.frame.setVisible(true);
-        client.run();
+//        if (args.length != 1) {
+//            System.err.println("Pass the server IP as the sole command line argument");
+//            return;
+//        }
+//        var client = new Client(args[0]);
+//        client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        client.frame.setVisible(true);
+//        client.run();
 
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        this.serverAddress = "localhost";
+        var socket = new Socket(serverAddress, 59001);
+        in = new Scanner(socket.getInputStream());
+        out = new PrintWriter(socket.getOutputStream(), true);
+
+//        while (in.hasNextLine()) {
+//            var line = in.nextLine();
+//            if (line.startsWith("SUBMITNAME")) {
+//                out.println(addPlayer());
+//            } else if (line.startsWith("NAMEACCEPTED")) {
+//                this.frame.setTitle("Player " + line.substring(13));
+//                textField.setEditable(true);
+//            } else if (line.startsWith("REJECT")) {
+//                messageArea.append("Invalid move was rejected\n");
+//            } else {
+//                // directly echo the server response into the chat area
+//                messageArea.append(line + "\n");
+//            }
+//        }
+
+        Stage popupWindow = new Stage();
+        popupWindow.initModality(Modality.APPLICATION_MODAL);
+        popupWindow.setTitle("New Chat User");
+        Label label1 = new Label("Please enter a display name:");
+        TextField text1 = new TextField();
+        text1.setPrefWidth(200);
+        text1.setMaxWidth(200);
+        Button button1 = new Button("Register");
+        button1.setOnAction(e -> {
+            if (sendAndReceive(ProtocolAction.SetDisplayName, text1.getText())) {
+                popupWindow.close();
+            } else
+                label1.setText(text1.getText() + " is invalid. Please try another name.");
+        });
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(label1, text1, button1);
+        layout.setAlignment(Pos.CENTER);
+        Scene scene1 = new Scene(layout, 300, 250);
+        popupWindow.setScene(scene1);
+        popupWindow.showAndWait();
+
+        StackPane stackPane = new StackPane();
+
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        stackPane.getChildren().add(root);
+
         primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
+
+
+        Rectangle rect = new Rectangle(200, 200, Color.RED);
+        ScrollPane s1 = new ScrollPane();
+        s1.setPrefSize(120, 120);
+        s1.setContent(rect);
+
+        stackPane.getChildren().add(s1);
+
+        primaryStage.setScene(new Scene(stackPane, 300, 275));
         primaryStage.show();
+    }
+
+    private boolean sendAndReceive(ProtocolAction messageType, String message) {
+        out.println(messageType.ordinal() + message);
+        String response = in.nextLine();
+        System.out.println("received: " + response);//debug
+        if(response.equals(messageType.ordinal() + "valid"))
+            return true;
+        return false;
     }
 
 }
