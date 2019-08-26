@@ -1,4 +1,4 @@
-package sample;
+package splendor.client;
 
 public class Controller {
 }

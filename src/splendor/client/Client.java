@@ -1,3 +1,11 @@
+package splendor.client;
+
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -7,7 +15,6 @@ import java.util.Scanner;
 
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -18,7 +25,7 @@ import javax.swing.JTextField;
 /**
  * A simple Swing-based client for the chat server. Graphically it is a frame with a text
  * field for entering messages and a textarea to see the whole dialog.
- *
+ * <p>
  * The client follows the following Chat Protocol. When the server sends "SUBMITNAME" the
  * client replies with the desired screen name. The server will keep sending "SUBMITNAME"
  * requests as long as the client submits screen names that are already in use. When the
@@ -27,7 +34,7 @@ import javax.swing.JTextField;
  * server. When the server sends a line beginning with "MESSAGE" then all characters
  * following this string should be displayed in its message area.
  */
-public class splendorClient {
+public class Client extends Application {
 
     String serverAddress;
     String playerID = "0";
@@ -44,7 +51,7 @@ public class splendorClient {
      * only becomes editable AFTER the client receives the NAMEACCEPTED message from
      * the server.
      */
-    public splendorClient(String serverAddress) {
+    public Client(String serverAddress) {
         this.serverAddress = serverAddress;
 
         textField.setEditable(false);
@@ -67,7 +74,7 @@ public class splendorClient {
     private String addPlayer() {
         int temp = Integer.parseInt(playerID) + 1;
         playerID = Integer.toString(temp);
-        if(temp > 4) terminate();
+        if (temp > 4) terminate();
         return playerID;
     }
 
@@ -96,7 +103,7 @@ public class splendorClient {
         }
     }
 
-    void terminate(){
+    void terminate() {
         System.out.println("Terminating!");
         frame.setVisible(false);
         frame.dispose();
@@ -108,9 +115,20 @@ public class splendorClient {
             System.err.println("Pass the server IP as the sole command line argument");
             return;
         }
-        var client = new splendorClient(args[0]);
+        var client = new Client(args[0]);
         client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         client.frame.setVisible(true);
         client.run();
+
+        launch(args);
     }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        primaryStage.setTitle("Hello World");
+        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.show();
+    }
+
 }

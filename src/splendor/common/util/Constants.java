@@ -27,7 +27,7 @@ public class Constants {
     }
 
     public enum ProtocolAction {
-        WithdrawCoins, BuyCard, ReserveCard, DepositCoins, AcquireNoble;
+        WithdrawCoins, BuyCard, ReserveCard, DepositCoins, AcquireNoble, SyncTime, SyncGameState, SendChat, SetDisplayName, CheckAlive, Acknowledge;
 
         public static final ProtocolAction[] protocolActions = ProtocolAction.values();
     }

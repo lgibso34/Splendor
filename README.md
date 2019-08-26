@@ -4,7 +4,7 @@
 
 To run the client, make sure you specify the server address (ie localhost):
 
-` javac splendorClient.java && java splendorClient localhost `
+` javac Client.java && java Client localhost `
 
 The client initiates connection with the server by obtaining a player name (1-4).
 

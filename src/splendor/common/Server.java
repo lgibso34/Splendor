@@ -1,3 +1,5 @@
+package splendor.common;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -18,7 +20,7 @@ import java.util.concurrent.Executors;
  * This is just a teaching example so it can be enhanced in many ways, e.g., better
  * logging. Another is to accept a lot of fun commands, like Slack.
  */
-public class splendorServer {
+public class Server {
     
     // All client names, so we can check for duplicates upon registration.
     private static Set<String> names = new HashSet<>();
