@@ -28,3 +28,10 @@ If the request is invalid, the server will send **REJECT**. Right now there's no
 I'll leave it here for a while so you guys can work on adding the game logic and integrating the client and server into the rest of the project.
 
 -- Dallin
+
+## Notes on JavaFX
+
+Because we are not using tools like Maven or gradle, any dependencies have to be configured individually.
+Follow this link, click on JavaFX and IntelliJ, and start at step 3 to set up your environment to run the client class:
+
+https://openjfx.io/openjfx-docs/
