@@ -7,10 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.Executors;
 
 /**
@@ -27,10 +24,12 @@ import java.util.concurrent.Executors;
 public class Server {
 
     // All client names, so we can check for duplicates upon registration.
-    private static Set<String> names = new HashSet<>();
+    private static Map<String, Boolean> names = new HashMap<>();
 
     // The set of all the print writers for all the clients, used for broadcast.
     private static Set<PrintWriter> writers = new HashSet<>();
+
+    private static Game game = new Game();
 
     public static void main(String[] args) throws Exception {
         System.out.println("The Splendor server is running...");
@@ -72,20 +71,7 @@ public class Server {
                 out = new PrintWriter(socket.getOutputStream(), true);
 
                 // Keep requesting a name until we get a unique one.
-                //while (true) {
-                //out.println("SUBMITNAME");
                 name = receiveDisplayName(ProtocolAction.SetDisplayName, "valid");
-                //name = in.nextLine();
-//                if (name == null) {
-//                    return;
-//                }
-//                synchronized (names) {
-//                    if (!name.isBlank() && !names.contains(name)) {
-//                        names.add(name);
-//                        break;
-//                    }
-//                }
-                //}
 
                 // Now that a successful name has been chosen, add the socket's print writer
                 // to the set of all writers so this client can receive broadcast messages.
@@ -126,7 +112,7 @@ public class Server {
                 }
                 if (name != null) {
                     System.out.println(name + " is leaving");
-                    names.remove(name);
+                    //names.remove(name); Do not remove the name, so another user cannot pretend to be a previous user.
                     for (PrintWriter writer : writers) {
                         writer.println("MESSAGE " + name + " has left");
                     }
@@ -134,44 +120,135 @@ public class Server {
                 try {
                     socket.close();
                 } catch (IOException e) {
+                    System.out.println(e);
+                    System.out.println(e.getStackTrace());
                 }
             }
         }
 
         String validateAction(String input) {
-            String msg = "";
-            if (input.startsWith("WITHDRAW")) msg = validateWithdraw(input);
-            else if (input.startsWith("BUY")) msg = validateBuy(input);
-            else if (input.startsWith("RESERVE")) msg = validateReserve(input);
-                // ... additional else-ifs to cover all input actions
-            else msg = "REJECT";
-            return msg;
+            StringBuilder sb = new StringBuilder(input.substring(0,1));
+            ProtocolAction messageType = MessageType(input);
+            String message = input.substring(1);
+
+            switch (messageType) {
+                case WithdrawCoins:
+                    sb.append(validateWithdraw(message));
+                    break;
+                case BuyCard:
+                    sb.append(validateBuy(message));
+                    break;
+                case ReserveCard:
+                    sb.append(validateReserve(message));
+                    break;
+                case DepositCoins:
+                    sb.append(validateDeposit(message));
+                    break;
+                case AcquireNoble:
+                    sb.append(validateNoble(message));
+                    break;
+                case SyncTime:
+                    sb.append(syncTime(message));
+                    break;
+                case SyncGameState:
+                    sb.append(syncState(message));
+                    break;
+                case SyncChat:
+                    sb.append(syncChat(message));
+                    break;
+                case SendChat:
+                    sb.append(sendChat(message));
+                    break;
+                case SetDisplayName:
+                    //this could be used to nickname people
+                    sb.append(setDisplayName(message));
+                    break;
+                case CheckAlive:
+                    sb.append(checkAlive(message));
+                    break;
+                case Acknowledge:
+                    sb.append(acknowledge(message));
+                    break;
+                default:
+                    sb.append(sendResendMessage(message));
+                    break;
+            }
+            return sb.toString();
         }
 
-        String validateWithdraw(String input) {
-            String coins = input.substring(8);
+        String validateWithdraw(String message) {
             // TODO: validate game logic
-            String retVal = "WITHDRAW " + name + " " + coins;
-            return retVal;
+            //TODO game has all of the state and validation. delegate the message to game with the player number to validate against the game state
+            //boolean valid = game.validateWithdraw(coins, getPlayerNumber(name);
+            boolean valid = false;
+            if(!valid)
+                return null;
+            return "valid";
         }
 
-        String validateBuy(String input) {
-            String card = input.substring(4);
+        String validateBuy(String message) {
             // TODO: validate game logic
-            String retVal = "BUY " + name + " " + card;
-            return retVal;
+            return null;
         }
 
-        String validateReserve(String input) {
-            String card = input.substring(7);
+        String validateReserve(String message) {
             //TODO: validate game logic
-            String retVal = "RESERVE " + name + " " + card;
-            return retVal;
+            return null;
+        }
+
+        String validateDeposit(String message) {
+            //TODO: validate game logic
+            return null;
+        }
+
+        String validateNoble(String message) {
+            //TODO: validate game logic
+            return null;
+        }
+
+        String syncTime(String message) {
+            //TODO: validate game logic
+            return null;
+        }
+
+        String syncState(String message) {
+            //TODO: validate game logic
+            return null;
+        }
+
+        String syncChat(String message) {
+            //TODO: validate game logic
+            return null;
+        }
+
+        String sendChat(String message) {
+            //TODO: validate game logic
+            return null;
+        }
+
+        String setDisplayName(String message) {
+            //TODO: validate game logic
+            return null;
+        }
+
+        String checkAlive(String message) {
+            //TODO: validate game logic
+            return null;
+        }
+
+        String acknowledge(String message) {
+            //TODO: validate game logic
+            return null;
+        }
+
+        String sendResendMessage(String message) {
+            //TODO: validate game logic
+            return null;
         }
 
         private boolean receiveAndSend(ProtocolAction messageType, String send) {
             String response = in.nextLine();
-            if (Integer.parseInt(response.substring(0, 1)) == messageType.ordinal())
+            if (MessageType(response) == messageType)
                 return true;
             return false;
         }
@@ -180,12 +257,13 @@ public class Server {
             String response;
             while (true) {
                 response = in.nextLine();
-                if (Integer.parseInt(response.substring(0, 1)) == messageType.ordinal()) {
+                if (MessageType(response) == messageType) {
                     response = response.substring(1);
                     if (response != null) {
                         synchronized (names) {
-                            if (!response.isBlank() && !names.contains(response)) {
-                                names.add(response);
+                            if (!response.isBlank() && !names.containsKey(response)) {
+                                //TODO change true to be the boolean value of if the client is a player
+                                names.put(response, true);
                                 break;
                             }
                         }
@@ -195,6 +273,10 @@ public class Server {
             System.out.println("Sending: " + messageType.ordinal() + "valid");
             out.println(messageType.ordinal() + "valid");
             return response;
+        }
+
+        private ProtocolAction MessageType(String s){
+            return ProtocolAction.fromInt(Integer.parseInt(s.substring(0,1)));
         }
     }
 }

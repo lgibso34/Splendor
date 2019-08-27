@@ -30,6 +30,11 @@ public class Constants {
         WithdrawCoins, BuyCard, ReserveCard, DepositCoins, AcquireNoble, SyncTime, SyncGameState, SyncChat, SendChat, SetDisplayName, CheckAlive, Acknowledge;
 
         public static final ProtocolAction[] protocolActions = ProtocolAction.values();
+
+        public static ProtocolAction fromInt(int i){
+            return protocolActions[i];
+        }
+
     }
 
     public static final int MAX_GEMS_2PLAYER = 4;

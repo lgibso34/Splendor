@@ -8,6 +8,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -142,6 +146,14 @@ public class Client extends Application {
         TextField text1 = new TextField();
         text1.setPrefWidth(200);
         text1.setMaxWidth(200);
+
+        final ToggleGroup group = new ToggleGroup();
+        RadioButton rb1 = new RadioButton("Player");
+        rb1.setToggleGroup(group);
+        rb1.setSelected(true);
+        RadioButton rb2 = new RadioButton("Spectator");
+        rb2.setToggleGroup(group);
+
         Button button1 = new Button("Register");
         button1.setOnAction(e -> {
             if (sendAndReceive(ProtocolAction.SetDisplayName, text1.getText())) {
@@ -149,10 +161,16 @@ public class Client extends Application {
             } else
                 label1.setText(text1.getText() + " is invalid. Please try another name.");
         });
-        VBox layout = new VBox(10);
-        layout.getChildren().addAll(label1, text1, button1);
-        layout.setAlignment(Pos.CENTER);
-        Scene scene1 = new Scene(layout, 300, 250);
+
+        HBox hLayout = new HBox(10);
+        hLayout.setAlignment(Pos.CENTER);
+        hLayout.getChildren().addAll(rb1, rb2);
+
+        VBox vLayout = new VBox(10);
+        vLayout.getChildren().addAll(label1, text1, hLayout, button1);
+        vLayout.setAlignment(Pos.CENTER);
+
+        Scene scene1 = new Scene(vLayout, 300, 250);
         popupWindow.setScene(scene1);
         popupWindow.showAndWait();
 
