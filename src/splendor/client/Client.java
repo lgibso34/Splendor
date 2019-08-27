@@ -1,15 +1,14 @@
 package splendor.client;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -17,9 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.control.TextField;
 import splendor.common.util.Constants;
 import splendor.common.util.Constants.ProtocolAction;
 
@@ -153,10 +150,18 @@ public class Client extends Application {
         rb1.setSelected(true);
         RadioButton rb2 = new RadioButton("Spectator");
         rb2.setToggleGroup(group);
+        group.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
+            public void changed(ObservableValue<? extends Toggle> ov,
+                                Toggle old_toggle, Toggle new_toggle) {
+                if (group.getSelectedToggle() != null) {
+
+                }
+            }
+        });
 
         Button button1 = new Button("Register");
         button1.setOnAction(e -> {
-            if (sendAndReceive(ProtocolAction.SetDisplayName, text1.getText())) {
+            if (sendAndReceive(ProtocolAction.SetDisplayName, text1.getText(), rb1.isSelected())) {
                 popupWindow.close();
             } else
                 label1.setText(text1.getText() + " is invalid. Please try another name.");
@@ -193,8 +198,8 @@ public class Client extends Application {
         primaryStage.show();
     }
 
-    private boolean sendAndReceive(ProtocolAction messageType, String message) {
-        out.println(messageType.ordinal() + message);
+    private boolean sendAndReceive(ProtocolAction messageType, String message, boolean player) {
+        out.println(messageType.ordinal() + (player ? "1" : "0") + message);
         String response = in.nextLine();
         System.out.println("received: " + response);//debug
         if(response.equals(messageType.ordinal() + "valid"))

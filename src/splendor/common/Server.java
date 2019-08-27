@@ -258,12 +258,12 @@ public class Server {
             while (true) {
                 response = in.nextLine();
                 if (MessageType(response) == messageType) {
-                    response = response.substring(1);
+                    boolean player = Boolean.parseBoolean(response.substring(1,2));
+                    response = response.substring(2);
                     if (response != null) {
                         synchronized (names) {
                             if (!response.isBlank() && !names.containsKey(response)) {
-                                //TODO change true to be the boolean value of if the client is a player
-                                names.put(response, true);
+                                names.put(response, player);
                                 break;
                             }
                         }
