@@ -43,4 +43,5 @@ public class Constants {
     public static final int MAX_GOLD_COINS = 5;
 
     public static final int MAX_CLIENTS = 10;
+    public static final int MAX_NUM_PLAYERS = 4;
 }

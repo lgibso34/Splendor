@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import splendor.common.cards.*;
 import splendor.common.coins.CoinBank;
+import splendor.common.util.Constants;
 import splendor.common.util.DeckBuilder;
 import splendor.common.util.Constants.Color;
 
@@ -514,8 +515,8 @@ class Game {
     }
 
     public int addClient(boolean player){
-        if (player)
-            return ++numPlayers;
+        if (player && numPlayers < Constants.MAX_NUM_PLAYERS)
+            return numPlayers++;
         else
             return -1;
     }
