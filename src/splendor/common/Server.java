@@ -258,12 +258,13 @@ public class Server {
             while (true) {
                 response = in.nextLine();
                 if (MessageType(response) == messageType) {
-                    boolean player = Boolean.parseBoolean(response.substring(1,2));
+                    boolean player = response.substring(1,2).equals("0") ? false : true;
                     response = response.substring(2);
                     if (response != null) {
                         synchronized (names) {
                             if (!response.isBlank() && !names.containsKey(response)) {
                                 names.put(response, player);
+                                System.out.println(new StringBuilder("Added ").append(response).append(" as a ").append(player ? "player." : "spectator.").toString());
                                 break;
                             }
                         }
