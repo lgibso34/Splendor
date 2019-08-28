@@ -264,7 +264,7 @@ public class Server {
                         synchronized (clientNames) {
                             if (!response.isBlank() && !clientNames.containsKey(response)) {
                                 clientNames.put(response, game.addClient(player));
-                                System.out.println(new StringBuilder("Added ").append(response).append(" as a ").append(player ? "player." : "spectator.").toString());
+                                System.out.println(new StringBuilder("Added ").append(response).append(" as a ").append(clientNames.get(response) >= 0 ? "player." : "spectator.").toString());
                                 break;
                             }
                         }
