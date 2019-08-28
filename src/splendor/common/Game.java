@@ -11,7 +11,7 @@ import splendor.common.util.Constants.Color;
 
 class Game {
 
-    private static int numPlayers = 5;
+    private static int numPlayers = 0;
     private static boolean lastRound = false;
     private static int playerWhoInitiatedLastRound = -1;
     private static final boolean debug = true;
@@ -511,6 +511,13 @@ class Game {
             showDecks();
             showGameBank();
         }
+    }
+
+    public int addClient(boolean player){
+        if (player)
+            return ++numPlayers;
+        else
+            return -1;
     }
 
 }

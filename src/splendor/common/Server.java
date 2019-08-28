@@ -24,7 +24,7 @@ import java.util.concurrent.Executors;
 public class Server {
 
     // All client names, so we can check for duplicates upon registration.
-    private static Map<String, Boolean> names = new HashMap<>();
+    private static Map<String, Integer> clientNames = new HashMap<>();
 
     // The set of all the print writers for all the clients, used for broadcast.
     private static Set<PrintWriter> writers = new HashSet<>();
@@ -261,9 +261,9 @@ public class Server {
                     boolean player = response.charAt(1) == '1' ? true : false;
                     response = response.substring(2);
                     if (response != null) {
-                        synchronized (names) {
-                            if (!response.isBlank() && !names.containsKey(response)) {
-                                names.put(response, player);
+                        synchronized (clientNames) {
+                            if (!response.isBlank() && !clientNames.containsKey(response)) {
+                                clientNames.put(response, game.addClient(player));
                                 System.out.println(new StringBuilder("Added ").append(response).append(" as a ").append(player ? "player." : "spectator.").toString());
                                 break;
                             }
