@@ -258,7 +258,7 @@ public class Server {
             while (true) {
                 response = in.nextLine();
                 if (MessageType(response) == messageType) {
-                    boolean player = response.substring(1,2).equals("0") ? false : true;
+                    boolean player = response.charAt(1) == '1' ? true : false;
                     response = response.substring(2);
                     if (response != null) {
                         synchronized (names) {
