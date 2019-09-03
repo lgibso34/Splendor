@@ -1,6 +1,8 @@
 package splendor.common;
 
+import splendor.common.cards.Colors;
 import splendor.common.util.Constants;
+import splendor.common.util.Constants.Color;
 import splendor.common.util.Constants.ProtocolAction;
 
 import java.io.IOException;
@@ -177,13 +179,10 @@ public class Server {
         }
 
         String validateWithdraw(String message) {
-            // TODO: validate game logic
             //TODO game has all of the state and validation. delegate the message to game with the player number to validate against the game state
-            //boolean valid = game.validateWithdraw(coins, getPlayerNumber(name);
-            boolean valid = false;
-            if(!valid)
-                return null;
-            return "valid";
+            if (game.validateWithdraw(new Colors(message), clientNames.get(name)))
+                return "valid";
+            return null;
         }
 
         String validateBuy(String message) {
@@ -264,7 +263,7 @@ public class Server {
                         synchronized (clientNames) {
                             if (!response.isBlank() && !clientNames.containsKey(response)) {
                                 clientNames.put(response, game.addClient(player));
-                                System.out.println(new StringBuilder("Added ").append(response).append(" as a ").append(clientNames.get(response) >= 0 ? "player." : "spectator.").toString());
+                                System.out.println("Added " + response + " as a" + (clientNames.get(response) >= 0 ? "player." : "spectator."));
                                 break;
                             }
                         }
