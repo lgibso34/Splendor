@@ -133,7 +133,7 @@ class Game {
         return winner;
     }
 
-    private static void checkCoinOverflow(Hand playerHand, Scanner scanner){
+    private static void checkCoinOverflow(Hand playerHand, Scanner scanner) {
         //check if player has too many gems
         if (playerHand.getCoinCount() > MAX_PLAYER_COINS) {
             System.out.println("You may not own more than 10 coins. You currently have " + playerHand.getCoinCount() + " coins.");
@@ -300,7 +300,7 @@ class Game {
                         Card pickedUpCard = cardRows[row].removeAndReplace(cardSpot);
                         pickedUpCard.setFaceUp(false);
                         playerHand.reserveCard(pickedUpCard);
-                        if (gameCoins.removeCoins(Color.Gold)){
+                        if (gameCoins.removeCoins(Color.Gold)) {
                             playerHand.addCoin(Color.Gold); // add a gold coin if one was in the pile
                             checkCoinOverflow(playerHand, scanner);
                         }
@@ -479,7 +479,7 @@ class Game {
                                     playerWhoInitiatedLastRound = player;
                                 }
 
-                                if (lastRound && player == numPlayers-1)
+                                if (lastRound && player == numPlayers - 1)
                                     break; //exit the doWhile loop to handleWinner()
 
 
@@ -499,7 +499,7 @@ class Game {
                     }
                 } while (exitDo <= 0);
 
-                if(playerWhoInitiatedLastRound != -1){
+                if (playerWhoInitiatedLastRound != -1) {
                     Hand WINNER = handleWinner();
                     System.out.println("WINNER:");
                     System.out.println(WINNER.toString());
@@ -514,11 +514,22 @@ class Game {
         }
     }
 
-    public int addClient(boolean player){
+    public int addClient(boolean player) {
         if (player && numPlayers < Constants.MAX_NUM_PLAYERS)
             return numPlayers++;
         else
             return -1;
+    }
+
+    public boolean validateWithdraw(Colors coins, int playerNum) {
+        Hand playerHand = hands[playerNum];
+        if (coins.isSaneWithdraw() && gameCoins.canPlayerTake(coins)) {
+            //TODO
+            //playerHand.addCoins(gameCoins.removeCoins());
+            return true;
+            //checkCoinOverflow(playerHand);
+        }
+        return false;
     }
 
 }

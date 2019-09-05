@@ -1,5 +1,6 @@
 package splendor.common.coins;
 
+import splendor.common.cards.Colors;
 import splendor.common.util.Constants.Color;
 
 public class CoinBank {
@@ -50,6 +51,16 @@ public class CoinBank {
         if (c == null)
             return true;
         return bank[c.ordinal()].canTake(amount);
+    }
+
+    public boolean canPlayerTake(Colors colors) {
+        if (colors == null)
+            return true;
+        for (Color c : Color.colors) {
+            if (!bank[c.ordinal()].canTake(colors.getCost(c)))
+                return false;
+        }
+        return true;
     }
 
     public String pileToString(Color c) {
