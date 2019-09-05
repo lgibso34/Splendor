@@ -101,13 +101,11 @@ public class Server {
                         }
                     }
                 }
+            } catch (NoSuchElementException e) {
+                System.out.println("Socket Closed for client: " + name);
             } catch (Exception e) {
-                if (e instanceof NoSuchElementException)
-                    System.out.println("Socket Closed for client: " + name);
-                else {
-                    System.out.println(e);
-                    System.out.println(e.getStackTrace());
-                }
+                System.out.println(e);
+                System.out.println(e.getStackTrace());
             } finally {
                 if (out != null) {
                     writers.remove(out);
