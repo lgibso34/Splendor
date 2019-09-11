@@ -177,9 +177,11 @@ public class Server {
         }
 
         String validateWithdraw(String message) {
-            //TODO game has all of the state and validation. delegate the message to game with the player number to validate against the game state
-            if (game.validateWithdraw(new Colors(message), clientNames.get(name)))
-                return "valid";
+            int playerNum = clientNames.get(name);
+            if (game.validateWithdraw(new Colors(message), playerNum)) {
+                if (validateCoinOverflow(playerNum))
+                    return "valid";
+            }
             return null;
         }
 
@@ -242,6 +244,11 @@ public class Server {
             //TODO: validate game logic
             return null;
         }
+
+        Boolean validateCoinOverflow(int playerNum) {
+            return game.checkCoinOverflow(playerNum);
+        }
+
 
         private boolean receiveAndSend(ProtocolAction messageType, String send) {
             String response = in.nextLine();

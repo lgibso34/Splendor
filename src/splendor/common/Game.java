@@ -158,6 +158,26 @@ class Game {
         }
     }
 
+    public boolean checkCoinOverflow(int playerNum) {
+        Hand playerHand = hands[playerNum];
+        while (playerHand.getCoinCount() > MAX_PLAYER_COINS) {
+            //TODO need to have client send overflow packet.
+//            int amount = -1;
+//            Color color = null;
+//            while (0 > amount || color == null) {
+//                color = null;
+//                String input = scanner.next();
+//                amount = Integer.parseInt(input.substring(0, 1));
+//                if (input.length() > 1)
+//                    color = Color.fromShortName(input.substring(1, 2));
+//                //check hand coins
+//                if (playerHand.getCoinAmount(color) >= amount)
+//                    playerHand.removeCoins(color, amount);
+//            }
+        }
+        return true;
+    }
+
     private static int handlePlayChoice(Scanner scanner, int player, int choice, int exitDo) {
         int row;
         int cardSpot;
@@ -524,10 +544,17 @@ class Game {
     public boolean validateWithdraw(Colors coins, int playerNum) {
         Hand playerHand = hands[playerNum];
         if (coins.isSaneWithdraw() && gameCoins.canPlayerTake(coins)) {
-            //TODO
-            //playerHand.addCoins(gameCoins.removeCoins());
+            playerHand.addCoins(gameCoins.removeCoins(coins));
             return true;
-            //checkCoinOverflow(playerHand);
+        }
+        return false;
+    }
+
+    public boolean validateDeposit(Colors coins, int playerNum) {
+        Hand playerHand = hands[playerNum];
+        if (playerHand.canSpend(coins)) {
+            playerHand.addCoins(gameCoins.removeCoins(coins));
+            return true;
         }
         return false;
     }

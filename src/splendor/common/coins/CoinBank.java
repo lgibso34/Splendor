@@ -26,6 +26,12 @@ public class CoinBank {
         bank[c.ordinal()].add(amount);
     }
 
+    public void addCoins(Colors colors) {
+        for (Color c : Color.colors) {
+            bank[c.ordinal()].add(colors.getCost(c));
+        }
+    }
+
     public boolean removeCoins(Color c) {
         return removeCoins(c, 1);
     }
@@ -34,6 +40,15 @@ public class CoinBank {
         if (c == null)
             return true;
         return bank[c.ordinal()].removeCoins(amount);
+    }
+
+    public Colors removeCoins(Colors colors) {
+        if (colors == null)
+            return null;
+        for (Color c : Color.colors) {
+            bank[c.ordinal()].removeCoins(colors.getCost(c));
+        }
+        return colors;
     }
 
     public int numCoins(Color c) {
@@ -73,6 +88,18 @@ public class CoinBank {
             output.append(bank[c.ordinal()].toString()).append(", ");
         }
         return output.substring(0, output.length() - 2);
+    }
+
+    public Colors toColors() {
+        int[] colors = new int[Color.colors.length];
+        for (Color c : Color.colors) {
+            colors[c.ordinal()] = bank[c.ordinal()].getSize();
+        }
+        return new Colors(colors);
+    }
+
+    public boolean greaterOrEqualTo(Colors spend) {
+        return this.toColors().greaterOrEqualTo(spend);
     }
 
 }

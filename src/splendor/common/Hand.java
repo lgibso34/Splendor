@@ -59,8 +59,12 @@ class Hand {
         return cardCost;
     }
 
-    public boolean canBuy(Card card, Colors c) {
-        return c.greaterOrEqualTo(card.getColorCost());
+    public boolean canBuy(Card card, Colors modifiedCost) {
+        return modifiedCost.greaterOrEqualTo(card.getColorCost());
+    }
+
+    public boolean canSpend(Colors spend) {
+        return playerCoins.greaterOrEqualTo(spend);
     }
 
     public boolean checkReservedCardQuantity() {
@@ -74,6 +78,10 @@ class Hand {
 
     public void addCoins(Color color, int amount) {
         playerCoins.addCoins(color, amount);
+    }
+
+    public void addCoins(Colors colors) {
+        playerCoins.addCoins(colors);
     }
 
     private void removeCoinsFromInventory(Colors cardCost) {
