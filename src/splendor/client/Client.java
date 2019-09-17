@@ -3,13 +3,11 @@ package splendor.client;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -19,17 +17,18 @@ import javafx.stage.Stage;
 import javafx.scene.shape.Rectangle;
 import splendor.common.util.Constants;
 import splendor.common.util.Constants.ProtocolAction;
+import splendor.common.util.DH_AES;
+import splendor.common.util.ProtocolMessage;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.security.PublicKey;
 import java.util.Scanner;
 
-import java.awt.BorderLayout;
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -53,6 +52,7 @@ public class Client extends Application {
     String serverAddress;
     int playerID = 0;
     private static final int MAX_PLAYERS = 5;
+    private DH_AES clientDH = new DH_AES();
 
     Scanner in;
     PrintWriter out;
@@ -118,8 +118,17 @@ public class Client extends Application {
     public void start(Stage primaryStage) throws Exception {
         this.serverAddress = "localhost";
         var socket = new Socket(serverAddress, 59001);
+
+        ObjectOutputStream oOut = new ObjectOutputStream(socket.getOutputStream());
+        //oOut.writeObject(obj);
+        ObjectInputStream oIn = new ObjectInputStream(socket.getInputStream());
+        //ProtocolMessage message = (ProtocolMessage)oIn.readObject();
+
         in = new Scanner(socket.getInputStream());
         out = new PrintWriter(socket.getOutputStream(), true);
+
+        //setup encryption
+        setupDH(oIn, oOut);
 
 //        while (in.hasNextLine()) {
 //            var line = in.nextLine();
@@ -205,6 +214,25 @@ public class Client extends Application {
         if(response.equals(messageType.ordinal() + "valid"))
             return true;
         return false;
+    }
+
+    private void setupDH(ObjectInputStream oIn, ObjectOutputStream oOut) {
+        while (true) {
+            try {
+                ProtocolMessage pm = (ProtocolMessage) oIn.readObject();
+                if (pm.getMessageType() == ProtocolAction.KeyExchange) {
+                    Object message = pm.getMessage();
+                    if (message != null) {
+                        clientDH.setReceiverPublicKey((PublicKey)message);
+                        oOut.writeObject(new ProtocolMessage(ProtocolAction.KeyExchange, clientDH.getPublicKey()));
+                        break;
+                    }
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+                System.err.println("Error setting up DH.");
+            }
+        }
     }
 
 }

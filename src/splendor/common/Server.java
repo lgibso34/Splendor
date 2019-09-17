@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.PublicKey;
 import java.util.*;
 import java.util.concurrent.Executors;
 
@@ -299,11 +300,10 @@ public class Server {
                 try {
                     ProtocolMessage pm = (ProtocolMessage) oIn.readObject();
                     if (pm.getMessageType() == ProtocolAction.KeyExchange) {
-                        byte[] message = pm.getMessage();
+                        Object message = pm.getMessage();
                         if (message != null) {
-                            serverDH.setReceiverPublicKey(message);
-                            oOut.writeObject(serverDH.getPublicKey());
-                            //clientDH.setReceiverPublicKey(serverDH.getPublicKey());
+                            serverDH.setReceiverPublicKey((PublicKey)message);
+                            oOut.writeObject(new ProtocolMessage(ProtocolAction.KeyExchange, serverDH.getPublicKey()));
                             break;
                         }
                     }

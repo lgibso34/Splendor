@@ -5,16 +5,16 @@ import java.io.Serializable;
 
 public class ProtocolMessage implements Serializable {
     private final ProtocolAction messageType;
-    private final byte[] message;
+    private final Object message;
     private final boolean valid;
 
-    public ProtocolMessage(ProtocolAction messageType, byte[] message, boolean valid) {
+    public ProtocolMessage(ProtocolAction messageType, Object message, boolean valid) {
         this.messageType = messageType;
         this.message = message;
         this.valid = valid;
     }
 
-    public ProtocolMessage(ProtocolAction messageType, byte[] message) {
+    public ProtocolMessage(ProtocolAction messageType, Object message) {
         this.messageType = messageType;
         this.message = message;
         this.valid = false;
@@ -24,7 +24,7 @@ public class ProtocolMessage implements Serializable {
         return messageType;
     }
 
-    public byte[] getMessage() {
+    public Object getMessage() {
         return message;
     }
 
