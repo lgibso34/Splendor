@@ -1,11 +1,14 @@
+//https://stackoverflow.com/questions/21081713/diffie-hellman-key-exchange-in-java
 package splendor.common.util;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
-public class AESSecurityCap {
+public class DH_AES {
 
     private PublicKey publicKey;
     private KeyAgreement keyAgreement;
@@ -13,7 +16,7 @@ public class AESSecurityCap {
     private final int keySize = 1024;
     private String cryptoAlgorithm = "AES";
 
-    AESSecurityCap() {
+    public DH_AES() {
         makeKeyExchangeParams();
     }
 
@@ -37,6 +40,25 @@ public class AESSecurityCap {
             keyAgreement.doPhase(publickey, true);
             sharedSecret = keyAgreement.generateSecret();
         } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setReceiverPublicKey(byte[] pkBytes) {
+        try {
+            //PublicKey publickey = keyAgreement.; //ka.doPhase(loadEcPublicKey(publicKey, curveName), true);
+            //KeyAgreement ka = KeyAgreement.getInstance("ECDH");
+
+            //KeyFactory kf = KeyFactory.getInstance("ECDH");
+            //PublicKey publickey = kf.generatePublic(pubKeySpec);
+
+            KeyFactory kf = KeyFactory.getInstance("DH");
+            X509EncodedKeySpec x509Spec = new X509EncodedKeySpec(pkBytes);
+            PublicKey publickey = kf.generatePublic(x509Spec);
+
+            keyAgreement.doPhase(publickey, true);
+            sharedSecret = keyAgreement.generateSecret();
+        } catch (InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             e.printStackTrace();
         }
     }

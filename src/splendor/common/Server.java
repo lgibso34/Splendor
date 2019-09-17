@@ -1,11 +1,14 @@
 package splendor.common;
 
 import splendor.common.cards.Colors;
+import splendor.common.util.DH_AES;
 import splendor.common.util.Constants;
-import splendor.common.util.Constants.Color;
 import splendor.common.util.Constants.ProtocolAction;
+import splendor.common.util.ProtocolMessage;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -51,6 +54,7 @@ public class Server {
         private Socket socket;
         private Scanner in;
         private PrintWriter out;
+        private DH_AES serverDH = new DH_AES();
 
         /**
          * Constructs a handler thread, squirreling away the socket. All the interesting
@@ -69,8 +73,16 @@ public class Server {
          */
         public void run() {
             try {
+                ObjectOutputStream oOut = new ObjectOutputStream(socket.getOutputStream());
+                //oOut.writeObject(obj);
+                ObjectInputStream oIn = new ObjectInputStream(socket.getInputStream());
+                //ProtocolMessage message = (ProtocolMessage)oIn.readObject();
+
                 in = new Scanner(socket.getInputStream());
                 out = new PrintWriter(socket.getOutputStream(), true);
+
+                //setup encryption
+                setupDH(oIn, oOut);
 
                 // Keep requesting a name until we get a unique one.
                 name = receiveDisplayName(ProtocolAction.SetDisplayName, "valid");
@@ -87,6 +99,8 @@ public class Server {
 
                 // Accept messages from this client and broadcast them.
                 while (true) {
+                    ProtocolMessage pm = (ProtocolMessage)oIn.readObject();
+
                     String input = in.nextLine();
                     String message = "";
                     if (input.toLowerCase().startsWith("/quit")) {
@@ -278,6 +292,26 @@ public class Server {
             System.out.println("Sending: " + messageType.ordinal() + "valid");
             out.println(messageType.ordinal() + "valid");
             return response;
+        }
+
+        private void setupDH(ObjectInputStream oIn, ObjectOutputStream oOut) {
+            while (true) {
+                try {
+                    ProtocolMessage pm = (ProtocolMessage) oIn.readObject();
+                    if (pm.getMessageType() == ProtocolAction.KeyExchange) {
+                        byte[] message = pm.getMessage();
+                        if (message != null) {
+                            serverDH.setReceiverPublicKey(message);
+                            oOut.writeObject(serverDH.getPublicKey());
+                            //clientDH.setReceiverPublicKey(serverDH.getPublicKey());
+                            break;
+                        }
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                    System.err.println("Error setting up DH.");
+                }
+            }
         }
 
         private ProtocolAction MessageType(String s){

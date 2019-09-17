@@ -5,16 +5,16 @@ import java.io.Serializable;
 
 public class ProtocolMessage implements Serializable {
     private final ProtocolAction messageType;
-    private final String message;
+    private final byte[] message;
     private final boolean valid;
 
-    public ProtocolMessage(ProtocolAction messageType, String message, boolean valid) {
+    public ProtocolMessage(ProtocolAction messageType, byte[] message, boolean valid) {
         this.messageType = messageType;
-        this.message = encode(message);
+        this.message = message;
         this.valid = valid;
     }
 
-    public ProtocolMessage(ProtocolAction messageType, String message) {
+    public ProtocolMessage(ProtocolAction messageType, byte[] message) {
         this.messageType = messageType;
         this.message = message;
         this.valid = false;
@@ -24,15 +24,11 @@ public class ProtocolMessage implements Serializable {
         return messageType;
     }
 
-    public String getMessage() {
+    public byte[] getMessage() {
         return message;
     }
 
     public boolean isValid() {
         return valid;
-    }
-
-    private String encode(String s) {
-        return s;
     }
 }
