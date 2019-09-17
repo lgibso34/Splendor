@@ -55,7 +55,7 @@ public class Server {
         private Socket socket;
         private Scanner in;
         private PrintWriter out;
-        private DH_AES serverDH = new DH_AES();
+        private DH_AES dh_aes = new DH_AES();
 
         /**
          * Constructs a handler thread, squirreling away the socket. All the interesting
@@ -84,6 +84,8 @@ public class Server {
 
                 //setup encryption
                 setupDH(oIn, oOut);
+                //byte[] enc = dh_aes.encrypt(new byte[] {1, 2, 3});
+                //byte[] dec = dh_aes.decrypt(new byte[] {1, 2, 3});
 
                 // Keep requesting a name until we get a unique one.
                 name = receiveDisplayName(ProtocolAction.SetDisplayName, "valid");
@@ -302,8 +304,8 @@ public class Server {
                     if (pm.getMessageType() == ProtocolAction.KeyExchange) {
                         Object message = pm.getMessage();
                         if (message != null) {
-                            serverDH.setReceiverPublicKey((PublicKey)message);
-                            oOut.writeObject(new ProtocolMessage(ProtocolAction.KeyExchange, serverDH.getPublicKey()));
+                            dh_aes.setReceiverPublicKey((PublicKey)message);
+                            oOut.writeObject(new ProtocolMessage(ProtocolAction.KeyExchange, dh_aes.getPublicKey()));
                             break;
                         }
                     }

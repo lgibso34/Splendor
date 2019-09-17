@@ -63,12 +63,12 @@ public class DH_AES {
         }
     }
 
-    public byte[] encrypt(String msg) {
+    public byte[] encrypt(byte[] msg) {
         try {
             Key key = generateKey();
             Cipher c = Cipher.getInstance(cryptoAlgorithm);
             c.init(Cipher.ENCRYPT_MODE, key);
-            byte[] encVal = c.doFinal(msg.getBytes());
+            byte[] encVal = c.doFinal(msg/*.getBytes()*/);
             return Base64.getEncoder().encode(encVal);
         } catch (BadPaddingException | InvalidKeyException | NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -76,14 +76,14 @@ public class DH_AES {
         return null;
     }
 
-    public String decrypt(byte[] encryptedData) {
+    public byte[] decrypt(byte[] encryptedData) {
         try {
             Key key = generateKey();
             Cipher c = Cipher.getInstance(cryptoAlgorithm);
             c.init(Cipher.DECRYPT_MODE, key);
             byte[] decodedValue = Base64.getDecoder().decode(encryptedData);
-            byte[] decValue = c.doFinal(decodedValue);
-            return new String(decValue);
+            return /*byte[] decValue =*/ c.doFinal(decodedValue);
+            //return new String(decValue);
         } catch (BadPaddingException | InvalidKeyException | NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }

@@ -52,7 +52,7 @@ public class Client extends Application {
     String serverAddress;
     int playerID = 0;
     private static final int MAX_PLAYERS = 5;
-    private DH_AES clientDH = new DH_AES();
+    private DH_AES dh_aes = new DH_AES();
 
     Scanner in;
     PrintWriter out;
@@ -129,6 +129,8 @@ public class Client extends Application {
 
         //setup encryption
         setupDH(oIn, oOut);
+        //byte[] enc = dh_aes.encrypt(new byte[] {1, 2, 3});
+        //byte[] dec = dh_aes.decrypt(new byte[] {1, 2, 3});
 
 //        while (in.hasNextLine()) {
 //            var line = in.nextLine();
@@ -223,8 +225,8 @@ public class Client extends Application {
                 if (pm.getMessageType() == ProtocolAction.KeyExchange) {
                     Object message = pm.getMessage();
                     if (message != null) {
-                        clientDH.setReceiverPublicKey((PublicKey)message);
-                        oOut.writeObject(new ProtocolMessage(ProtocolAction.KeyExchange, clientDH.getPublicKey()));
+                        dh_aes.setReceiverPublicKey((PublicKey)message);
+                        oOut.writeObject(new ProtocolMessage(ProtocolAction.KeyExchange, dh_aes.getPublicKey()));
                         break;
                     }
                 }
